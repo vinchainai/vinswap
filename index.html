@@ -1,1 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VinSwap.vin - VIN/BNB</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="web48.png" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar" style="background-color: #007bff; color: white;">
+        <img src="https://github.com/vinchainai/vinswap/blob/main/web48.png?raw=true" alt="VinSwap Logo" class="logo">
+        <div class="nav-links">
+            <a href="https://t.me/Lottery_vin" target="_blank">Join Telegram</a>
+            <a href="https://x.com/Lottery_vin" target="_blank">Follow X</a>
+        </div>
+        <!-- Thêm dòng hiển thị giá VIN/USD -->
+        <div class="vin-price">
+            <strong>1 VIN = <span id="vin-to-usd">Loading...</span> USD</strong>
+        </div>
+    </header>
+    <!-- Connect Wallet Interface -->
+    <div id="connect-interface" class="interface">
+        <h1>Welcome to VinSwap!</h1>
+        <p>Swap your VIN and BNB tokens easily, quickly, and securely.</p>
+        <button id="connect-wallet" class="button">Connect Wallet</button>
+    </div>
+    <!-- Swap Interface -->
+    <div id="swap-interface" class="interface" style="display: none;">
+        <header class="swap-header">
+            <div id="wallet-address" class="wallet-address"></div>
+            <button id="disconnect-wallet" class="button">Disconnect Wallet</button>
+        </header>
+        <h1>Swap</h1>
+        <div class="swap-container">
+            <!-- From Token -->
+            <div class="token-input">
+                <img id="from-token-logo" src="https://github.com/vinchainai/vinswap/blob/main/vin24.png?raw=true" alt="From Token">
+                <div>
+                    <p id="from-token-info">VIN: 0.0000</p>
+                    <input type="number" id="from-amount" placeholder="0.0">
+                </div>
+                <button id="max-button" class="button">Max</button>
+            </div>
 
+            <!-- Swap Direction -->
+            <button id="swap-direction" class="swap-direction">↔️</button>
+
+            <!-- To Token -->
+            <div class="token-input">
+                <img id="to-token-logo" src="https://github.com/vinchainai/vinswap/blob/main/bnb24.png?raw=true" alt="To Token">
+                <div>
+                    <p id="to-token-info">BNB: 0.0000</p>
+                    <input type="text" id="to-amount" placeholder="0.0" disabled>
+                </div>
+            </div>
+        </div>
+        <!-- Swap Details -->
+        <div class="swap-details">
+            <p id="gas-fee">Estimated Gas Fee: ~0.0005 BNB</p>
+        </div>
+
+        <!-- Swap Button -->
+        <button id="swap-now" class="button">Swap Now</button>
+    </div>
+    <!-- Include Ethers.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <!-- Include App.js -->
+    <script src="app.js"></script>
+</body>
+</html>
