@@ -1,1 +1,33 @@
+name: Update VIN Price
 
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Chạy tự động mỗi giờ
+  workflow_dispatch: # Cho phép chạy thủ công từ giao diện GitHub Actions
+
+jobs:
+  update-price:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update VIN Price
+        run: node update-price.js
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add vin-price.json
+          git commit -m "Update VIN price"
+          git push
