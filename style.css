@@ -63,3 +63,95 @@ body {
 .navbar .nav-links a:hover {
     text-decoration: underline;
 }
+/* 📦 Giao diện chính (Container) */
+.interface {
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+/* 🏆 Tiêu đề chính */
+h1 {
+    color: #007bff; /* Màu xanh chủ đạo */
+}
+
+/* 📝 Định dạng văn bản */
+p {
+    color: #555; /* Màu xám đậm */
+}
+
+/* 🎛️ Nút bấm (Button) */
+.button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* 🖱️ Hiệu ứng khi di chuột vào nút */
+.button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* 🎯 Hiệu ứng khi nhấn nút */
+.button:active {
+    background-color: #004085;
+    transform: scale(0.95);
+}
+
+/* 🚫 Nút bị vô hiệu hóa */
+.button:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
+}
+
+/* 🔄 Hộp chứa Swap */
+.swap-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    gap: 20px; /* Khoảng cách giữa các phần tử */
+}
+
+/* 🔄 Ô nhập token */
+.token-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 45%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+/* 🖼️ Biểu tượng Token */
+.token-input img {
+    height: 24px;
+    width: 24px;
+}
+
+/* 🔢 Ô nhập số lượng Token */
+.token-input input {
+    flex-grow: 1;
+    border: none;
+    background: none;
+    font-size: 16px;
+    color: #333;
+}
+
+/* ✏️ Khi nhập số, loại bỏ viền xung quanh */
+.token-input input:focus {
+    outline: none;
+}
+
