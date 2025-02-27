@@ -2,6 +2,10 @@
 let provider, signer, userAddress;
 const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // VIN Token
 const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38"; // Hợp đồng VinSwap
+const rpcUrl = "https://rpc.viction.xyz"; // RPC mạng Viction
+
+// 🌐 Khởi tạo provider từ RPC mạng Viction
+const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
 
 // 🎯 Khởi tạo các phần tử giao diện
 const connectButton = document.getElementById("connect-wallet");
@@ -15,7 +19,7 @@ const fromAmountInput = document.getElementById("from-amount");
 const toAmountInput = document.getElementById("to-amount");
 
 // ✅ Kiểm tra nếu MetaMask đã được cài đặt
-if (typeof window.ethereum === "undefined") {
+if (!window.ethereum) {
     alert("MetaMask chưa được cài đặt! Vui lòng cài đặt MetaMask để sử dụng VinSwap.");
 }
 
@@ -25,6 +29,7 @@ provider = new ethers.providers.Web3Provider(window.ethereum);
 // 📌 Xử lý sự kiện kết nối ví
 connectButton.addEventListener("click", async () => {
     try {
+        // 🔗 Yêu cầu kết nối ví MetaMask
         const accounts = await provider.send("eth_requestAccounts", []);
         userAddress = accounts[0];
 
