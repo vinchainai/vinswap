@@ -68,3 +68,46 @@ document.addEventListener('DOMContentLoaded', () => {
     let balances = { VIC: 0, VIN: 0 };
     let fromToken = 'VIC';
     let toToken = 'VIN';
+    // Ensure Wallet Connected
+    async function ensureWalletConnected() {
+        try {
+            if (!window.ethereum) {
+                alert('MetaMask is not installed. Please install MetaMask to use this application.');
+                return false;
+            }
+
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            walletAddress = await signer.getAddress();
+
+            return true;
+        } catch (error) {
+            console.error("Failed to connect wallet:", error);
+            alert('Failed to connect wallet. Please try again.');
+            return false;
+        }
+    }
+
+    // Fetch Balances
+    async function updateBalances() {
+        try {
+            balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
+            balances.VIN = parseFloat(
+                ethers.utils.formatUnits(
+                    await vinTokenContract.balanceOf(walletAddress),
+                    18
+                )
+            );
+
+            updateTokenDisplay();
+        } catch (error) {
+            console.error('Error fetching balances:', error);
+        }
+    }
+
+    function updateTokenDisplay() {
+        fromTokenInfo.textContent = `${fromToken}: ${balances[fromToken].toFixed(18)}`;
+        toTokenInfo.textContent = `${toToken}: ${balances[toToken].toFixed(18)}`;
+    }
