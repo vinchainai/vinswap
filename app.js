@@ -1,154 +1,108 @@
-// 🚀 Sự kiện chạy khi trang đã tải hoàn tất
-document.addEventListener('DOMContentLoaded', () => {
-    // 🎯 DOM Elements
-    const connectWalletButton = document.getElementById('connect-wallet');
-    const disconnectWalletButton = document.getElementById('disconnect-wallet');
-    const walletAddressDisplay = document.getElementById('wallet-address');
-    const fromAmountInput = document.getElementById('from-amount');
-    const toAmountInput = document.getElementById('to-amount');
-    const fromTokenInfo = document.getElementById('from-token-info');
-    const toTokenInfo = document.getElementById('to-token-info');
-    const fromTokenLogo = document.getElementById('from-token-logo');
-    const toTokenLogo = document.getElementById('to-token-logo');
-    const swapDirectionButton = document.getElementById('swap-direction');
-    const maxButton = document.getElementById('max-button');
-    const swapNowButton = document.getElementById('swap-now');
-    const transactionFeeDisplay = document.getElementById('transaction-fee');
-    const gasFeeDisplay = document.getElementById('gas-fee');
+// 🚀 Kết nối ví & Swap VIC/VIN trên Viction
 
-    // 🌐 Blockchain Config
-    let provider, signer;
-    let walletAddress = null;
-    const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
-    const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-    const RATE = 100; // 1 VIN = 100 VIC
-    const FEE = 0.01; // 0.01 VIC phí giao dịch
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+let signer;
+let userAddress;
 
-    const vinABI = [
-        {
-            "constant": true,
-            "inputs": [{ "name": "owner", "type": "address" }],
-            "name": "balanceOf",
-            "outputs": [{ "name": "balance", "type": "uint256" }],
-            "type": "function"
-        }
-    ];
+// Địa chỉ hợp đồng & Token
+const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
+const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+const vinABI = [
+    { "constant": true, "inputs": [{ "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "type": "function" },
+    { "constant": false, "inputs": [{ "name": "spender", "type": "address" }, { "name": "amount", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "success", "type": "bool" }], "type": "function" }
+];
+const swapABI = [
+    { "inputs": [], "name": "swapVicToVin", "outputs": [], "stateMutability": "payable", "type": "function" },
+    { "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }], "name": "swapVinToVic", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+];
 
-    let vinTokenContract;
+// Kết nối Wallet
+async function connectWallet() {
+    try {
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        userAddress = await signer.getAddress();
+        document.getElementById("wallet-address").textContent = `Connected: ${userAddress.substring(0, 6)}...${userAddress.slice(-4)}`;
+        document.getElementById("connect-interface").style.display = "none";
+        document.getElementById("swap-interface").style.display = "block";
+        updateBalances();
+    } catch (error) {
+        console.error("Lỗi kết nối ví:", error);
+    }
+}
 
-    // 🏦 Kết nối ví
-    async function connectWallet() {
-        try {
-            if (window.ethereum) {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-                signer = await provider.getSigner();
-                walletAddress = await signer.getAddress();
-                walletAddressDisplay.textContent = walletAddress;
+// Ngắt kết nối Wallet
+function disconnectWallet() {
+    userAddress = null;
+    document.getElementById("wallet-address").textContent = "";
+    document.getElementById("connect-interface").style.display = "block";
+    document.getElementById("swap-interface").style.display = "none";
+}
 
-                // 🎯 Kết nối hợp đồng VIN Token
-                vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+// Lấy số dư VIC & VIN
+async function updateBalances() {
+    if (!userAddress) return;
+    const vicBalance = await provider.getBalance(userAddress);
+    const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+    const vinBalance = await vinTokenContract.balanceOf(userAddress);
+    document.getElementById("from-token-info").textContent = `VIC: ${ethers.utils.formatEther(vicBalance)}`;
+    document.getElementById("to-token-info").textContent = `VIN: ${ethers.utils.formatUnits(vinBalance, 18)}`;
+}
 
-                // 🔄 Cập nhật số dư
-                await updateBalances();
-                showSwapInterface();
-            } else {
-                alert("❌ Bạn cần cài đặt MetaMask!");
-            }
-        } catch (error) {
-            console.error("❌ Lỗi khi kết nối ví:", error);
-        }
+// Swap VIC <-> VIN
+async function swapTokens() {
+    const fromAmount = document.getElementById("from-amount").value;
+    if (!fromAmount || isNaN(fromAmount) || fromAmount <= 0) {
+        alert("Vui lòng nhập số lượng hợp lệ!");
+        return;
     }
 
-    // 🏦 Ngắt kết nối ví
-    function disconnectWallet() {
-        walletAddress = null;
-        walletAddressDisplay.textContent = "";
-        fromTokenInfo.textContent = "VIC: 0.0000";
-        toTokenInfo.textContent = "VIN: 0.0000";
-        showConnectInterface();
-        alert("🚀 Đã ngắt kết nối ví!");
-    }
-
-    // 🔄 Cập nhật số dư VIC & VIN
-    async function updateBalances() {
-        try {
-            if (!walletAddress) return;
-
-            console.log("🔍 Kiểm tra số dư của ví:", walletAddress);
-
-            // 🏦 Lấy số dư VIC (Native Coin)
-            const vicBalanceRaw = await provider.getBalance(walletAddress);
-            const vicBalance = ethers.formatEther(vicBalanceRaw);
-            console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
-
-            // 🏦 Lấy số dư VIN (Token ERC-20)
-            const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
-            const vinBalance = ethers.formatUnits(vinBalanceRaw, 18);
-            console.log(`✅ Số dư VIN: ${vinBalance} VIN`);
-
-            // 🏦 Cập nhật UI
-            fromTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
-            toTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
-        } catch (error) {
-            console.error("❌ Lỗi khi lấy số dư:", error);
-        }
-    }
-
-    // 🎯 Nút Max
-    maxButton.addEventListener('click', async () => {
-        fromAmountInput.value = fromTokenInfo.textContent.includes("VIC")
-            ? parseFloat(fromTokenInfo.textContent.split(": ")[1])
-            : parseFloat(toTokenInfo.textContent.split(": ")[1]);
-        calculateToAmount();
-    });
-
-    // 🎯 Nút Swap Direction (Đổi VIC ⇄ VIN)
-    swapDirectionButton.addEventListener('click', () => {
-        [fromTokenInfo.textContent, toTokenInfo.textContent] = [toTokenInfo.textContent, fromTokenInfo.textContent];
-        [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
-        fromAmountInput.value = "";
-        toAmountInput.value = "";
-    });
-
-    // 🔄 Tính toán số token nhận được
-    fromAmountInput.addEventListener('input', calculateToAmount);
-    function calculateToAmount() {
-        const fromAmount = parseFloat(fromAmountInput.value);
-        if (isNaN(fromAmount) || fromAmount <= 0) {
-            toAmountInput.value = "";
-            return;
-        }
-
-        let toAmount;
-        if (fromTokenInfo.textContent.includes("VIC")) {
-            toAmount = (fromAmount - FEE) / RATE;
+    const swapContract = new ethers.Contract(vinSwapAddress, swapABI, signer);
+    const isVicToVin = document.getElementById("from-token-logo").src.includes("vic");
+    try {
+        if (isVicToVin) {
+            const tx = await swapContract.swapVicToVin({ value: ethers.utils.parseEther(fromAmount) });
+            await tx.wait();
         } else {
-            toAmount = (fromAmount * RATE) - FEE;
+            const vinAmount = ethers.utils.parseUnits(fromAmount, 18);
+            const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+            await vinTokenContract.approve(vinSwapAddress, vinAmount);
+            const tx = await swapContract.swapVinToVic(vinAmount);
+            await tx.wait();
         }
-        toAmountInput.value = toAmount.toFixed(4);
+        alert("Swap thành công!");
+        updateBalances();
+    } catch (error) {
+        console.error("Lỗi khi swap:", error);
     }
+}
 
-    // 🎯 Nút Swap Now
-    swapNowButton.addEventListener('click', async () => {
-        alert("🚀 Chức năng Swap sẽ được cập nhật sau!");
-    });
+// Xử lý nút Max
+async function setMaxAmount() {
+    const isVicToVin = document.getElementById("from-token-logo").src.includes("vic");
+    if (!userAddress) return;
+    const balance = isVicToVin ? await provider.getBalance(userAddress) : await new ethers.Contract(vinTokenAddress, vinABI, provider).balanceOf(userAddress);
+    document.getElementById("from-amount").value = ethers.utils.formatUnits(balance, isVicToVin ? "ether" : 18);
+}
 
-    // 🔄 Hiển thị giao diện Swap sau khi kết nối ví
-    function showSwapInterface() {
-        document.getElementById('swap-interface').style.display = 'block';
-        document.getElementById('connect-interface').style.display = 'none';
+// Đảo chiều swap
+function swapDirection() {
+    const fromLogo = document.getElementById("from-token-logo");
+    const toLogo = document.getElementById("to-token-logo");
+    if (fromLogo.src.includes("vic")) {
+        fromLogo.src = "vin24.png";
+        toLogo.src = "vic24.png";
+    } else {
+        fromLogo.src = "vic24.png";
+        toLogo.src = "vin24.png";
     }
+}
 
-    function showConnectInterface() {
-        document.getElementById('swap-interface').style.display = 'none';
-        document.getElementById('connect-interface').style.display = 'block';
-    }
-
-    // 🎯 Kết nối & Ngắt kết nối ví
-    connectWalletButton.addEventListener('click', connectWallet);
-    disconnectWalletButton.addEventListener('click', disconnectWallet);
-
-    // 🚀 Khởi động giao diện
-    showConnectInterface();
-});
+// Gắn sự kiện
+window.onload = () => {
+    document.getElementById("connect-wallet").onclick = connectWallet;
+    document.getElementById("disconnect-wallet").onclick = disconnectWallet;
+    document.getElementById("swap-now").onclick = swapTokens;
+    document.getElementById("max-button").onclick = setMaxAmount;
+    document.getElementById("swap-direction").onclick = swapDirection;
+};
