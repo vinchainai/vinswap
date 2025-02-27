@@ -49,8 +49,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 🔄 Hàm lấy số dư VIC & VIN
     async function getBalances(address) {
         try {
+            // 🛠 Sử dụng JsonRpcProvider để lấy số dư VIC
+            const rpcProvider = new ethers.providers.JsonRpcProvider("https://rpc.viction.xyz");
+
             // 🏦 Lấy số dư VIC (Native Coin)
-            const vicBalanceRaw = await provider.getBalance(address);
+            const vicBalanceRaw = await rpcProvider.getBalance(address);  // ⚠️ Dùng `rpcProvider` thay vì `provider`
             const vicBalance = ethers.utils.formatEther(vicBalanceRaw);
             fromTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
 
@@ -66,9 +69,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             ];
 
-            // 🛠 Sử dụng JsonRpcProvider thay vì Web3Provider để đảm bảo kết nối đúng mạng
-            const rpcProvider = new ethers.providers.JsonRpcProvider("https://rpc.viction.xyz");
-
             // 🌍 Kết nối hợp đồng VIN Token
             const vinContract = new ethers.Contract(vinTokenAddress, vinABI, rpcProvider);
             
@@ -77,8 +77,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
             toTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
         } catch (error) {
-            console.error("❌ Lỗi khi lấy số dư VIN:", error);
-            alert("Không thể lấy số dư VIN. Kiểm tra console để biết thêm chi tiết.");
+            console.error("❌ Lỗi khi lấy số dư:", error);
+            alert("Không thể lấy số dư VIC/VIN. Kiểm tra console để biết thêm chi tiết.");
         }
     }
 });
