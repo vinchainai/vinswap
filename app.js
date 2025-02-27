@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let fromToken = 'VIC';
     let toToken = 'VIN';
 
-    // ✅ Sử dụng ethers.providers.JsonRpcProvider để kết nối RPC
+    // ✅ Khởi tạo provider RPC riêng để đảm bảo lấy số dư chính xác
     const staticProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 
     // ✅ Kết nối ví
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ✅ Kết nối hợp đồng thông minh
             vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, staticProvider);
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer); // Dùng signer thay vì staticProvider
 
             walletAddressDisplay.textContent = walletAddress;
             await updateBalances();
@@ -85,12 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ✅ Cập nhật số dư VIC & VIN
+    // ✅ Cập nhật số dư VIC & VIN đúng ví người dùng
     async function updateBalances() {
         try {
+            // 🏦 Lấy số dư VIC (Native Coin)
             const vicBalanceRaw = await provider.getBalance(walletAddress);
             balances.VIC = parseFloat(ethers.utils.formatEther(vicBalanceRaw));
 
+            // 🏦 Lấy số dư VIN từ ví đã kết nối
             const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
             balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
 
