@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             await getBalances();
         } catch (error) {
-            console.error("❌ Lỗi khi kết nối ví:", error);
-            alert("Không thể kết nối ví. Vui lòng thử lại!");
+            console.error("❌ Error connecting wallet:", error);
+            alert("Cannot connect wallet. Please try again!");
         }
     });
 
