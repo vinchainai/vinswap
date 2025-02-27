@@ -10,23 +10,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header -->
+    <!-- 🏆 Thanh điều hướng -->
     <header class="navbar">
         <img src="vin_48.png" alt="VinSwap Logo" class="logo">
-        <div class="nav-links">
-            <a href="https://t.me/FortuneRolls" target="_blank">Join Telegram</a>
-            <a href="https://x.com/FortuneRolls" target="_blank">Follow X</a>
+        <div class="nav-info">
+            <span id="vin-price" class="vin-price">Loading price...</span>
         </div>
     </header>
-
-    <!-- Connect Wallet Interface -->
+    <!-- 🚀 Giao diện kết nối ví -->
     <div id="connect-interface" class="interface">
         <h1>Welcome to VinSwap!</h1>
         <p>Swap your tokens easily, quickly, and securely.</p>
         <button id="connect-wallet" class="button">Connect Wallet</button>
     </div>
-
-    <!-- Swap Interface -->
+    <!-- 🔄 Giao diện Swap -->
     <div id="swap-interface" class="interface" style="display: none;">
         <header class="swap-header">
             <div id="wallet-address" class="wallet-address"></div>
@@ -66,10 +63,16 @@
         <!-- Swap Button -->
         <button id="swap-now" class="button">Swap Now</button>
     </div>
-
-    <!-- Include Ethers.js -->
+    <!-- 🔗 Thanh điều hướng dưới cùng (Footer) -->
+    <footer class="footer">
+        <p>Follow us:</p>
+        <a href="https://t.me/FortuneRolls" target="_blank">Telegram</a> |
+        <a href="https://x.com/FortuneRolls" target="_blank">X (Twitter)</a>
+    </footer>
+    <!-- 📜 Nhúng thư viện Ethers.js -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-    <!-- Include App.js -->
+
+    <!-- 🚀 Nhúng mã JavaScript chính -->
     <script src="app.js"></script>
 </body>
 </html>
