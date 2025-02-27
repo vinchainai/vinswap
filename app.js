@@ -10,21 +10,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let provider, signer, userAddress;
 
-    // ✅ Kiểm tra nếu MetaMask đã được cài đặt
+    // ✅ Kiểm tra nếu trình duyệt đã cài đặt MetaMask chưa
     if (typeof window.ethereum === "undefined") {
-        alert("MetaMask chưa được cài đặt! Vui lòng cài đặt MetaMask để sử dụng VinSwap.");
+        alert("MetaMask is not installed! Please install MetaMask to use VinSwap.");
         return;
     }
 
-    // 🌐 Khởi tạo provider từ MetaMask
+    // 🌐 Khởi tạo provider từ MetaMask để kết nối blockchain
     provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    // 📌 Kết nối ví MetaMask
+    // 📌 Sự kiện khi nhấn nút "Connect Wallet"
     connectButton.addEventListener("click", async () => {
         try {
+            // 🚀 Gửi yêu cầu kết nối tài khoản MetaMask
             const accounts = await provider.send("eth_requestAccounts", []);
-            userAddress = accounts[0];
+            userAddress = accounts[0]; // Lấy địa chỉ ví của người dùng
 
+            // ✅ Lấy signer để thực hiện giao dịch
             signer = provider.getSigner();
             walletAddressDisplay.textContent = `🟢 ${userAddress}`;
 
@@ -32,32 +34,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             homeInterface.style.display = "none";
             swapInterface.style.display = "block";
 
-            // Gọi hàm lấy số dư VIC & VIN
+            // 🏦 Gọi hàm lấy số dư VIC & VIN
             await getBalances(userAddress);
         } catch (error) {
-            console.error("❌ Lỗi khi kết nối MetaMask:", error);
-            alert("Không thể kết nối MetaMask. Vui lòng thử lại!");
+            console.error("❌ Error connecting to MetaMask:", error);
+            alert("Failed to connect to MetaMask. Please try again!");
         }
     });
 
-    // 🔌 Ngắt kết nối và quay lại màn hình Home
+    // 🔌 Sự kiện khi nhấn nút "Disconnect Wallet"
     disconnectButton.addEventListener("click", () => {
+        // Quay lại màn hình Home khi ngắt kết nối ví
         swapInterface.style.display = "none";
         homeInterface.style.display = "block";
     });
 
-    // 🔄 Hàm lấy số dư VIC & VIN
+    // 🔄 Hàm lấy số dư VIC & VIN từ blockchain
     async function getBalances(address) {
         try {
-            // 🛠 Sử dụng JsonRpcProvider để lấy số dư VIC
+            // 🛠 Sử dụng JsonRpcProvider để lấy số dư VIC từ RPC của Viction
             const rpcProvider = new ethers.providers.JsonRpcProvider("https://rpc.viction.xyz");
 
-            // 🏦 Lấy số dư VIC (Native Coin)
-            const vicBalanceRaw = await rpcProvider.getBalance(address);  // ⚠️ Dùng `rpcProvider` thay vì `provider`
+            // 🏦 Lấy số dư VIC (Native Coin của mạng VIC)
+            const vicBalanceRaw = await rpcProvider.getBalance(address);
             const vicBalance = ethers.utils.formatEther(vicBalanceRaw);
             fromTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
 
-            // 🏦 Lấy số dư VIN (ERC-20)
+            // 🏦 Lấy số dư VIN (Token ERC-20)
             const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
             const vinABI = [
                 {
@@ -69,16 +72,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             ];
 
-            // 🌍 Kết nối hợp đồng VIN Token
+            // 🌍 Kết nối hợp đồng VIN Token để lấy số dư
             const vinContract = new ethers.Contract(vinTokenAddress, vinABI, rpcProvider);
-            
-            // 🔍 Lấy số dư token VIN
             const vinBalanceRaw = await vinContract.balanceOf(address);
             const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
             toTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
         } catch (error) {
-            console.error("❌ Lỗi khi lấy số dư:", error);
-            alert("Không thể lấy số dư VIC/VIN. Kiểm tra console để biết thêm chi tiết.");
+            console.error("❌ Error fetching balances:", error);
+            alert("Failed to fetch VIC/VIN balances. Check the console for details.");
         }
     }
 });
