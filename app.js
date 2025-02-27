@@ -219,3 +219,38 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`Failed to initialize wallet: ${error.message}`);
         }
     });
+    // Handle Disconnect Wallet button click
+    disconnectWalletButton.addEventListener('click', async () => {
+        try {
+            // Reset wallet-related variables
+            walletAddress = null;
+            balances = { VIC: 0, VIN: 0 };
+            vinSwapContract = null;
+            vinTokenContract = null;
+
+            // Update UI
+            walletAddressDisplay.textContent = '';
+            clearInputs();
+            showConnectInterface();
+
+            alert('Wallet disconnected successfully.');
+        } catch (error) {
+            console.error('Error disconnecting wallet:', error);
+            alert('Failed to disconnect wallet. Please try again.');
+        }
+    });
+
+    // Show/Hide Interfaces
+    function showSwapInterface() {
+        document.getElementById('swap-interface').style.display = 'block';
+        document.getElementById('connect-interface').style.display = 'none';
+    }
+
+    function showConnectInterface() {
+        document.getElementById('swap-interface').style.display = 'none';
+        document.getElementById('connect-interface').style.display = 'block';
+    }
+
+    // Initialize Interface
+    showConnectInterface();
+});
