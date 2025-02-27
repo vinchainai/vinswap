@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 🏦 Lấy số dư VIC (Native Coin)
             const vicBalanceRaw = await provider.getBalance(walletAddress);
-            const vicBalance = ethers.formatEther(vicBalanceRaw);
+            const vicBalance = ethers.formatEther(vicBalanceRaw);  // ⚠️ Đổi cách gọi hàm trong ethers v6
             console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
 
             // 🏦 Lấy số dư VIN (Token ERC-20)
             const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
-            const vinBalance = ethers.formatUnits(vinBalanceRaw, 18);
+            const vinBalance = ethers.formatUnits(vinBalanceRaw, 18);  // ⚠️ Đổi cách gọi hàm trong ethers v6
             console.log(`✅ Số dư VIN: ${vinBalance} VIN`);
 
             // 🏦 Cập nhật UI
