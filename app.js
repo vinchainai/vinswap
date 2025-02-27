@@ -21,12 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let walletConnectProvider = null;
     const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+    const RPC_URL = "https://rpc.viction.xyz";
 
     const RATE = 100; // 1 VIN = 100 VIC
     const FEE = 0.01; // 0.01 VIC swap fee
     const GAS_FEE_ESTIMATE = 0.000029; // Estimated gas fee
-    const MIN_SWAP_AMOUNT_VIC = 0.011; // Minimum VIC
-    const MIN_SWAP_AMOUNT_VIN = 0.00011; // Minimum VIN
 
     const vinSwapABI = [
         {
@@ -47,20 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const vinABI = [
         {
-            "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+            "constant": true,
+            "inputs": [{ "name": "owner", "type": "address" }],
             "name": "balanceOf",
-            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                { "internalType": "address", "name": "spender", "type": "address" },
-                { "internalType": "uint256", "name": "amount", "type": "uint256" }
-            ],
-            "name": "approve",
-            "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-            "stateMutability": "nonpayable",
+            "outputs": [{ "name": "balance", "type": "uint256" }],
             "type": "function"
         }
     ];
@@ -79,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await provider.send("eth_requestAccounts", []);
             } else {
                 walletConnectProvider = new WalletConnectProvider.default({
-                    rpc: { 88: "https://rpc.viction.xyz" },
+                    rpc: { 88: RPC_URL },
                     chainId: 88,
                     qrcode: false
                 });
@@ -92,10 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
             walletAddress = await signer.getAddress();
 
             vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
 
             walletAddressDisplay.textContent = walletAddress;
-            updateBalances();
+            await updateBalances();
             showSwapInterface();
         } catch (error) {
             console.error("Kết nối ví thất bại:", error);
@@ -158,7 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Nút kết nối ví
-    connectWalletButton.addEventListener('click', connectWallet);
+    connectWalletButton.addEventListener('click', async () => {
+        connectWalletButton.textContent = "Connecting...";
+        connectWalletButton.disabled = true;
+
+        await connectWallet();
+
+        connectWalletButton.textContent = "Connect Wallet";
+        connectWalletButton.disabled = false;
+    });
 
     // Nút ngắt kết nối
     disconnectWalletButton.addEventListener('click', () => {
@@ -169,10 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         walletAddressDisplay.textContent = '';
         alert('Ngắt kết nối ví thành công.');
+        showConnectInterface();
     });
 
-    // Giao diện ban đầu
+    // Hiển thị giao diện Swap sau khi kết nối ví
     function showSwapInterface() {
         document.getElementById('swap-interface').style.display = 'block';
+        document.getElementById('connect-interface').style.display = 'none';
+    }
+
+    // Hiển thị giao diện kết nối ban đầu
+    function showConnectInterface() {
+        document.getElementById('swap-interface').style.display = 'none';
+        document.getElementById('connect-interface').style.display = 'block';
     }
 });
