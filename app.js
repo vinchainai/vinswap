@@ -104,3 +104,140 @@ async function updateBalances() {
 
 // 🖱️ Khi bấm "Connect Wallet"
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+
+// 🔢 Hằng số Swap
+const RATE = 100; // 1 VIN = 100 VIC
+const FEE = 0.01; // Phí giao dịch 0.01 VIC
+const MIN_SWAP_AMOUNT_VIC = 0.011; // Tối thiểu 0.011 VIC
+const MIN_SWAP_AMOUNT_VIN = 0.00011; // Tối thiểu 0.00011 VIN
+
+// 🔄 Tính toán số lượng nhận được khi nhập vào
+function calculateToAmount() {
+    const fromAmount = parseFloat(fromAmountInput.value);
+    if (isNaN(fromAmount) || fromAmount <= 0) {
+        toAmountInput.value = '';
+        return;
+    }
+
+    let netFromAmount;
+    let toAmount;
+
+    if (fromToken === 'VIC') {
+        if (fromAmount < MIN_SWAP_AMOUNT_VIC) {
+            alert(`⚠️ Minimum swap amount is ${MIN_SWAP_AMOUNT_VIC} VIC.`);
+            return;
+        }
+        netFromAmount = fromAmount - FEE;
+        toAmount = netFromAmount > 0 ? (netFromAmount / RATE).toFixed(4) : '0.0000';
+    } else {
+        if (fromAmount < MIN_SWAP_AMOUNT_VIN) {
+            alert(`⚠️ Minimum swap amount is ${MIN_SWAP_AMOUNT_VIN} VIN.`);
+            return;
+        }
+        netFromAmount = fromAmount * RATE;
+        toAmount = netFromAmount > FEE ? (netFromAmount - FEE).toFixed(4) : '0.0000';
+    }
+
+    toAmountInput.value = toAmount;
+    transactionFeeDisplay.textContent = `Transaction Fee: ${FEE} VIC`;
+}
+
+// ⌨️ Khi nhập số lượng, tự động tính toán
+fromAmountInput.addEventListener('input', calculateToAmount);
+
+// 🔄 Thực hiện Swap
+swapNowButton.addEventListener('click', async () => {
+    try {
+        const fromAmount = parseFloat(fromAmountInput.value);
+        if (isNaN(fromAmount) || fromAmount <= 0) {
+            alert('⚠️ Please enter a valid amount to swap.');
+            return;
+        }
+
+        if (fromToken === 'VIC') {
+            const fromAmountInWei = ethers.utils.parseEther(fromAmount.toString());
+
+            // 🚀 Gửi giao dịch Swap VIC → VIN
+            const tx = await vinSwapContract.connect(signer).swapVicToVin({
+                value: fromAmountInWei
+            });
+            await tx.wait();
+            alert('✅ Swap VIC to VIN successful.');
+        } else {
+            const fromAmountInWei = ethers.utils.parseUnits(fromAmount.toString(), 18);
+
+            // ✅ Phê duyệt hợp đồng Swap
+            const approveTx = await vinTokenContract.connect(signer).approve(vinSwapAddress, fromAmountInWei);
+            await approveTx.wait();
+
+            // 🚀 Gửi giao dịch Swap VIN → VIC
+            const tx = await vinSwapContract.connect(signer).swapVinToVic(fromAmountInWei);
+            await tx.wait();
+            alert('✅ Swap VIN to VIC successful.');
+        }
+
+        // 🔄 Cập nhật lại số dư sau khi swap
+        await updateBalances();
+    } catch (error) {
+        console.error("❌ Swap failed:", error);
+        alert(`⚠️ Swap failed: ${error.reason || error.message}`);
+    }
+});
+// 🔘 Nút Max: Chọn tối đa số dư hiện có
+maxButton.addEventListener('click', async () => {
+    const connected = await ensureWalletConnected();
+    if (!connected) return;
+
+    fromAmountInput.value = balances[fromToken];
+    calculateToAmount();
+});
+// 🔄 Hoán đổi Token VIC ⇄ VIN
+swapDirectionButton.addEventListener('click', () => {
+    [fromToken, toToken] = [toToken, fromToken];
+    [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
+
+    updateTokenDisplay();
+    clearInputs();
+});
+
+// 🗑️ Xóa dữ liệu nhập khi đổi chiều
+function clearInputs() {
+    fromAmountInput.value = '';
+    toAmountInput.value = '';
+}
+// 🔌 Ngắt kết nối ví
+disconnectWalletButton.addEventListener('click', async () => {
+    try {
+        if (walletConnectProvider) {
+            await walletConnectProvider.disconnect();
+            walletConnectProvider = null;
+        }
+
+        // 🔄 Reset lại toàn bộ dữ liệu liên quan đến ví
+        walletAddress = null;
+        balances = { VIC: 0, VIN: 0 };
+        vinSwapContract = null;
+        vinTokenContract = null;
+
+        // 🗑️ Xóa thông tin UI
+        walletAddressDisplay.textContent = '';
+        clearInputs();
+        showConnectInterface();
+
+        alert('✅ Wallet disconnected successfully.');
+    } catch (error) {
+        console.error('❌ Error disconnecting wallet:', error);
+        alert('⚠️ Failed to disconnect wallet. Please try again.');
+    }
+});
+
+// 🎭 Chuyển đổi giữa giao diện "Connect Wallet" và "Swap"
+function showSwapInterface() {
+    document.getElementById('swap-interface').style.display = 'block';
+    document.getElementById('connect-interface').style.display = 'none';
+}
+
+function showConnectInterface() {
+    document.getElementById('swap-interface').style.display = 'none';
+    document.getElementById('connect-interface').style.display = 'block';
+}
