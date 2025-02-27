@@ -98,3 +98,36 @@ maxButton.addEventListener("click", () => {
         alert("Số dư không hợp lệ!");
     }
 });
+
+// 🎯 Hàm tính số token nhận được
+function calculateSwapAmount() {
+    let fromAmount = parseFloat(fromAmountInput.value);
+
+    if (isNaN(fromAmount) || fromAmount <= 0) {
+        toAmountInput.value = "";
+        return;
+    }
+
+    // 🔄 Kiểm tra hướng swap: VIC → VIN hoặc VIN → VIC
+    let receivingAmount;
+    if (fromTokenInfo.textContent.startsWith("VIC")) {
+        // Swap VIC → VIN
+        if (fromAmount <= 0.01) {
+            alert("Số VIC quá ít, không đủ để swap!");
+            return;
+        }
+        receivingAmount = (fromAmount - 0.01) / 100; // Trừ phí 0.01 VIC, tính số VIN nhận
+    } else {
+        // Swap VIN → VIC
+        receivingAmount = fromAmount * 100 - 0.01; // Tính VIC nhận, trừ phí 0.01 VIC
+        if (receivingAmount <= 0) {
+            alert("Số VIN quá ít, không đủ để swap!");
+            return;
+        }
+    }
+
+    toAmountInput.value = receivingAmount.toFixed(4); // Hiển thị kết quả
+}
+
+// 📌 Sự kiện: Khi nhập số lượng từ token, tự động tính toán số nhận được
+fromAmountInput.addEventListener("input", calculateSwapAmount);
