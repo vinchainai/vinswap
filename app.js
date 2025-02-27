@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxButton = document.getElementById('max-button');
     const swapNowButton = document.getElementById('swap-now');
     const transactionFeeDisplay = document.getElementById('transaction-fee');
-    const gasFeeDisplay = document.getElementById('gas-fee');
 
     // Blockchain Config
     const RPC_URL = "https://rpc.viction.xyz";
@@ -56,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let fromToken = 'VIC';
     let toToken = 'VIN';
 
-    // Khởi tạo provider mặc định từ RPC nếu MetaMask chưa kết nối
-    const staticProvider = new ethers.JsonRpcProvider(RPC_URL);
+    // ✅ Sử dụng ethers.providers.JsonRpcProvider để kết nối RPC
+    const staticProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 
-    // Kết nối ví
+    // ✅ Kết nối ví
     async function connectWallet() {
         try {
             if (window.ethereum) {
@@ -73,9 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
             signer = provider.getSigner();
             walletAddress = await signer.getAddress();
 
-            // Kết nối hợp đồng thông minh
+            // ✅ Kết nối hợp đồng thông minh
             vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, staticProvider); // Dùng staticProvider để lấy số dư chính xác
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, staticProvider);
 
             walletAddressDisplay.textContent = walletAddress;
             await updateBalances();
@@ -86,13 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Cập nhật số dư VIC & VIN
+    // ✅ Cập nhật số dư VIC & VIN
     async function updateBalances() {
         try {
-            balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
-            balances.VIN = parseFloat(
-                ethers.utils.formatUnits(await vinTokenContract.balanceOf(walletAddress), 18)
-            );
+            const vicBalanceRaw = await provider.getBalance(walletAddress);
+            balances.VIC = parseFloat(ethers.utils.formatEther(vicBalanceRaw));
+
+            const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
+            balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
 
             updateTokenDisplay();
         } catch (error) {
@@ -105,13 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
         toTokenInfo.textContent = `${toToken}: ${balances[toToken].toFixed(6)}`;
     }
 
-    // Nút Max
+    // ✅ Nút Max
     maxButton.addEventListener('click', () => {
         fromAmountInput.value = balances[fromToken];
         calculateToAmount();
     });
 
-    // Tính toán số lượng token nhận được
+    // ✅ Tính toán số lượng token nhận được
     fromAmountInput.addEventListener('input', calculateToAmount);
     function calculateToAmount() {
         const fromAmount = parseFloat(fromAmountInput.value);
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         transactionFeeDisplay.textContent = `Transaction Fee: ${FEE} VIC`;
     }
 
-    // Nút hoán đổi VIC ↔ VIN
+    // ✅ Nút hoán đổi VIC ↔ VIN
     swapDirectionButton.addEventListener('click', () => {
         [fromToken, toToken] = [toToken, fromToken];
         updateTokenDisplay();
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toAmountInput.value = '';
     }
 
-    // Swap Token
+    // ✅ Swap Token
     swapNowButton.addEventListener('click', async () => {
         try {
             const fromAmount = parseFloat(fromAmountInput.value);
