@@ -53,3 +53,33 @@ disconnectButton.addEventListener("click", () => {
     swapInterface.style.display = "none";
     homeInterface.style.display = "block";
 });
+
+// 🎯 Hàm lấy số dư VIC & VIN từ blockchain
+async function getBalances(address) {
+    try {
+        // 🏦 Lấy số dư VIC (Native Coin)
+        const vicBalanceRaw = await rpcProvider.getBalance(address);
+        const vicBalance = ethers.utils.formatEther(vicBalanceRaw);
+        fromTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
+
+        // 🏦 Lấy số dư VIN (ERC-20 Token)
+        const vinABI = [
+            {
+                "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+                "name": "balanceOf",
+                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        // 🔗 Kết nối hợp đồng VIN Token
+        const vinContract = new ethers.Contract(vinTokenAddress, vinABI, rpcProvider);
+        const vinBalanceRaw = await vinContract.balanceOf(address);
+        const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
+        toTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
+    } catch (error) {
+        console.error("❌ Lỗi khi lấy số dư:", error);
+        alert("Không thể lấy số dư VIC/VIN. Kiểm tra console để biết thêm chi tiết.");
+    }
+}
