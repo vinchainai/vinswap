@@ -19,31 +19,249 @@ document.addEventListener('DOMContentLoaded', () => {
     // Blockchain Config
     let provider, signer;
     let walletConnectProvider = null;
-    const vinSwapAddress = "0x9197BF0813e0727df4555E8cb43a0977F4a3A068";
+    const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
 
-    const RATE = 100; // 1 FROLL = 100 VIC
+    const RATE = 100; // 1 VIN = 100 VIC
     const FEE = 0.01; // 0.01 VIC swap fee
     const GAS_FEE_ESTIMATE = 0.000029; // Estimated gas fee
     const MIN_SWAP_AMOUNT_VIC = 0.011; // Minimum VIC
-    const MIN_SWAP_AMOUNT_FROLL = 0.00011; // Minimum FROLL
+    const MIN_SWAP_AMOUNT_VIN = 0.00011; // Minimum VIN
 
-    const frollSwapABI = [
-        {
-            "inputs": [],
-            "name": "swapVicToFroll",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "inputs": [{ "internalType": "uint256", "name": "frollAmount", "type": "uint256" }],
-            "name": "swapFrollToVic",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }
-    ];
+    const vinSwapABI = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vinToken",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vicAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AddLiquidity",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vicAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SwapVinToVic",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vicAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SwapVicToVin",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vicAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Withdraw",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "FEE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "RATE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "addLiquidity",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vinToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getContractBalances",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "vicBalance",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "vinBalance",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "swapVinToVic",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "swapVicToVin",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "vicAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "vinAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
 
     const frollABI = [
         {
