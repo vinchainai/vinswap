@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let balances = { VIC: 0, VIN: 0 };
     let swapVicToVin = true; // true: swap VIC -> VIN, false: swap VIN -> VIC
 
-    // 🦊 Kết nối ví MetaMask bằng ethers.js
+    // 🦊 Kết nối ví MetaMask bằng ethers.js v5
     async function connectWallet() {
         try {
             if (!window.ethereum) {
