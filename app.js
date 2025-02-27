@@ -42,37 +42,41 @@ async function connectWallet() {
         // 🎉 Hiển thị địa chỉ ví lên giao diện
         document.getElementById("wallet-address").textContent = `Connected: ${walletAddress}`;
 
-        // 🔄 Cập nhật số dư
-        await updateBalances();
+        // 🔄 Lấy số dư VIC & VIN
+async function updateBalances() {
+    try {
+        if (!walletAddress) {
+            throw new Error("❌ Ví chưa kết nối!");
+        }
+
+        console.log(`🔍 Đang lấy số dư cho ví: ${walletAddress}`);
+
+        // 🏦 Lấy số dư VIC (Native Coin)
+        const vicBalanceRaw = await provider.getBalance(walletAddress);
+        balances.VIC = parseFloat(ethers.utils.formatEther(vicBalanceRaw));
+
+        console.log(`✅ Số dư VIC: ${balances.VIC}`);
+
+        // 🏦 Lấy số dư VIN (Token ERC-20)
+        const vinBalanceRaw = await vinTokenContract.connect(signer).balanceOf(walletAddress);
+        balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
+
+        console.log(`✅ Số dư VIN: ${balances.VIN}`);
+
+        // 📌 Hiển thị số dư lên giao diện
+        document.getElementById("from-token-info").textContent = `VIC: ${balances.VIC.toFixed(4)}`;
+        document.getElementById("to-token-info").textContent = `VIN: ${balances.VIN.toFixed(4)}`;
 
         // Ẩn giao diện kết nối, hiển thị giao diện Swap
         document.getElementById('swap-interface').style.display = 'block';
         document.getElementById('connect-interface').style.display = 'none';
 
     } catch (error) {
-        console.error("❌ Kết nối ví thất bại:", error);
-        alert("⚠️ Failed to connect wallet. Please try again!");
-    }
-}
-
-// 🔄 Lấy số dư VIC & VIN
-async function updateBalances() {
-    try {
-        // 🏦 Lấy số dư VIC (Native Coin)
-        balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
-
-        // 🏦 Lấy số dư VIN (Token ERC-20)
-        const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
-        balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
-
-        // 📌 Hiển thị số dư lên giao diện
-        document.getElementById("from-token-info").textContent = `VIC: ${balances.VIC.toFixed(4)}`;
-        document.getElementById("to-token-info").textContent = `VIN: ${balances.VIN.toFixed(4)}`;
-    } catch (error) {
         console.error("❌ Lỗi khi lấy số dư:", error);
-        alert("⚠️ Failed to fetch balances. Please try again!");
+        alert("⚠️ Failed to fetch balances. Please check Console (F12)!");
     }
 }
+
 
 // 🖱️ Khi bấm "Connect Wallet", gọi hàm connectWallet()
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
