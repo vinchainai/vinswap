@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const swapDirectionButton = document.getElementById('swap-direction');
     const maxButton = document.getElementById('max-button');
     const swapNowButton = document.getElementById('swap-now');
+    const transactionFeeDisplay = document.getElementById('transaction-fee');
+    const gasFeeDisplay = document.getElementById('gas-fee');
 
     // 🌐 Blockchain Config
     let provider, signer;
     let walletAddress = null;
+    const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-    const RPC_URL = "https://rpc.viction.xyz";
     const RATE = 100; // 1 VIN = 100 VIC
     const FEE = 0.01; // 0.01 VIC phí giao dịch
 
@@ -44,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 walletAddress = await signer.getAddress();
                 walletAddressDisplay.textContent = walletAddress;
 
-                // 🌍 Kết nối hợp đồng VIN Token
+                // 🎯 Kết nối hợp đồng VIN Token
                 vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
 
                 // 🔄 Cập nhật số dư
                 await updateBalances();
                 showSwapInterface();
             } else {
-                alert("❌ Bạn cần cài đặt MetaMask hoặc ví hỗ trợ Viction!");
+                alert("❌ Bạn cần cài đặt MetaMask!");
             }
         } catch (error) {
             console.error("❌ Lỗi khi kết nối ví:", error);
@@ -68,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("🚀 Đã ngắt kết nối ví!");
     }
 
-    // 🔄 Cập nhật số dư VIC & VIN (ĐÃ FIX)
+    // 🔄 Cập nhật số dư VIC & VIN
     async function updateBalances() {
         try {
             if (!walletAddress) return;
@@ -77,12 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 🏦 Lấy số dư VIC (Native Coin)
             const vicBalanceRaw = await provider.getBalance(walletAddress);
-            const vicBalance = ethers.utils.formatEther(vicBalanceRaw); // 🔥 FIX lỗi lấy số dư VIC
+            const vicBalance = ethers.formatEther(vicBalanceRaw);
             console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
 
             // 🏦 Lấy số dư VIN (Token ERC-20)
             const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
-            const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
+            const vinBalance = ethers.formatUnits(vinBalanceRaw, 18);
             console.log(`✅ Số dư VIN: ${vinBalance} VIN`);
 
             // 🏦 Cập nhật UI
