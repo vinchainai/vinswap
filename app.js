@@ -83,3 +83,50 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 });
+
+// 🎯 Xử lý nút "Max" để nhập toàn bộ số dư vào ô input
+document.getElementById("max-button").addEventListener("click", () => {
+    if (isSwappingVicToVin) {
+        // Nếu đang swap VIC → VIN, nhập hết số dư VIC vào ô input
+        document.getElementById("from-amount").value = parseFloat(vicBalance).toFixed(4);
+    } else {
+        // Nếu đang swap VIN → VIC, nhập hết số dư VIN vào ô input
+        document.getElementById("from-amount").value = parseFloat(vinBalance).toFixed(4);
+    }
+});
+
+// 🔄 Biến kiểm soát trạng thái swap (true = VIC → VIN, false = VIN → VIC)
+let isSwappingVicToVin = true;
+
+// 🎯 Xử lý nút mũi tên để hoán đổi token swap
+document.getElementById("swap-direction").addEventListener("click", () => {
+    isSwappingVicToVin = !isSwappingVicToVin; // Đảo ngược trạng thái swap
+
+    // 🔄 Đổi mã ký hiệu token
+    const fromTokenInfo = document.getElementById("from-token-info");
+    const toTokenInfo = document.getElementById("to-token-info");
+
+    if (isSwappingVicToVin) {
+        fromTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
+        toTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
+    } else {
+        fromTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
+        toTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
+    }
+
+    // 🔄 Đổi logo token
+    const fromTokenLogo = document.getElementById("from-token-logo");
+    const toTokenLogo = document.getElementById("to-token-logo");
+
+    if (isSwappingVicToVin) {
+        fromTokenLogo.src = "vic24.png";
+        toTokenLogo.src = "vin24.png";
+    } else {
+        fromTokenLogo.src = "vin24.png";
+        toTokenLogo.src = "vic24.png";
+    }
+
+    // 🔄 Xóa giá trị input sau khi hoán đổi để tránh sai sót
+    document.getElementById("from-amount").value = "";
+    document.getElementById("to-amount").value = "";
+});
