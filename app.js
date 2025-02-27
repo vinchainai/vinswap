@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let fromToken = 'VIC';
     let toToken = 'VIN';
 
-    // ✅ Khởi tạo provider RPC riêng để đảm bảo lấy số dư chính xác
+    // ✅ Dùng provider RPC riêng để đảm bảo lấy số dư chính xác
     const staticProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 
     // ✅ Kết nối ví
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ✅ Kết nối hợp đồng thông minh
             vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer); // Dùng signer thay vì staticProvider
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, staticProvider); // Dùng staticProvider thay vì signer
 
             walletAddressDisplay.textContent = walletAddress;
             await updateBalances();
@@ -85,20 +85,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ✅ Cập nhật số dư VIC & VIN đúng ví người dùng
+    // ✅ Cập nhật số dư VIC & VIN
     async function updateBalances() {
         try {
+            console.log("🔍 Kiểm tra số dư của ví:", walletAddress);
+
             // 🏦 Lấy số dư VIC (Native Coin)
             const vicBalanceRaw = await provider.getBalance(walletAddress);
             balances.VIC = parseFloat(ethers.utils.formatEther(vicBalanceRaw));
+            console.log(`✅ Số dư VIC: ${balances.VIC}`);
 
-            // 🏦 Lấy số dư VIN từ ví đã kết nối
+            // 🏦 Lấy số dư VIN từ hợp đồng Token (Dùng staticProvider để đảm bảo chính xác)
             const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
             balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
+            console.log(`✅ Số dư VIN: ${balances.VIN}`);
 
             updateTokenDisplay();
         } catch (error) {
-            console.error('Lỗi khi cập nhật số dư:', error);
+            console.error('❌ Lỗi khi cập nhật số dư:', error);
         }
     }
 
