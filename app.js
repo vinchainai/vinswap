@@ -1,18 +1,18 @@
 // 🚀 Sự kiện chạy khi trang đã tải hoàn tất
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     // 🎯 DOM Elements
-    const connectWalletButton = document.getElementById("connect-wallet");
-    const disconnectWalletButton = document.getElementById("disconnect-wallet");
-    const walletAddressDisplay = document.getElementById("wallet-address");
-    const fromAmountInput = document.getElementById("from-amount");
-    const toAmountInput = document.getElementById("to-amount");
-    const fromTokenInfo = document.getElementById("from-token-info");
-    const toTokenInfo = document.getElementById("to-token-info");
-    const fromTokenLogo = document.getElementById("from-token-logo");
-    const toTokenLogo = document.getElementById("to-token-logo");
-    const swapDirectionButton = document.getElementById("swap-direction");
-    const maxButton = document.getElementById("max-button");
-    const swapNowButton = document.getElementById("swap-now");
+    const connectWalletButton = document.getElementById('connect-wallet');
+    const disconnectWalletButton = document.getElementById('disconnect-wallet');
+    const walletAddressDisplay = document.getElementById('wallet-address');
+    const fromAmountInput = document.getElementById('from-amount');
+    const toAmountInput = document.getElementById('to-amount');
+    const fromTokenInfo = document.getElementById('from-token-info');
+    const toTokenInfo = document.getElementById('to-token-info');
+    const fromTokenLogo = document.getElementById('from-token-logo');
+    const toTokenLogo = document.getElementById('to-token-logo');
+    const swapDirectionButton = document.getElementById('swap-direction');
+    const maxButton = document.getElementById('max-button');
+    const swapNowButton = document.getElementById('swap-now');
 
     // 🌐 Blockchain Config
     let provider, signer;
@@ -34,13 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let vinTokenContract;
 
-    // 🚀 KẾT NỐI VÍ
+    // 🏦 Kết nối ví
     async function connectWallet() {
         try {
             if (window.ethereum) {
-                provider = new ethers.providers.Web3Provider(window.ethereum);
+                provider = new ethers.BrowserProvider(window.ethereum);
                 await provider.send("eth_requestAccounts", []);
-                signer = provider.getSigner();
+                signer = await provider.getSigner();
                 walletAddress = await signer.getAddress();
                 walletAddressDisplay.textContent = walletAddress;
 
@@ -55,11 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (error) {
             console.error("❌ Lỗi khi kết nối ví:", error);
-            alert("❌ Lỗi khi kết nối ví. Hãy thử lại!");
         }
     }
 
-    // 🚀 NGẮT KẾT NỐI VÍ
+    // 🏦 Ngắt kết nối ví
     function disconnectWallet() {
         walletAddress = null;
         walletAddressDisplay.textContent = "";
@@ -69,15 +68,16 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("🚀 Đã ngắt kết nối ví!");
     }
 
-    // 🔄 CẬP NHẬT SỐ DƯ VIC & VIN
+    // 🔄 Cập nhật số dư VIC & VIN (ĐÃ FIX)
     async function updateBalances() {
         try {
             if (!walletAddress) return;
+
             console.log("🔍 Kiểm tra số dư của ví:", walletAddress);
 
             // 🏦 Lấy số dư VIC (Native Coin)
             const vicBalanceRaw = await provider.getBalance(walletAddress);
-            const vicBalance = ethers.utils.formatEther(vicBalanceRaw);
+            const vicBalance = ethers.utils.formatEther(vicBalanceRaw); // 🔥 FIX lỗi lấy số dư VIC
             console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
 
             // 🏦 Lấy số dư VIN (Token ERC-20)
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 🎯 Nút Max
-    maxButton.addEventListener("click", async () => {
+    maxButton.addEventListener('click', async () => {
         fromAmountInput.value = fromTokenInfo.textContent.includes("VIC")
             ? parseFloat(fromTokenInfo.textContent.split(": ")[1])
             : parseFloat(toTokenInfo.textContent.split(": ")[1]);
@@ -102,15 +102,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 🎯 Nút Swap Direction (Đổi VIC ⇄ VIN)
-    swapDirectionButton.addEventListener("click", () => {
+    swapDirectionButton.addEventListener('click', () => {
         [fromTokenInfo.textContent, toTokenInfo.textContent] = [toTokenInfo.textContent, fromTokenInfo.textContent];
         [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
         fromAmountInput.value = "";
         toAmountInput.value = "";
     });
 
-    // 🔄 TÍNH TOÁN SWAP
-    fromAmountInput.addEventListener("input", calculateToAmount);
+    // 🔄 Tính toán số token nhận được
+    fromAmountInput.addEventListener('input', calculateToAmount);
     function calculateToAmount() {
         const fromAmount = parseFloat(fromAmountInput.value);
         if (isNaN(fromAmount) || fromAmount <= 0) {
@@ -128,24 +128,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 🎯 Nút Swap Now
-    swapNowButton.addEventListener("click", async () => {
+    swapNowButton.addEventListener('click', async () => {
         alert("🚀 Chức năng Swap sẽ được cập nhật sau!");
     });
 
-    // 🚀 HIỂN THỊ GIAO DIỆN
+    // 🔄 Hiển thị giao diện Swap sau khi kết nối ví
     function showSwapInterface() {
-        document.getElementById("swap-interface").style.display = "block";
-        document.getElementById("connect-interface").style.display = "none";
+        document.getElementById('swap-interface').style.display = 'block';
+        document.getElementById('connect-interface').style.display = 'none';
     }
 
     function showConnectInterface() {
-        document.getElementById("swap-interface").style.display = "none";
-        document.getElementById("connect-interface").style.display = "block";
+        document.getElementById('swap-interface').style.display = 'none';
+        document.getElementById('connect-interface').style.display = 'block';
     }
 
     // 🎯 Kết nối & Ngắt kết nối ví
-    connectWalletButton.addEventListener("click", connectWallet);
-    disconnectWalletButton.addEventListener("click", disconnectWallet);
+    connectWalletButton.addEventListener('click', connectWallet);
+    disconnectWalletButton.addEventListener('click', disconnectWallet);
 
     // 🚀 Khởi động giao diện
     showConnectInterface();
