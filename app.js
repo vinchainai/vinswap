@@ -1,4 +1,4 @@
-// 🚀 VinSwap - Kết nối ví & Hiển thị số dư
+// 🚀 VinSwap - Kết nối ví & Hiển thị số dư (Sửa lỗi cho ethers v5)
 
 document.addEventListener('DOMContentLoaded', () => {
     const connectWalletButton = document.getElementById('connect-wallet');
@@ -9,18 +9,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let provider, signer, userAddress;
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+
     const vinABI = [
-        { "constant": true, "inputs": [{ "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "type": "function" }
+        {
+            "constant": true,
+            "inputs": [{ "name": "owner", "type": "address" }],
+            "name": "balanceOf",
+            "outputs": [{ "name": "balance", "type": "uint256" }],
+            "type": "function"
+        }
     ];
 
     async function connectWallet() {
         if (!window.ethereum) {
-            alert("Please install MetaMask!");
+            alert("🚨 Vui lòng cài đặt MetaMask để sử dụng VinSwap!");
             return;
         }
 
         try {
-            provider = new ethers.providers.Web3Provider(window.ethereum);
+            provider = new ethers.providers.Web3Provider(window.ethereum); // ✅ Dùng đúng ethers v5
             await provider.send("eth_requestAccounts", []);
             signer = provider.getSigner();
             userAddress = await signer.getAddress();
@@ -31,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateBalances();
         } catch (error) {
-            console.error("Wallet connection failed:", error);
-            alert("Failed to connect wallet.");
+            console.error("❌ Lỗi khi kết nối ví:", error);
+            alert("🚨 Không thể kết nối ví, vui lòng thử lại.");
         }
     }
 
@@ -50,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fromTokenInfo.textContent = `VIC: ${formattedVicBalance}`;
             toTokenInfo.textContent = `VIN: ${formattedVinBalance}`;
         } catch (error) {
-            console.error("Error fetching balances:", error);
+            console.error("❌ Lỗi khi lấy số dư:", error);
         }
     }
 
