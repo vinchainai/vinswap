@@ -10,7 +10,7 @@ const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
 let walletAddress = null;
 let balances = { VIC: 0, VIN: 0 };
 
-// 📌 ABI của VIN Swap & VIN Token để lấy số dư
+// 📌 ABI của VIN Swap & VIN Token
 const vinSwapABI = [
     { "inputs": [], "name": "swapVicToVin", "outputs": [], "stateMutability": "payable", "type": "function" },
     { "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }], "name": "swapVinToVic", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
@@ -76,3 +76,28 @@ async function updateBalances() {
 
 // 🖱️ Khi bấm "Connect Wallet", gọi hàm connectWallet()
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+
+// 🔌 Ngắt kết nối ví
+async function disconnectWallet() {
+    try {
+        walletAddress = null;
+        balances = { VIC: 0, VIN: 0 };
+
+        // Cập nhật giao diện
+        document.getElementById("wallet-address").textContent = '';
+        document.getElementById("from-token-info").textContent = "VIC: 0.0000";
+        document.getElementById("to-token-info").textContent = "VIN: 0.0000";
+
+        // Hiển thị lại giao diện kết nối
+        document.getElementById('swap-interface').style.display = 'none';
+        document.getElementById('connect-interface').style.display = 'block';
+
+        alert("✅ Wallet disconnected successfully.");
+    } catch (error) {
+        console.error("❌ Error disconnecting wallet:", error);
+        alert("⚠️ Failed to disconnect wallet. Please try again.");
+    }
+}
+
+// 🖱️ Khi bấm "Disconnect Wallet", gọi hàm disconnectWallet()
+document.getElementById("disconnect-wallet").addEventListener("click", disconnectWallet);
