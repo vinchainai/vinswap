@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toAmountInput = document.getElementById('to-amount');
     const fromTokenInfo = document.getElementById('from-token-info');
     const toTokenInfo = document.getElementById('to-token-info');
-    const fromTokenLogo = document.getElementById('from-token-logo');
-    const toTokenLogo = document.getElementById('to-token-logo');
     const swapDirectionButton = document.getElementById('swap-direction');
     const maxButton = document.getElementById('max-button');
     const swapNowButton = document.getElementById('swap-now');
@@ -17,11 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const gasFeeDisplay = document.getElementById('gas-fee');
 
     // Blockchain Config
-    let provider, signer;
-    let walletAddress = null;
+    const RPC_URL = "https://rpc.viction.xyz";
     const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-    const RPC_URL = "https://rpc.viction.xyz";
 
     const RATE = 100; // 1 VIN = 100 VIC
     const FEE = 0.01; // 0.01 VIC swap fee
@@ -50,23 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
             "name": "balanceOf",
             "outputs": [{ "name": "balance", "type": "uint256" }],
             "type": "function"
-        },
-        {
-            "inputs": [
-                { "internalType": "address", "name": "spender", "type": "address" },
-                { "internalType": "uint256", "name": "amount", "type": "uint256" }
-            ],
-            "name": "approve",
-            "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-            "stateMutability": "nonpayable",
-            "type": "function"
         }
     ];
 
+    let provider, signer;
     let vinSwapContract, vinTokenContract;
+    let walletAddress = null;
     let balances = { VIC: 0, VIN: 0 };
     let fromToken = 'VIC';
     let toToken = 'VIN';
+
+    // Khởi tạo provider mặc định từ RPC nếu MetaMask chưa kết nối
+    const staticProvider = new ethers.JsonRpcProvider(RPC_URL);
 
     // Kết nối ví
     async function connectWallet() {
@@ -82,8 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
             signer = provider.getSigner();
             walletAddress = await signer.getAddress();
 
+            // Kết nối hợp đồng thông minh
             vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, staticProvider); // Dùng staticProvider để lấy số dư chính xác
 
             walletAddressDisplay.textContent = walletAddress;
             await updateBalances();
@@ -94,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Cập nhật số dư
+    // Cập nhật số dư VIC & VIN
     async function updateBalances() {
         try {
             balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
@@ -145,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nút hoán đổi VIC ↔ VIN
     swapDirectionButton.addEventListener('click', () => {
         [fromToken, toToken] = [toToken, fromToken];
-        [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
         updateTokenDisplay();
         clearInputs();
     });
