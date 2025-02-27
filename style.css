@@ -27,6 +27,7 @@ body {
     padding: 12px 20px;
     background-color: #0056b3; /* Xanh đậm */
     color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .navbar .logo {
@@ -38,6 +39,7 @@ body {
     font-size: 16px;
     font-weight: bold;
     color: white;
+    animation: fadeIn 1s ease-in-out;
 }
 
 /* 🔥 Keyframes cho hiệu ứng fade-in */
@@ -123,10 +125,10 @@ p {
 
 /* 🔹 Định dạng Logo Token VIC & VIN */
 .token-input img {
-    height: 32px; /* Tăng kích thước */
+    height: 32px;
     width: 32px;
-    border-radius: 50%; /* Bo tròn cho đẹp */
-    background: white; /* Viền sáng */
+    border-radius: 50%;
+    background: white;
     padding: 2px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -138,6 +140,7 @@ p {
     background: none;
     font-size: 16px;
     color: #333;
+    text-align: right;
 }
 
 .token-input input:focus {
