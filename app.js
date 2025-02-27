@@ -103,30 +103,29 @@ maxButton.addEventListener("click", () => {
 // 🎯 Xử lý nút "Mũi tên" (đảo chiều swap giữa VIC ↔ VIN)
 const swapDirectionButton = document.getElementById("swap-direction");
 
-swapDirectionButton.addEventListener("click", async () => {
-    // 🌐 Lấy thông tin hiện tại
-    const fromTokenText = fromTokenInfo.textContent.split(":")[0].trim();
-    const toTokenText = toTokenInfo.textContent.split(":")[0].trim();
+// Biến lưu trữ trạng thái token hiện tại
+let fromToken = "VIC";
+let toToken = "VIN";
 
-    // 🔄 Đổi nội dung hiển thị (VIC ↔ VIN)
-    fromTokenInfo.textContent = `${toTokenText}: 0.0000`;
-    toTokenInfo.textContent = `${fromTokenText}: 0.0000`;
+// 🛠 Xử lý khi người dùng nhấn nút "Mũi tên"
+swapDirectionButton.addEventListener("click", async () => {
+    // 🔄 Đảo trạng thái VIC ↔ VIN
+    [fromToken, toToken] = [toToken, fromToken];
+
+    // 🏷️ Cập nhật thông tin hiển thị trên giao diện
+    fromTokenInfo.textContent = `${fromToken}: 0.0000`;
+    toTokenInfo.textContent = `${toToken}: 0.0000`;
 
     // 🔄 Đổi biểu tượng token
     const fromLogo = document.getElementById("from-token-logo").src;
     document.getElementById("from-token-logo").src = document.getElementById("to-token-logo").src;
     document.getElementById("to-token-logo").src = fromLogo;
 
-    // 🔄 Xóa giá trị nhập & đặt lại số dư đúng theo token
+    // 🧹 Xóa giá trị nhập & đặt lại số dư đúng theo token
     fromAmountInput.value = "";
     toAmountInput.value = "";
 
-    // ✅ Đảo vị trí số dư trong bộ nhớ để đảm bảo số dư thay đổi theo logic
-    const tempBalance = fromTokenInfo.dataset.balance;
-    fromTokenInfo.dataset.balance = toTokenInfo.dataset.balance;
-    toTokenInfo.dataset.balance = tempBalance;
-
-    // ⏳ Chờ 500ms rồi cập nhật lại số dư VIC & VIN theo đúng chiều mới
+    // 🕒 Chờ 500ms rồi cập nhật lại số dư VIC & VIN theo đúng chiều mới
     setTimeout(async () => {
         await getBalances(userAddress);
     }, 500);
