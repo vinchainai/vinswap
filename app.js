@@ -1,4 +1,4 @@
-// 🚀 VinSwap - Kết nối ví & Hiển thị số dư (Fix lỗi CALL_EXCEPTION)
+// 🚀 VinSwap - Kết nối ví & Hiển thị số dư (Sửa lỗi CALL_EXCEPTION)
 
 document.addEventListener('DOMContentLoaded', () => {
     const connectWalletButton = document.getElementById('connect-wallet');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let provider, signer, userAddress;
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
 
-    // ✅ Cập nhật ABI đầy đủ để ethers v5 nhận diện đúng
+    // ✅ Dùng ABI đầy đủ nhất từ VicScan nếu có
     const vinABI = [
         {
             "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
@@ -28,11 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            provider = new ethers.providers.Web3Provider(window.ethereum); // ✅ Dùng ethers v5
+            provider = new ethers.providers.Web3Provider(window.ethereum);
             await provider.send("eth_requestAccounts", []);
             signer = provider.getSigner();
             userAddress = await signer.getAddress();
 
+            console.log("✅ Ví đã kết nối:", userAddress);
             walletAddressDisplay.textContent = `Connected: ${userAddress.substring(0, 6)}...${userAddress.slice(-4)}`;
             document.getElementById("connect-interface").style.display = "none";
             document.getElementById("swap-interface").style.display = "block";
@@ -48,22 +49,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!userAddress) return;
 
         try {
-            // ✅ Lấy số dư VIC (Native Coin)
+            console.log("🔍 Đang kiểm tra số dư cho địa chỉ:", userAddress);
+
+            // ✅ Lấy số dư VIC
             const vicBalance = await provider.getBalance(userAddress);
             const formattedVicBalance = ethers.utils.formatEther(vicBalance);
+            console.log(`✅ Số dư VIC: ${formattedVicBalance}`);
 
-            // ✅ Lấy số dư VIN (Token ERC-20)
+            // ✅ Lấy số dư VIN
             const vinContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
             const vinBalance = await vinContract.balanceOf(userAddress);
             const formattedVinBalance = ethers.utils.formatUnits(vinBalance, 18);
+            console.log(`✅ Số dư VIN: ${formattedVinBalance}`);
 
             // ✅ Cập nhật UI
             fromTokenInfo.textContent = `VIC: ${formattedVicBalance}`;
             toTokenInfo.textContent = `VIN: ${formattedVinBalance}`;
-            console.log(`✅ Số dư VIC: ${formattedVicBalance}, VIN: ${formattedVinBalance}`);
         } catch (error) {
-            console.error("❌ Lỗi khi lấy số dư:", error);
-            alert("🚨 Không thể lấy số dư, vui lòng kiểm tra lại mạng.");
+            console.error("❌ Lỗi khi lấy số dư VIN:", error);
+            alert("🚨 Không thể lấy số dư, vui lòng kiểm tra lại mạng hoặc thử lại sau.");
         }
     }
 
