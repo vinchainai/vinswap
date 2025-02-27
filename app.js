@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Blockchain Config
     let provider, signer;
     let walletConnectProvider = null;
-    const frollSwapAddress = "0x9197BF0813e0727df4555E8cb43a0977F4a3A068";
-    const frollTokenAddress = "0xB4d562A8f811CE7F134a1982992Bd153902290BC";
+    const vinSwapAddress = "0x9197BF0813e0727df4555E8cb43a0977F4a3A068";
+    const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
 
     const RATE = 100; // 1 FROLL = 100 VIC
     const FEE = 0.01; // 0.01 VIC swap fee
