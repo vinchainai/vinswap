@@ -30,15 +30,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         { "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }], "name": "swapVinToVic", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
     ];
 
-    // 🔗 ABI của token VIN
+    // 🔗 ABI của token VIN (ERC-20 chuẩn)
     const vinTokenABI = [
-        { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" },
+        { "constant": true, "inputs": [{ "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "type": "function" },
         { "inputs": [{ "internalType": "address", "name": "spender", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "approve", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "nonpayable", "type": "function" }
     ];
 
     let vinSwapContract, vinTokenContract;
     let walletAddress = null;
-    let balances = { VIC: 0, VIN: 0 };
     let swapVicToVin = true; // true: swap VIC -> VIN, false: swap VIN -> VIC
 
     // 🦊 Kết nối ví MetaMask bằng ethers.js v5
@@ -55,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Kết nối hợp đồng
             vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinTokenABI, signer);
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinTokenABI, provider);
 
             // Cập nhật giao diện
             walletAddressDisplay.textContent = `Wallet: ${walletAddress}`;
@@ -73,20 +72,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 🔄 Cập nhật số dư VIC & VIN
     async function updateBalances() {
         try {
+            if (!walletAddress) return;
+
+            // 🏦 Lấy số dư VIC
             const balanceVic = await provider.getBalance(walletAddress);
+
+            // 🏦 Lấy số dư VIN (cố định chuẩn ERC-20)
             const balanceVin = await vinTokenContract.balanceOf(walletAddress);
 
-            balances.VIC = parseFloat(ethers.utils.formatEther(balanceVic));
-            balances.VIN = parseFloat(ethers.utils.formatUnits(balanceVin, 18));
+            const vicBalance = parseFloat(ethers.utils.formatEther(balanceVic));
+            const vinBalance = parseFloat(ethers.utils.formatUnits(balanceVin, 18));
 
-            fromTokenInfo.textContent = swapVicToVin ? `VIC: ${balances.VIC.toFixed(4)}` : `VIN: ${balances.VIN.toFixed(4)}`;
+            // 📝 Cập nhật giao diện
+            fromTokenInfo.textContent = swapVicToVin ? `VIC: ${vicBalance.toFixed(4)}` : `VIN: ${vinBalance.toFixed(4)}`;
             toTokenInfo.textContent = swapVicToVin ? `VIN: 0.0000` : `VIC: 0.0000`;
         } catch (error) {
             console.error("Error updating balances:", error);
         }
     }
 
-    // 🔄 Xử lý đổi hướng swap
+    // 🔄 Xử lý đổi hướng swap (VIC ↔ VIN)
     swapDirectionButton.addEventListener("click", () => {
         swapVicToVin = !swapVicToVin;
         [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
@@ -94,8 +99,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // 🔄 Xử lý nút Max
-    maxButton.addEventListener("click", () => {
-        fromAmountInput.value = swapVicToVin ? balances.VIC.toFixed(4) : balances.VIN.toFixed(4);
+    maxButton.addEventListener("click", async () => {
+        await updateBalances();
+        fromAmountInput.value = swapVicToVin ? parseFloat(fromTokenInfo.textContent.split(": ")[1]).toFixed(4) : parseFloat(toTokenInfo.textContent.split(": ")[1]).toFixed(4);
         calculateSwapAmount();
     });
 
@@ -108,11 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        const fee = FEE;
-        const toAmount = swapVicToVin
-            ? (fromAmount / RATE) - fee
-            : (fromAmount * RATE) - fee;
-
+        const toAmount = swapVicToVin ? (fromAmount / RATE) - FEE : (fromAmount * RATE) - FEE;
         toAmountInput.value = toAmount.toFixed(4);
     }
 
@@ -126,12 +128,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             if (swapVicToVin) {
-                // Swap VIC -> VIN
                 const tx = await vinSwapContract.swapVicToVin({ value: ethers.utils.parseEther(fromAmount.toString()) });
                 alert("Transaction submitted! Please wait...");
                 await tx.wait();
             } else {
-                // Swap VIN -> VIC
                 const amountToSwap = ethers.utils.parseUnits(fromAmount.toString(), 18);
                 await vinTokenContract.approve(vinSwapAddress, amountToSwap);
                 const tx = await vinSwapContract.swapVinToVic(amountToSwap);
