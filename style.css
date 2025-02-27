@@ -154,4 +154,43 @@ p {
 .token-input input:focus {
     outline: none;
 }
+/* 🔘 Điều chỉnh nút Max */
+.token-input .button {
+    margin-left: -5px; /* Điều chỉnh vị trí của nút Max */
+}
+
+/* 🔄 Nút đổi hướng Swap */
+.swap-direction {
+    font-size: 24px;
+    color: #007bff; /* Màu xanh chủ đạo */
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* 🌀 Hiệu ứng xoay khi di chuột vào nút Swap */
+.swap-direction:hover {
+    transform: rotate(180deg);
+}
+
+/* ℹ️ Chi tiết giao dịch Swap */
+.swap-details {
+    text-align: left;
+    font-size: 14px;
+    color: #555; /* Màu xám đậm */
+    margin-top: 20px;
+}
+
+/* 📱 Thiết kế responsive (Tối ưu cho di động) */
+@media (max-width: 768px) {
+    .swap-container {
+        flex-direction: column;
+        gap: 10px; /* Giảm khoảng cách trên giao diện mobile */
+    }
+
+    .token-input {
+        width: 100%;
+    }
+}
 
