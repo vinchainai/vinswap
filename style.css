@@ -5,15 +5,18 @@ html {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    height: 100%;
 }
 
-/* 🎨 Thiết lập nền chung */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f7fc; /* Nền xanh nhạt */
     color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* ✅ Đảm bảo footer luôn ở dưới cùng */
 }
 
 /* 📌 Thanh điều hướng trên cùng */
@@ -146,7 +149,7 @@ p {
     margin-left: -5px;
 }
 
-/* 🔁 Nút hoán đổi VIC ⇄ VIN */
+/* 🔄 Nút hoán đổi VIC ⇄ VIN */
 .swap-direction {
     font-size: 24px;
     color: #0056b3;
@@ -184,6 +187,12 @@ p {
     background: #0056b3;
     color: white;
     font-size: 14px;
+    font-weight: bold;
+    margin-top: auto; /* ✅ Đẩy footer xuống dưới cùng */
+}
+
+.footer p {
+    font-weight: bold; /* ✅ Chữ "Follow us" đậm */
 }
 
 .footer a {
