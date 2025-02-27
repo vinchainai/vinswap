@@ -1,4 +1,4 @@
-// 📌 Import thư viện ethers
+// 📌 Khi trang web tải xong, thêm sự kiện vào các nút
 document.addEventListener('DOMContentLoaded', async () => {
     // 🌍 Các phần tử DOM
     const connectWalletButton = document.getElementById('connect-wallet');
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     ];
 
-    // 🦊 Kết nối ví MetaMask bằng ethers.js
+    // 🦊 Kết nối ví MetaMask bằng Web3Provider
     async function connectWallet() {
         try {
             if (!window.ethereum) {
@@ -56,12 +56,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             if (!walletAddress) return;
 
-            // 🏦 Lấy số dư VIC đúng như đã test trên máy chủ
+            // 🏦 Lấy số dư VIC bằng Web3Provider (Đúng trên trình duyệt)
             const balanceVic = await provider.getBalance(walletAddress);
             const formattedVic = ethers.utils.formatEther(balanceVic);
 
-            // 🏦 Lấy số dư VIN theo chuẩn ERC-20
-            const balanceVin = await vinTokenContract.balanceOf(walletAddress);
+            // 🏦 Lấy số dư VIN bằng signer thay vì provider
+            const vinTokenContractWithSigner = new ethers.Contract(vinTokenAddress, vinTokenABI, signer);
+            const balanceVin = await vinTokenContractWithSigner.balanceOf(walletAddress);
             const formattedVin = ethers.utils.formatUnits(balanceVin, 18);
 
             // 📝 Hiển thị số dư trên giao diện
