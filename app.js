@@ -12,32 +12,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const swapDirectionButton = document.getElementById('swap-direction');
     const maxButton = document.getElementById('max-button');
     const swapNowButton = document.getElementById('swap-now');
+    const transactionFeeDisplay = document.getElementById('transaction-fee');
     const gasFeeDisplay = document.getElementById('gas-fee');
-    const vinToUsdDisplay = document.getElementById('vin-to-usd');
 
     // Blockchain Config
     let provider, signer;
-    const vinSwapAddress = "0xC23a850B5a09ca99d94f80DA08586f2d85320e94";
-    const vinTokenAddress = "0xeD9b4820cF465cc32a842434d6AeC74E950976c7";
-    const RATE = 0.039; // 1 VIN = 0.039 BNB
+    const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
+    const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+
+    const RATE = 100; // 1 VIN = 100 VIC
+    const FEE = 0.01; // 0.01 VIC swap fee
+    const GAS_FEE_ESTIMATE = 0.000029; // Estimated gas fee
+    const MIN_SWAP_AMOUNT_VIC = 0.011; // Minimum VIC
+    const MIN_SWAP_AMOUNT_VIN = 0.00011; // Minimum VIN
+
     const vinSwapABI = [
         {
-            "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }],
-            "name": "swapVINForBNB",
+            "inputs": [],
+            "name": "swapVicToVin",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "payable",
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "swapBNBForVIN",
+            "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }],
+            "name": "swapVinToVic",
             "outputs": [],
-            "stateMutability": "payable",
+            "stateMutability": "nonpayable",
             "type": "function"
         }
     ];
 
-    const vinTokenABI = [
+    const vinABI = [
         {
             "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
             "name": "balanceOf",
@@ -59,9 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let vinSwapContract, vinTokenContract;
     let walletAddress = null;
-    let balances = { VIN: 0, BNB: 0 };
-    let fromToken = 'VIN';
-    let toToken = 'BNB';
+    let balances = { VIC: 0, VIN: 0 };
+    let fromToken = 'VIC';
+    let toToken = 'VIN';
+
     // Ensure Wallet Connected
     async function ensureWalletConnected() {
         try {
@@ -84,36 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch BNB/USD price from BSC API
-    async function fetchBnbToUsdPrice() {
-        try {
-            const response = await fetch(
-                `https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=BIEGUCY7A9NPF2M2KPYZRMRFABVCVJ9D3V`
-            );
-            const data = await response.json();
-            return parseFloat(data.result.ethusd); // Giá BNB/USD từ API
-        } catch (error) {
-            console.error("Failed to fetch BNB price:", error);
-            return null;
-        }
-    }
-
-    // Calculate VIN/USD price
-    async function calculateVinPrice() {
-        try {
-            const bnbToUsd = await fetchBnbToUsdPrice();
-            if (!bnbToUsd) return;
-
-            const vinToUsd = (RATE * bnbToUsd).toFixed(2); // Tính giá VIN/USD
-            vinToUsdDisplay.textContent = vinToUsd; // Cập nhật giá trên giao diện
-        } catch (error) {
-            console.error("Failed to calculate VIN price:", error);
-        }
-    }
     // Fetch Balances
     async function updateBalances() {
         try {
-            balances.BNB = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
+            balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
             balances.VIN = parseFloat(
                 ethers.utils.formatUnits(
                     await vinTokenContract.balanceOf(walletAddress),
@@ -127,10 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update Token Display
     function updateTokenDisplay() {
-        fromTokenInfo.textContent = `${fromToken}: ${balances[fromToken].toFixed(4)}`;
-        toTokenInfo.textContent = `${toToken}: ${balances[toToken].toFixed(4)}`;
+        fromTokenInfo.textContent = `${fromToken}: ${balances[fromToken].toFixed(18)}`;
+        toTokenInfo.textContent = `${toToken}: ${balances[toToken].toFixed(18)}`;
     }
 
     // Max Button
@@ -151,16 +131,30 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        let netFromAmount;
         let toAmount;
-        if (fromToken === 'VIN') {
-            toAmount = (fromAmount * RATE).toFixed(4);
+
+        if (fromToken === 'VIC') {
+            if (fromAmount < MIN_SWAP_AMOUNT_VIC) {
+                alert(`Minimum swap amount is ${MIN_SWAP_AMOUNT_VIC} VIC.`);
+                return;
+            }
+            netFromAmount = fromAmount - FEE;
+            toAmount = netFromAmount > 0 ? (netFromAmount / RATE).toFixed(18) : '0.000000000000000000';
         } else {
-            toAmount = (fromAmount / RATE).toFixed(4);
+            if (fromAmount < MIN_SWAP_AMOUNT_VIN) {
+                alert(`Minimum swap amount is ${MIN_SWAP_AMOUNT_VIN} VIN.`);
+                return;
+            }
+            netFromAmount = fromAmount * RATE;
+            toAmount = netFromAmount > FEE ? (netFromAmount - FEE).toFixed(18) : '0.000000000000000000';
         }
 
         toAmountInput.value = toAmount;
-        gasFeeDisplay.textContent = `Estimated Gas Fee: ~0.0005 BNB`;
+        transactionFeeDisplay.textContent = `Transaction Fee: ${FEE} VIC`;
+        gasFeeDisplay.textContent = `Estimated Gas Fee: ~${GAS_FEE_ESTIMATE} VIC`;
     }
+
     // Swap Direction
     swapDirectionButton.addEventListener('click', () => {
         [fromToken, toToken] = [toToken, fromToken];
@@ -185,19 +179,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (fromToken === 'VIN') {
+            if (fromToken === 'VIC') {
+                const fromAmountInWei = ethers.utils.parseEther(fromAmount.toString());
+
+                const tx = await vinSwapContract.swapVicToVin({
+                    value: fromAmountInWei
+                });
+                await tx.wait();
+                alert('Swap VIC to VIN successful.');
+            } else {
                 const fromAmountInWei = ethers.utils.parseUnits(fromAmount.toString(), 18);
 
                 const approveTx = await vinTokenContract.approve(vinSwapAddress, fromAmountInWei);
                 await approveTx.wait();
 
-                const tx = await vinSwapContract.swapVINForBNB(fromAmountInWei);
+                const tx = await vinSwapContract.swapVinToVic(fromAmountInWei);
                 await tx.wait();
-                alert('Swap VIN to BNB successful.');
-            } else {
-                const tx = await vinSwapContract.swapBNBForVIN({ value: ethers.utils.parseEther(fromAmount.toString()) });
-                await tx.wait();
-                alert('Swap BNB to VIN successful.');
+                alert('Swap VIN to VIC successful.');
             }
 
             await updateBalances();
@@ -206,50 +204,25 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`Swap failed: ${error.reason || error.message}`);
         }
     });
+
     // Connect Wallet
     connectWalletButton.addEventListener('click', async () => {
         const connected = await ensureWalletConnected();
         if (!connected) return;
 
-        try {
-            vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinTokenABI, signer);
+        vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
+        vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
 
-            walletAddressDisplay.textContent = walletAddress;
-            await updateBalances();
-            calculateVinPrice(); // Cập nhật giá VIN/USD khi kết nối ví
-            showSwapInterface();
-        } catch (error) {
-            console.error('Failed to initialize wallet:', error);
-            alert(`Failed to initialize wallet: ${error.message}`);
-        }
+        walletAddressDisplay.textContent = walletAddress;
+        await updateBalances();
+        showSwapInterface();
     });
 
-    // Disconnect Wallet
-    disconnectWalletButton.addEventListener('click', async () => {
-        walletAddress = null;
-        balances = { VIN: 0, BNB: 0 };
-        vinSwapContract = null;
-        vinTokenContract = null;
-
-        walletAddressDisplay.textContent = '';
-        clearInputs();
-        showConnectInterface();
-
-        alert('Wallet disconnected successfully.');
-    });
-
-    // Show/Hide Interfaces
+    // Initialize Interface
     function showSwapInterface() {
         document.getElementById('swap-interface').style.display = 'block';
         document.getElementById('connect-interface').style.display = 'none';
     }
 
-    function showConnectInterface() {
-        document.getElementById('swap-interface').style.display = 'none';
-        document.getElementById('connect-interface').style.display = 'block';
-    }
-
-    // Initialize Interface
-    showConnectInterface();
+    showSwapInterface();
 });
