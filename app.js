@@ -31,3 +31,25 @@ updateVinPrice();
 
 // 🔄 Cập nhật giá mỗi 30 giây
 setInterval(updateVinPrice, 30000);
+
+// Sự kiện chạy khi trang đã tải hoàn tất
+document.addEventListener('DOMContentLoaded', () => {
+    // DOM Elements
+    const connectWalletButton = document.getElementById('connect-wallet');
+    const disconnectWalletButton = document.getElementById('disconnect-wallet');
+    const walletAddressDisplay = document.getElementById('wallet-address');
+    const fromAmountInput = document.getElementById('from-amount');
+    const toAmountInput = document.getElementById('to-amount');
+    const fromTokenInfo = document.getElementById('from-token-info');
+    const toTokenInfo = document.getElementById('to-token-info');
+    const fromTokenLogo = document.getElementById('from-token-logo');
+    const toTokenLogo = document.getElementById('to-token-logo');
+    const swapDirectionButton = document.getElementById('swap-direction');
+    const maxButton = document.getElementById('max-button');
+    const swapNowButton = document.getElementById('swap-now');
+    const transactionFeeDisplay = document.getElementById('transaction-fee');
+    const gasFeeDisplay = document.getElementById('gas-fee');
+
+    // Blockchain Config
+    let provider, signer;
+    let walletConnectProvider = null;
