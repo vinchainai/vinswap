@@ -120,3 +120,53 @@ function calculateToAmount() {
     toAmountInput.value = receivingAmount > 0 ? receivingAmount.toFixed(4) : "0.0000";
 }
 
+// 🔄 Swap token (Sửa lại hoàn chỉnh)
+swapNowButton.addEventListener("click", async () => {
+    if (!signer) {
+        alert("Vui lòng kết nối ví trước!");
+        return;
+    }
+
+    let fromAmount = parseFloat(fromAmountInput.value);
+    if (isNaN(fromAmount) || fromAmount <= 0) {
+        alert("Vui lòng nhập số lượng hợp lệ!");
+        return;
+    }
+
+    try {
+        const vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
+        let tx;
+
+        console.log(`🔄 Bắt đầu swap: ${fromAmount} ${fromToken} → ${toToken}`);
+
+        if (fromToken === "VIC") {
+            console.log(`✅ Swap VIC → VIN: Gửi ${fromAmount} VIC vào hợp đồng swap`);
+            
+            tx = await vinSwapContract.swapVicToVin({
+                value: ethers.utils.parseEther(fromAmount.toString()) // Chuyển VIC vào hợp đồng
+            });
+
+        } else {
+            console.log(`✅ Swap VIN → VIC: Chuẩn bị gửi ${fromAmount} VIN`);
+            const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
+            const vinContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+
+            console.log("🔄 Thực hiện approve cho hợp đồng swap...");
+            const approveTx = await vinContract.approve(vinSwapAddress, vinAmount);
+            await approveTx.wait();
+
+            console.log(`✅ Đã approve ${fromAmount} VIN. Bắt đầu swap VIN → VIC...`);
+            tx = await vinSwapContract.swapVinToVic(vinAmount);
+        }
+
+        console.log("⏳ Đang chờ giao dịch hoàn thành...");
+        await tx.wait();
+
+        console.log("🎉 Swap thành công!");
+        alert("Swap thành công!");
+        await getBalances();
+    } catch (error) {
+        console.error("❌ Lỗi khi swap:", error);
+        alert(`Swap thất bại! Lỗi: ${error.message || "Không xác định"}`);
+    }
+});
