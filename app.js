@@ -2,9 +2,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // 🌍 Các phần tử DOM
     const connectWalletButton = document.getElementById('connect-wallet');
+    const disconnectWalletButton = document.getElementById('disconnect-wallet');
     const walletAddressDisplay = document.getElementById('wallet-address');
     const fromTokenInfo = document.getElementById('from-token-info');
     const toTokenInfo = document.getElementById('to-token-info');
+    const homeInterface = document.getElementById('connect-interface'); // Trang home
+    const swapInterface = document.getElementById('swap-interface'); // Trang swap
 
     // 🔗 Cấu hình Blockchain
     let provider, signer;
@@ -41,7 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // 📝 Hiển thị địa chỉ ví
             walletAddressDisplay.textContent = `Wallet: ${walletAddress}`;
-            alert(`Connected: ${walletAddress}`);
+
+            // ✅ Hiện giao diện swap, ẩn home
+            showSwapInterface();
 
             // ✅ Kiểm tra số dư VIC & VIN
             checkBalances();
@@ -60,14 +65,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const balanceVic = await provider.getBalance(walletAddress);
             const formattedVic = ethers.utils.formatEther(balanceVic);
 
-            // 🏦 Lấy số dư VIN (SỬA: Dùng signer thay vì provider)
+            // 🏦 Lấy số dư VIN bằng signer thay vì provider
             const balanceVin = await vinTokenContract.balanceOf(walletAddress);
             const formattedVin = ethers.utils.formatUnits(balanceVin, 18);
 
             // 📝 Hiển thị số dư trên giao diện
             fromTokenInfo.textContent = `VIC: ${formattedVic}`;
             toTokenInfo.textContent = `VIN: ${formattedVin}`;
-            alert(`✅ VIC Balance: ${formattedVic} VIC\n✅ VIN Balance: ${formattedVin} VIN`);
         } catch (error) {
             console.error("❌ Lỗi khi nhận số dư:", error);
         }
@@ -75,4 +79,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 🎯 Kết nối ví khi nhấn nút
     connectWalletButton.addEventListener("click", connectWallet);
+
+    // 🔌 Ngắt kết nối ví
+    disconnectWalletButton.addEventListener("click", async () => {
+        try {
+            walletAddress = null;
+            walletAddressDisplay.textContent = "";
+            fromTokenInfo.textContent = "VIC: 0.0000";
+            toTokenInfo.textContent = "VIN: 0.0000";
+
+            // Ẩn giao diện swap, hiện home
+            showConnectInterface();
+
+            alert("Wallet disconnected successfully.");
+        } catch (error) {
+            console.error("Error disconnecting wallet:", error);
+            alert("Failed to disconnect wallet. Please try again.");
+        }
+    });
+
+    // 📌 Hiển thị giao diện Swap (Ẩn home)
+    function showSwapInterface() {
+        homeInterface.style.display = "none";
+        swapInterface.style.display = "block";
+    }
+
+    // 📌 Hiển thị giao diện Home (Ẩn swap)
+    function showConnectInterface() {
+        homeInterface.style.display = "block";
+        swapInterface.style.display = "none";
+    }
 });
