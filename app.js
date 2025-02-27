@@ -42,20 +42,7 @@ async function connectWallet() {
         // 🎉 Hiển thị địa chỉ ví lên giao diện
         document.getElementById("wallet-address").textContent = `Connected: ${walletAddress}`;
 
-        // 🔄 Cập nhật số dư VIC & VIN
-        await updateBalances();
-
-        // Ẩn giao diện kết nối, hiển thị giao diện Swap
-        document.getElementById('swap-interface').style.display = 'block';
-        document.getElementById('connect-interface').style.display = 'none';
-
-    } catch (error) {
-        console.error("❌ Kết nối ví thất bại:", error);
-        alert("⚠️ Failed to connect wallet. Please try again!");
-    }
-}
-
-// 🔄 Lấy số dư VIC & VIN
+        // 🔄 Lấy số dư VIC & VIN
 async function updateBalances() {
     try {
         if (!walletAddress) {
@@ -70,8 +57,11 @@ async function updateBalances() {
 
         console.log(`✅ Số dư VIC: ${balances.VIC}`);
 
+        // ✅ Kết nối signer với hợp đồng token VIN
+        const vinTokenWithSigner = vinTokenContract.connect(signer);
+
         // 🏦 Lấy số dư VIN (Token ERC-20)
-        const vinBalanceRaw = await vinTokenContract.connect(signer).balanceOf(walletAddress);
+        const vinBalanceRaw = await vinTokenWithSigner.balanceOf(walletAddress);
         balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
 
         console.log(`✅ Số dư VIN: ${balances.VIN}`);
@@ -85,6 +75,7 @@ async function updateBalances() {
         alert("⚠️ Failed to fetch balances. Please check Console (F12)!");
     }
 }
+
 
 // 🖱️ Khi bấm "Connect Wallet", gọi hàm connectWallet()
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
