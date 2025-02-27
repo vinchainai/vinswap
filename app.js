@@ -1,37 +1,29 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    // 🌍 API giá VIC từ Binance
-    const BINANCE_VIC_PRICE_API = "https://api.binance.com/api/v3/ticker/price?symbol=VICUSDT";
-    
-    // 🏦 Giá VIN theo USD (mặc định khi chưa có dữ liệu)
-    let vinPriceUSD = "Loading price...";
+// 📌 URL Binance API để lấy giá VIC theo USD
+const BINANCE_API_URL = "https://api.binance.com/api/v3/ticker/price?symbol=VICUSDT";
 
-    // 🏷️ Gán vào thanh điều hướng
-    const vinPriceElement = document.getElementById('vin-price');
+// 🔄 Hàm cập nhật giá VIN
+async function updateVinPrice() {
+    try {
+        const response = await fetch(BINANCE_API_URL);
+        const data = await response.json();
 
-    // 🔄 Hàm lấy giá VIC từ Binance và tính giá VIN
-    async function fetchVinPrice() {
-        try {
-            const response = await fetch(BINANCE_VIC_PRICE_API);
-            const data = await response.json();
-
-            if (data.price) {
-                const vicPrice = parseFloat(data.price);
-                vinPriceUSD = `1 VIN = ${(vicPrice * 100).toFixed(2)} USD`;
-            } else {
-                vinPriceUSD = "Error fetching price";
-            }
-        } catch (error) {
-            console.error("❌ Lỗi khi lấy giá VIC:", error);
-            vinPriceUSD = "Error fetching price";
+        if (!data || !data.price) {
+            throw new Error("Không lấy được giá VIC từ Binance API");
         }
 
-        // 📝 Cập nhật giao diện
-        vinPriceElement.textContent = vinPriceUSD;
+        const vicPrice = parseFloat(data.price); // Giá VIC theo USD
+        const vinPrice = vicPrice * 100; // 1 VIN = 100 VIC
+
+        // Hiển thị giá trên thanh điều hướng
+        document.getElementById("vin-price").textContent = `1 VIN = ${vinPrice.toFixed(2)} USD`;
+    } catch (error) {
+        console.error("❌ Lỗi khi cập nhật giá VIN:", error);
+        document.getElementById("vin-price").textContent = "Price unavailable";
     }
+}
 
-    // 📡 Gọi hàm để cập nhật giá ngay khi tải trang
-    await fetchVinPrice();
+// 🚀 Gọi ngay khi trang tải
+updateVinPrice();
 
-    // 🔄 Cập nhật giá mỗi 60 giây
-    setInterval(fetchVinPrice, 60000);
-});
+// 🔄 Cập nhật mỗi 60 giây
+setInterval(updateVinPrice, 60000);
