@@ -105,23 +105,28 @@ const swapDirectionButton = document.getElementById("swap-direction");
 
 swapDirectionButton.addEventListener("click", async () => {
     // 🌐 Lấy thông tin hiện tại
-    const fromToken = fromTokenInfo.textContent.split(":")[0].trim();
-    const toToken = toTokenInfo.textContent.split(":")[0].trim();
+    const fromTokenText = fromTokenInfo.textContent.split(":")[0].trim();
+    const toTokenText = toTokenInfo.textContent.split(":")[0].trim();
 
-    // 🔄 Đổi vị trí hiển thị VIC ↔ VIN
-    fromTokenInfo.textContent = `${toToken}: 0.0000`;
-    toTokenInfo.textContent = `${fromToken}: 0.0000`;
+    // 🔄 Đổi nội dung hiển thị (VIC ↔ VIN)
+    fromTokenInfo.textContent = `${toTokenText}: 0.0000`;
+    toTokenInfo.textContent = `${fromTokenText}: 0.0000`;
 
     // 🔄 Đổi biểu tượng token
     const fromLogo = document.getElementById("from-token-logo").src;
     document.getElementById("from-token-logo").src = document.getElementById("to-token-logo").src;
     document.getElementById("to-token-logo").src = fromLogo;
 
-    // 🔄 Xóa giá trị nhập để tránh nhầm lẫn
+    // 🔄 Xóa giá trị nhập & đặt lại số dư đúng theo token
     fromAmountInput.value = "";
     toAmountInput.value = "";
 
-    // ⏳ Chờ 500ms rồi cập nhật lại số dư VIC & VIN
+    // ✅ Đảo vị trí số dư trong bộ nhớ để đảm bảo số dư thay đổi theo logic
+    const tempBalance = fromTokenInfo.dataset.balance;
+    fromTokenInfo.dataset.balance = toTokenInfo.dataset.balance;
+    toTokenInfo.dataset.balance = tempBalance;
+
+    // ⏳ Chờ 500ms rồi cập nhật lại số dư VIC & VIN theo đúng chiều mới
     setTimeout(async () => {
         await getBalances(userAddress);
     }, 500);
