@@ -156,3 +156,80 @@ swapDirectionButton.addEventListener("click", () => {
     // Cập nhật lại số dư để phản ánh sự thay đổi
     getBalances(userAddress);
 });
+
+// 🎯 Hàm gọi hợp đồng để thực hiện swap
+async function executeSwap() {
+    if (!signer) {
+        alert("Vui lòng kết nối ví trước!");
+        return;
+    }
+
+    let fromAmount = parseFloat(fromAmountInput.value);
+    if (isNaN(fromAmount) || fromAmount <= 0) {
+        alert("Vui lòng nhập số lượng hợp lệ!");
+        return;
+    }
+
+    try {
+        const vinSwapABI = [
+            {
+                "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }],
+                "name": "swapVinToVic",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "swapVicToVin",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            }
+        ];
+
+        const vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
+        const fromToken = fromTokenInfo.textContent.split(":")[0].trim();
+
+        let tx;
+        if (fromToken === "VIC") {
+            // Swap VIC → VIN
+            const vicAmount = ethers.utils.parseEther(fromAmount.toString());
+            tx = await vinSwapContract.swapVicToVin({ value: vicAmount });
+        } else {
+            // Swap VIN → VIC
+            const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
+
+            // ✅ Trước tiên cần approve hợp đồng để sử dụng VIN
+            const vinABI = [
+                {
+                    "inputs": [{ "internalType": "address", "name": "spender", "type": "address" },
+                               { "internalType": "uint256", "name": "amount", "type": "uint256" }],
+                    "name": "approve",
+                    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ];
+
+            const vinContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+            const approveTx = await vinContract.approve(vinSwapAddress, vinAmount);
+            await approveTx.wait();
+
+            // Sau khi approve, thực hiện swap
+            tx = await vinSwapContract.swapVinToVic(vinAmount);
+        }
+
+        await tx.wait();
+        alert("Giao dịch swap thành công!");
+
+        // Cập nhật số dư sau khi swap
+        await getBalances(userAddress);
+    } catch (error) {
+        console.error("❌ Lỗi khi thực hiện swap:", error);
+        alert("Giao dịch thất bại! Vui lòng kiểm tra lại.");
+    }
+}
+
+// 📌 Sự kiện: Khi nhấn "Swap Now", gọi hàm swap
+document.getElementById("swap-now").addEventListener("click", executeSwap);
