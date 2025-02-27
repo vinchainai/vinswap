@@ -84,14 +84,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+// 🔹 Khai báo biến toàn cục để lưu số dư VIC & VIN
+let vicBalance = 0;
+let vinBalance = 0;
+
 // 🎯 Xử lý nút "Max" để nhập toàn bộ số dư vào ô input
 document.getElementById("max-button").addEventListener("click", () => {
+    const fromAmountInput = document.getElementById("from-amount");
+
     if (isSwappingVicToVin) {
         // Nếu đang swap VIC → VIN, nhập hết số dư VIC vào ô input
-        document.getElementById("from-amount").value = parseFloat(vicBalance).toFixed(4);
+        fromAmountInput.value = parseFloat(vicBalance).toFixed(4);
     } else {
         // Nếu đang swap VIN → VIC, nhập hết số dư VIN vào ô input
-        document.getElementById("from-amount").value = parseFloat(vinBalance).toFixed(4);
+        fromAmountInput.value = parseFloat(vinBalance).toFixed(4);
     }
 });
 
@@ -130,3 +136,36 @@ document.getElementById("swap-direction").addEventListener("click", () => {
     document.getElementById("from-amount").value = "";
     document.getElementById("to-amount").value = "";
 });
+
+// 🔄 Cập nhật số dư toàn cục khi lấy dữ liệu từ blockchain
+async function getBalances(address) {
+    try {
+        const rpcProvider = new ethers.providers.JsonRpcProvider("https://rpc.viction.xyz");
+
+        // 🏦 Lấy số dư VIC
+        const vicBalanceRaw = await rpcProvider.getBalance(address);
+        vicBalance = ethers.utils.formatEther(vicBalanceRaw);
+
+        // 🏦 Lấy số dư VIN (Token ERC-20)
+        const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+        const vinABI = [
+            {
+                "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+                "name": "balanceOf",
+                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        const vinContract = new ethers.Contract(vinTokenAddress, vinABI, rpcProvider);
+        const vinBalanceRaw = await vinContract.balanceOf(address);
+        vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
+
+        // ✅ Cập nhật hiển thị ban đầu
+        document.getElementById("from-token-info").textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
+        document.getElementById("to-token-info").textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
+    } catch (error) {
+        console.error("❌ Error fetching balances:", error);
+        alert("Failed to fetch VIC/VIN balances. Check the console for details.");
+    }
+}
