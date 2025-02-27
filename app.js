@@ -1,5 +1,4 @@
 // 🚀 VinSwap - Kết nối ví & Hiển thị số dư (Sửa lỗi CALL_EXCEPTION)
-
 document.addEventListener('DOMContentLoaded', () => {
     const connectWalletButton = document.getElementById('connect-wallet');
     const disconnectWalletButton = document.getElementById('disconnect-wallet');
@@ -8,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const toTokenInfo = document.getElementById('to-token-info');
 
     let provider, signer, userAddress;
-    const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+    const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // ✅ Địa chỉ đúng trên Viction
 
-    // ✅ Dùng ABI đầy đủ nhất từ VicScan nếu có
+    // ✅ Dùng ABI đầy đủ từ hợp đồng VIN trên Viction
     const vinABI = [
         {
             "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
@@ -56,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formattedVicBalance = ethers.utils.formatEther(vicBalance);
             console.log(`✅ Số dư VIC: ${formattedVicBalance}`);
 
-            // ✅ Lấy số dư VIN
+            // ✅ Lấy số dư VIN từ hợp đồng
             const vinContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
             const vinBalance = await vinContract.balanceOf(userAddress);
             const formattedVinBalance = ethers.utils.formatUnits(vinBalance, 18);
