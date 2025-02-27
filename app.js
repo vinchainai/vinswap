@@ -45,8 +45,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 🦊 Kết nối ví MetaMask
     connectWalletButton.addEventListener("click", async () => {
         try {
+            if (!window.ethereum) {
+                alert("MetaMask is not installed. Please install MetaMask!");
+                return;
+            }
+
             provider = new ethers.providers.Web3Provider(window.ethereum);
             await provider.send("eth_requestAccounts", []);
+
+            const network = await provider.getNetwork();
+            if (network.chainId !== 88) { // Kiểm tra mạng có phải Viction không
+                alert("Please switch to the Viction network in MetaMask!");
+                return;
+            }
+
             signer = provider.getSigner();
             userAddress = await signer.getAddress();
 
@@ -70,9 +82,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 🔄 Lấy số dư VIC & VIN
     async function getBalances() {
         try {
-            balances.VIC = parseFloat(ethers.utils.formatEther(await rpcProvider.getBalance(userAddress)));
+            balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(userAddress)));
 
-            const vinContract = new ethers.Contract(vinTokenAddress, vinABI, rpcProvider);
+            const vinContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
             balances.VIN = parseFloat(ethers.utils.formatUnits(await vinContract.balanceOf(userAddress), 18));
 
             updateTokenDisplay();
@@ -123,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         toAmountInput.value = receivingAmount > 0 ? receivingAmount.toFixed(4) : "0.0000";
     }
 
-    // 🔄 Swap VIC sang VIN
+    // 🔄 Swap VIC ↔ VIN
     swapNowButton.addEventListener("click", async () => {
         if (!signer) {
             alert("Please connect your wallet first!");
