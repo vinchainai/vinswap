@@ -131,3 +131,28 @@ function calculateSwapAmount() {
 
 // 📌 Sự kiện: Khi nhập số lượng từ token, tự động tính toán số nhận được
 fromAmountInput.addEventListener("input", calculateSwapAmount);
+
+// 🎯 Xử lý nút "Mũi tên" (đảo chiều swap giữa VIC ↔ VIN)
+const swapDirectionButton = document.getElementById("swap-direction");
+
+swapDirectionButton.addEventListener("click", () => {
+    // 🌐 Lấy thông tin hiện tại
+    const fromToken = fromTokenInfo.textContent.split(":")[0].trim();
+    const toToken = toTokenInfo.textContent.split(":")[0].trim();
+
+    // 🔄 Đổi vị trí hiển thị
+    fromTokenInfo.textContent = `${toToken}: 0.0000`;
+    toTokenInfo.textContent = `${fromToken}: 0.0000`;
+
+    // 🔄 Đổi biểu tượng token
+    const fromLogo = document.getElementById("from-token-logo").src;
+    document.getElementById("from-token-logo").src = document.getElementById("to-token-logo").src;
+    document.getElementById("to-token-logo").src = fromLogo;
+
+    // 🔄 Đổi placeholder input
+    fromAmountInput.value = "";
+    toAmountInput.value = "";
+
+    // Cập nhật lại số dư để phản ánh sự thay đổi
+    getBalances(userAddress);
+});
