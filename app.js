@@ -1,6 +1,6 @@
-// Sự kiện chạy khi trang đã tải hoàn tất
+// 🚀 Sự kiện chạy khi trang đã tải hoàn tất
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
+    // 🎯 DOM Elements
     const connectWalletButton = document.getElementById('connect-wallet');
     const disconnectWalletButton = document.getElementById('disconnect-wallet');
     const walletAddressDisplay = document.getElementById('wallet-address');
@@ -8,157 +8,133 @@ document.addEventListener('DOMContentLoaded', () => {
     const toAmountInput = document.getElementById('to-amount');
     const fromTokenInfo = document.getElementById('from-token-info');
     const toTokenInfo = document.getElementById('to-token-info');
+    const fromTokenLogo = document.getElementById('from-token-logo');
+    const toTokenLogo = document.getElementById('to-token-logo');
     const swapDirectionButton = document.getElementById('swap-direction');
     const maxButton = document.getElementById('max-button');
     const swapNowButton = document.getElementById('swap-now');
     const transactionFeeDisplay = document.getElementById('transaction-fee');
+    const gasFeeDisplay = document.getElementById('gas-fee');
 
-    // Blockchain Config
-    const RPC_URL = "https://rpc.viction.xyz";
+    // 🌐 Blockchain Config
+    let provider, signer;
+    let walletAddress = null;
     const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-
     const RATE = 100; // 1 VIN = 100 VIC
-    const FEE = 0.01; // 0.01 VIC swap fee
-
-    const vinSwapABI = [
-        {
-            "inputs": [],
-            "name": "swapVicToVin",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }],
-            "name": "swapVinToVic",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }
-    ];
+    const FEE = 0.01; // 0.01 VIC phí giao dịch
 
     const vinABI = [
         {
-            "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+            "constant": true,
+            "inputs": [{ "name": "owner", "type": "address" }],
             "name": "balanceOf",
-            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-            "stateMutability": "view",
+            "outputs": [{ "name": "balance", "type": "uint256" }],
             "type": "function"
         }
     ];
 
-    let provider, signer;
-    let vinSwapContract, vinTokenContract;
-    let walletAddress = null;
-    let balances = { VIC: 0, VIN: 0 };
-    let fromToken = 'VIC';
-    let toToken = 'VIN';
+    let vinTokenContract;
 
-    // ✅ Dùng provider RPC riêng để đảm bảo lấy số dư chính xác
-    const staticProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
-
-    // ✅ Kết nối ví
+    // 🏦 Kết nối ví
     async function connectWallet() {
         try {
             if (window.ethereum) {
-                provider = new ethers.providers.Web3Provider(window.ethereum);
+                provider = new ethers.BrowserProvider(window.ethereum);
                 await provider.send("eth_requestAccounts", []);
+                signer = await provider.getSigner();
+                walletAddress = await signer.getAddress();
+                walletAddressDisplay.textContent = walletAddress;
+
+                // 🎯 Kết nối hợp đồng VIN Token
+                vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+
+                // 🔄 Cập nhật số dư
+                await updateBalances();
+                showSwapInterface();
             } else {
-                alert("Vui lòng sử dụng MetaMask hoặc ví hỗ trợ Viction.");
-                return;
+                alert("❌ Bạn cần cài đặt MetaMask!");
             }
-
-            signer = provider.getSigner();
-            walletAddress = await signer.getAddress();
-
-            // ✅ Kết nối hợp đồng thông minh
-            vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, staticProvider); // Dùng staticProvider thay vì signer
-
-            walletAddressDisplay.textContent = walletAddress;
-            await updateBalances();
-            showSwapInterface();
         } catch (error) {
-            console.error("Kết nối ví thất bại:", error);
-            alert('Kết nối ví thất bại. Vui lòng thử lại.');
+            console.error("❌ Lỗi khi kết nối ví:", error);
         }
     }
 
-    // ✅ Cập nhật số dư VIC & VIN
+    // 🏦 Ngắt kết nối ví
+    function disconnectWallet() {
+        walletAddress = null;
+        walletAddressDisplay.textContent = "";
+        fromTokenInfo.textContent = "VIC: 0.0000";
+        toTokenInfo.textContent = "VIN: 0.0000";
+        showConnectInterface();
+        alert("🚀 Đã ngắt kết nối ví!");
+    }
+
+    // 🔄 Cập nhật số dư VIC & VIN
     async function updateBalances() {
         try {
+            if (!walletAddress) return;
+
             console.log("🔍 Kiểm tra số dư của ví:", walletAddress);
 
             // 🏦 Lấy số dư VIC (Native Coin)
             const vicBalanceRaw = await provider.getBalance(walletAddress);
-            balances.VIC = parseFloat(ethers.utils.formatEther(vicBalanceRaw));
-            console.log(`✅ Số dư VIC: ${balances.VIC}`);
+            const vicBalance = ethers.formatEther(vicBalanceRaw);
+            console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
 
-            // 🏦 Lấy số dư VIN từ hợp đồng Token (Dùng staticProvider để đảm bảo chính xác)
+            // 🏦 Lấy số dư VIN (Token ERC-20)
             const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
-            balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
-            console.log(`✅ Số dư VIN: ${balances.VIN}`);
+            const vinBalance = ethers.formatUnits(vinBalanceRaw, 18);
+            console.log(`✅ Số dư VIN: ${vinBalance} VIN`);
 
-            updateTokenDisplay();
+            // 🏦 Cập nhật UI
+            fromTokenInfo.textContent = `VIC: ${parseFloat(vicBalance).toFixed(4)}`;
+            toTokenInfo.textContent = `VIN: ${parseFloat(vinBalance).toFixed(4)}`;
         } catch (error) {
-            console.error('❌ Lỗi khi cập nhật số dư:', error);
+            console.error("❌ Lỗi khi lấy số dư:", error);
         }
     }
 
-    function updateTokenDisplay() {
-        fromTokenInfo.textContent = `${fromToken}: ${balances[fromToken].toFixed(6)}`;
-        toTokenInfo.textContent = `${toToken}: ${balances[toToken].toFixed(6)}`;
-    }
-
-    // ✅ Nút Max
-    maxButton.addEventListener('click', () => {
-        fromAmountInput.value = balances[fromToken];
+    // 🎯 Nút Max
+    maxButton.addEventListener('click', async () => {
+        fromAmountInput.value = fromTokenInfo.textContent.includes("VIC")
+            ? parseFloat(fromTokenInfo.textContent.split(": ")[1])
+            : parseFloat(toTokenInfo.textContent.split(": ")[1]);
         calculateToAmount();
     });
 
-    // ✅ Tính toán số lượng token nhận được
+    // 🎯 Nút Swap Direction (Đổi VIC ⇄ VIN)
+    swapDirectionButton.addEventListener('click', () => {
+        [fromTokenInfo.textContent, toTokenInfo.textContent] = [toTokenInfo.textContent, fromTokenInfo.textContent];
+        [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
+        fromAmountInput.value = "";
+        toAmountInput.value = "";
+    });
+
+    // 🔄 Tính toán số token nhận được
     fromAmountInput.addEventListener('input', calculateToAmount);
     function calculateToAmount() {
         const fromAmount = parseFloat(fromAmountInput.value);
         if (isNaN(fromAmount) || fromAmount <= 0) {
-            toAmountInput.value = '';
+            toAmountInput.value = "";
             return;
         }
 
-        let netFromAmount, toAmount;
-
-        if (fromToken === 'VIC') {
-            netFromAmount = fromAmount - FEE;
-            toAmount = netFromAmount > 0 ? (netFromAmount / RATE).toFixed(6) : '0.000000';
+        let toAmount;
+        if (fromTokenInfo.textContent.includes("VIC")) {
+            toAmount = (fromAmount - FEE) / RATE;
         } else {
-            netFromAmount = fromAmount * RATE;
-            toAmount = netFromAmount > FEE ? (netFromAmount - FEE).toFixed(6) : '0.000000';
+            toAmount = (fromAmount * RATE) - FEE;
         }
-
-        toAmountInput.value = toAmount;
-        transactionFeeDisplay.textContent = `Transaction Fee: ${FEE} VIC`;
+        toAmountInput.value = toAmount.toFixed(4);
     }
 
-    // ✅ Nút hoán đổi VIC ↔ VIN
-    swapDirectionButton.addEventListener('click', () => {
-        [fromToken, toToken] = [toToken, fromToken];
-        updateTokenDisplay();
-        clearInputs();
+    // 🎯 Nút Swap Now
+    swapNowButton.addEventListener('click', async () => {
+        alert("🚀 Chức năng Swap sẽ được cập nhật sau!");
     });
 
-    function clearInputs() {
-        fromAmountInput.value = '';
-        toAmountInput.value = '';
-    }
-
-    // ✅ Kết nối & Ngắt kết nối ví
-    connectWalletButton.addEventListener('click', connectWallet);
-    disconnectWalletButton.addEventListener('click', () => {
-        walletAddress = null;
-        showConnectInterface();
-    });
-
+    // 🔄 Hiển thị giao diện Swap sau khi kết nối ví
     function showSwapInterface() {
         document.getElementById('swap-interface').style.display = 'block';
         document.getElementById('connect-interface').style.display = 'none';
@@ -168,4 +144,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('swap-interface').style.display = 'none';
         document.getElementById('connect-interface').style.display = 'block';
     }
+
+    // 🎯 Kết nối & Ngắt kết nối ví
+    connectWalletButton.addEventListener('click', connectWallet);
+    disconnectWalletButton.addEventListener('click', disconnectWallet);
+
+    // 🚀 Khởi động giao diện
+    showConnectInterface();
 });
