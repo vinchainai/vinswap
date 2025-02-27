@@ -83,3 +83,18 @@ async function getBalances(address) {
         alert("Không thể lấy số dư VIC/VIN. Kiểm tra console để biết thêm chi tiết.");
     }
 }
+
+// 🎯 Xử lý nút "Max" (tự động điền số dư tối đa có thể swap)
+const maxButton = document.getElementById("max-button");
+
+maxButton.addEventListener("click", () => {
+    const balanceText = fromTokenInfo.textContent; // Lấy số dư VIC hiển thị
+    const balance = parseFloat(balanceText.split(": ")[1]); // Lấy giá trị số dư
+
+    if (!isNaN(balance) && balance > 0) {
+        fromAmountInput.value = balance;
+        calculateSwapAmount(); // Tự động tính toán số token nhận được
+    } else {
+        alert("Số dư không hợp lệ!");
+    }
+});
