@@ -1,6 +1,6 @@
-// 🌐 Khởi tạo provider kết nối với mạng blockchain Viction
-let provider = new ethers.providers.Web3Provider(window.ethereum);
-let signer; // Đối tượng signer để giao dịch
+// 🌐 Kết nối với Blockchain Viction
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+let signer; // Lưu đối tượng signer
 
 // 📌 Địa chỉ hợp đồng thông minh VIN Swap & VIN Token
 const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
@@ -10,19 +10,19 @@ const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
 let walletAddress = null;
 let balances = { VIC: 0, VIN: 0 };
 
-// 📌 ABI của VIN Swap & VIN Token
-const vinSwapABI = [
-    { "inputs": [], "name": "swapVicToVin", "outputs": [], "stateMutability": "payable", "type": "function" },
-    { "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }], "name": "swapVinToVic", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
-];
-
+// 📌 ABI của Token VIN
 const vinABI = [
-    { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
+    {
+        "constant": true,
+        "inputs": [{ "name": "owner", "type": "address" }],
+        "name": "balanceOf",
+        "outputs": [{ "name": "balance", "type": "uint256" }],
+        "type": "function"
+    }
 ];
 
-// 🌍 Kết nối hợp đồng thông minh
-let vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, provider);
-let vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+// 🌍 Kết nối hợp đồng VIN Token
+const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
 
 // 🔄 Kết nối ví MetaMask
 async function connectWallet() {
@@ -42,7 +42,7 @@ async function connectWallet() {
         // 🎉 Hiển thị địa chỉ ví lên giao diện
         document.getElementById("wallet-address").textContent = `Connected: ${walletAddress}`;
 
-        // 🔄 Cập nhật số dư
+        // 🔄 Cập nhật số dư VIC & VIN
         await updateBalances();
 
         // Ẩn giao diện kết nối, hiển thị giao diện Swap
