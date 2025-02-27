@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             updateTokenDisplay();
         } catch (error) {
-            console.error("❌ Lỗi khi lấy số dư:", error);
+            console.error("❌ Error fetching balance:", error);
         }
     }
 
