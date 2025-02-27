@@ -403,20 +403,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fromToken === 'VIC') {
                 const fromAmountInWei = ethers.utils.parseEther(fromAmount.toString());
 
-                const tx = await frollSwapContract.swapVicToFroll({
+                const tx = await frollSwapContract.swapVicToVin({
                     value: fromAmountInWei
                 });
                 await tx.wait();
-                alert('Swap VIC to FROLL successful.');
+                alert('Swap VIC to VIN successful.');
             } else {
                 const fromAmountInWei = ethers.utils.parseUnits(fromAmount.toString(), 18);
 
-                const approveTx = await frollTokenContract.approve(frollSwapAddress, fromAmountInWei);
+                const approveTx = await vinTokenContract.approve(vinSwapAddress, fromAmountInWei);
                 await approveTx.wait();
 
-                const tx = await frollSwapContract.swapFrollToVic(fromAmountInWei);
+                const tx = await vinSwapContract.swapFrollToVic(fromAmountInWei);
                 await tx.wait();
-                alert('Swap FROLL to VIC successful.');
+                alert('Swap VIN to VIC successful.');
             }
 
             await updateBalances();
@@ -439,8 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-        frollSwapContract = new ethers.Contract(frollSwapAddress, frollSwapABI, signer);
-        frollTokenContract = new ethers.Contract(frollTokenAddress, frollABI, signer);
+        vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
+        vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
 
         walletAddressDisplay.textContent = walletAddress;
         await updateBalances();
@@ -466,8 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset wallet-related variables
         walletAddress = null;
         balances = { VIC: 0, FROLL: 0 };
-        frollSwapContract = null;
-        frollTokenContract = null;
+        vinSwapContract = null;
+        vinTokenContract = null;
 
         // Update UI
         walletAddressDisplay.textContent = '';
