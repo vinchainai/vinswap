@@ -42,7 +42,20 @@ async function connectWallet() {
         // 🎉 Hiển thị địa chỉ ví lên giao diện
         document.getElementById("wallet-address").textContent = `Connected: ${walletAddress}`;
 
-        // 🔄 Lấy số dư VIC & VIN
+        // 🔄 Cập nhật số dư
+        await updateBalances();
+
+        // Ẩn giao diện kết nối, hiển thị giao diện Swap
+        document.getElementById('swap-interface').style.display = 'block';
+        document.getElementById('connect-interface').style.display = 'none';
+
+    } catch (error) {
+        console.error("❌ Kết nối ví thất bại:", error);
+        alert("⚠️ Failed to connect wallet. Please try again!");
+    }
+}
+
+// 🔄 Lấy số dư VIC & VIN
 async function updateBalances() {
     try {
         if (!walletAddress) {
@@ -67,16 +80,11 @@ async function updateBalances() {
         document.getElementById("from-token-info").textContent = `VIC: ${balances.VIC.toFixed(4)}`;
         document.getElementById("to-token-info").textContent = `VIN: ${balances.VIN.toFixed(4)}`;
 
-        // Ẩn giao diện kết nối, hiển thị giao diện Swap
-        document.getElementById('swap-interface').style.display = 'block';
-        document.getElementById('connect-interface').style.display = 'none';
-
     } catch (error) {
         console.error("❌ Lỗi khi lấy số dư:", error);
         alert("⚠️ Failed to fetch balances. Please check Console (F12)!");
     }
 }
-
 
 // 🖱️ Khi bấm "Connect Wallet", gọi hàm connectWallet()
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
