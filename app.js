@@ -111,3 +111,44 @@ document.addEventListener('DOMContentLoaded', () => {
         fromTokenInfo.textContent = `${fromToken}: ${balances[fromToken].toFixed(18)}`;
         toTokenInfo.textContent = `${toToken}: ${balances[toToken].toFixed(18)}`;
     }
+    // Max Button
+    maxButton.addEventListener('click', async () => {
+        const connected = await ensureWalletConnected();
+        if (!connected) return;
+
+        fromAmountInput.value = balances[fromToken];
+        calculateToAmount();
+    });
+
+    // Calculate To Amount
+    fromAmountInput.addEventListener('input', calculateToAmount);
+    function calculateToAmount() {
+        const fromAmount = parseFloat(fromAmountInput.value);
+        if (isNaN(fromAmount) || fromAmount <= 0) {
+            toAmountInput.value = '';
+            return;
+        }
+
+        let netFromAmount;
+        let toAmount;
+
+        if (fromToken === 'VIC') {
+            if (fromAmount < MIN_SWAP_AMOUNT_VIC) {
+                alert(`Minimum swap amount is ${MIN_SWAP_AMOUNT_VIC} VIC.`);
+                return;
+            }
+            netFromAmount = fromAmount - FEE;
+            toAmount = netFromAmount > 0 ? (netFromAmount / RATE).toFixed(18) : '0.000000000000000000';
+        } else {
+            if (fromAmount < MIN_SWAP_AMOUNT_VIN) {
+                alert(`Minimum swap amount is ${MIN_SWAP_AMOUNT_VIN} VIN.`);
+                return;
+            }
+            netFromAmount = fromAmount * RATE;
+            toAmount = netFromAmount > FEE ? (netFromAmount - FEE).toFixed(18) : '0.000000000000000000';
+        }
+
+        toAmountInput.value = toAmount;
+        transactionFeeDisplay.textContent = `Transaction Fee: ${FEE} VIC`;
+        gasFeeDisplay.textContent = `Estimated Gas Fee: ~${GAS_FEE_ESTIMATE} VIC`;
+    }
