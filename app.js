@@ -152,3 +152,70 @@ document.addEventListener('DOMContentLoaded', () => {
         transactionFeeDisplay.textContent = `Transaction Fee: ${FEE} VIC`;
         gasFeeDisplay.textContent = `Estimated Gas Fee: ~${GAS_FEE_ESTIMATE} VIC`;
     }
+    // Swap Direction
+    swapDirectionButton.addEventListener('click', () => {
+        [fromToken, toToken] = [toToken, fromToken];
+        [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
+        updateTokenDisplay();
+        clearInputs();
+    });
+
+    // Clear Inputs
+    function clearInputs() {
+        fromAmountInput.value = '';
+        toAmountInput.value = '';
+    }
+
+    // Swap Tokens
+    swapNowButton.addEventListener('click', async () => {
+        try {
+            const fromAmount = parseFloat(fromAmountInput.value);
+
+            if (isNaN(fromAmount) || fromAmount <= 0) {
+                alert('Please enter a valid amount to swap.');
+                return;
+            }
+
+            if (fromToken === 'VIC') {
+                const fromAmountInWei = ethers.utils.parseEther(fromAmount.toString());
+
+                const tx = await vinSwapContract.swapVicToVin({
+                    value: fromAmountInWei
+                });
+                await tx.wait();
+                alert('Swap VIC to VIN successful.');
+            } else {
+                const fromAmountInWei = ethers.utils.parseUnits(fromAmount.toString(), 18);
+
+                const approveTx = await vinTokenContract.approve(vinSwapAddress, fromAmountInWei);
+                await approveTx.wait();
+
+                const tx = await vinSwapContract.swapVinToVic(fromAmountInWei);
+                await tx.wait();
+                alert('Swap VIN to VIC successful.');
+            }
+
+            await updateBalances();
+        } catch (error) {
+            console.error("Swap failed:", error);
+            alert(`Swap failed: ${error.reason || error.message}`);
+        }
+    });
+
+    // Connect Wallet
+    connectWalletButton.addEventListener('click', async () => {
+        const connected = await ensureWalletConnected();
+        if (!connected) return;
+
+        try {
+            vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+
+            walletAddressDisplay.textContent = walletAddress;
+            await updateBalances();
+            showSwapInterface();
+        } catch (error) {
+            console.error('Failed to initialize wallet:', error);
+            alert(`Failed to initialize wallet: ${error.message}`);
+        }
+    });
