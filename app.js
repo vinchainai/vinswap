@@ -53,3 +53,72 @@ document.addEventListener('DOMContentLoaded', () => {
     // Blockchain Config
     let provider, signer;
     let walletConnectProvider = null;
+    // 📌 Địa chỉ hợp đồng thông minh VIN Swap & VIN Token
+    const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
+    const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+
+    // 🏦 Biến lưu số dư
+    let walletAddress = null;
+    let balances = { VIC: 0, VIN: 0 };
+
+    // 📌 ABI của VIN Swap & VIN Token để lấy số dư
+    const vinSwapABI = [
+        { "inputs": [], "name": "swapVicToVin", "outputs": [], "stateMutability": "payable", "type": "function" },
+        { "inputs": [{ "internalType": "uint256", "name": "vinAmount", "type": "uint256" }], "name": "swapVinToVic", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+    ];
+
+    const vinABI = [
+        { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
+    ];
+
+    // 🌍 Kết nối hợp đồng
+    let vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, provider);
+    let vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+
+    // 🔄 Kết nối ví
+    async function connectWallet() {
+        try {
+            // 🦊 Yêu cầu quyền kết nối từ MetaMask
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+
+            // 🔌 Kết nối signer
+            signer = provider.getSigner();
+            walletAddress = await signer.getAddress();
+
+            // 🎉 Hiển thị địa chỉ ví lên giao diện
+            walletAddressDisplay.textContent = `Connected: ${walletAddress}`;
+
+            // 🔄 Cập nhật số dư
+            await updateBalances();
+
+            // 🎭 Hiển thị giao diện Swap, ẩn giao diện Connect
+            document.getElementById('swap-interface').style.display = 'block';
+            document.getElementById('connect-interface').style.display = 'none';
+
+        } catch (error) {
+            console.error("❌ Kết nối ví thất bại:", error);
+            alert("⚠️ Failed to connect wallet. Please try again!");
+        }
+    }
+
+    // 🔄 Lấy số dư VIC & VIN
+    async function updateBalances() {
+        try {
+            // 🏦 Lấy số dư VIC (Native Coin)
+            balances.VIC = parseFloat(ethers.utils.formatEther(await provider.getBalance(walletAddress)));
+
+            // 🏦 Lấy số dư VIN (Token ERC-20)
+            const vinBalanceRaw = await vinTokenContract.balanceOf(walletAddress);
+            balances.VIN = parseFloat(ethers.utils.formatUnits(vinBalanceRaw, 18));
+
+            // 📌 Hiển thị số dư lên giao diện
+            fromTokenInfo.textContent = `VIC: ${balances.VIC.toFixed(4)}`;
+            toTokenInfo.textContent = `VIN: ${balances.VIN.toFixed(4)}`;
+        } catch (error) {
+            console.error("❌ Lỗi khi lấy số dư:", error);
+            alert("⚠️ Failed to fetch balances. Please try again!");
+        }
+    }
+
+    // 🖱️ Khi bấm "Connect Wallet"
+    connectWalletButton.addEventListener("click", connectWallet);
