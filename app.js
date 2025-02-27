@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const vinABI = [
         {
-            "constant": true,
-            "inputs": [{ "name": "owner", "type": "address" }],
+            "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
             "name": "balanceOf",
-            "outputs": [{ "name": "balance", "type": "uint256" }],
+            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+            "stateMutability": "view",
             "type": "function"
         }
     ];
@@ -152,35 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toAmountInput.value = '';
     }
 
-    // ✅ Swap Token
-    swapNowButton.addEventListener('click', async () => {
-        try {
-            const fromAmount = parseFloat(fromAmountInput.value);
-            if (isNaN(fromAmount) || fromAmount <= 0) {
-                alert('Vui lòng nhập số lượng hợp lệ.');
-                return;
-            }
-
-            if (fromToken === 'VIC') {
-                const tx = await vinSwapContract.swapVicToVin({ value: ethers.utils.parseEther(fromAmount.toString()) });
-                await tx.wait();
-                alert('Swap VIC → VIN thành công!');
-            } else {
-                const fromAmountInWei = ethers.utils.parseUnits(fromAmount.toString(), 18);
-                const approveTx = await vinTokenContract.approve(vinSwapAddress, fromAmountInWei);
-                await approveTx.wait();
-                const tx = await vinSwapContract.swapVinToVic(fromAmountInWei);
-                await tx.wait();
-                alert('Swap VIN → VIC thành công!');
-            }
-
-            updateBalances();
-        } catch (error) {
-            console.error("Swap thất bại:", error);
-            alert(`Lỗi khi swap: ${error.reason || error.message}`);
-        }
-    });
-
+    // ✅ Kết nối & Ngắt kết nối ví
     connectWalletButton.addEventListener('click', connectWallet);
     disconnectWalletButton.addEventListener('click', () => {
         walletAddress = null;
