@@ -1,4 +1,4 @@
-/* 🚀 Tối ưu hóa Favicon - Ngăn chặn thao tác không mong muốn trên thiết bị cảm ứng */
+/* 🌍 Reset Styles */
 html {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -7,15 +7,37 @@ html {
     user-select: none;
 }
 
-/* 🎨 Logo - Căn chỉnh kích thước và hiệu ứng hiển thị */
-.logo {
+/* 🎨 Thiết lập nền chung */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc; /* Nền xanh nhạt */
+    color: #333;
+}
+
+/* 📌 Thanh điều hướng trên cùng */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #0056b3; /* Xanh đậm */
+    color: #fff;
+}
+
+.navbar .logo {
     height: 40px;
-    display: block;
-    max-width: 100%;
     animation: fadeIn 1s ease-in-out;
 }
 
-/* 🔥 Hiệu ứng xuất hiện dần (fade-in) khi tải trang */
+.navbar .vin-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 🔥 Keyframes cho hiệu ứng fade-in */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -27,43 +49,7 @@ html {
     }
 }
 
-/* 🖌️ Cài đặt chung cho toàn bộ trang */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9; /* Màu nền xám nhẹ */
-    color: #333; /* Màu chữ xám đậm */
-}
-
-/* 🔝 Thanh điều hướng (Navbar) */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #007bff; /* Màu xanh dương chủ đạo */
-    color: #fff;
-}
-
-/* 🎯 Kích thước logo trong Navbar */
-.navbar .logo {
-    height: 40px;
-}
-
-/* 🔗 Liên kết trong thanh điều hướng */
-.navbar .nav-links a {
-    text-decoration: none;
-    color: #fff;
-    margin-left: 15px;
-    font-size: 14px;
-}
-
-/* 🖱️ Hiệu ứng khi di chuột vào liên kết */
-.navbar .nav-links a:hover {
-    text-decoration: underline;
-}
-/* 📦 Giao diện chính (Container) */
+/* 📌 Giao diện chính */
 .interface {
     max-width: 600px;
     margin: 50px auto;
@@ -71,22 +57,22 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 🏆 Tiêu đề chính */
+/* Tiêu đề chính */
 h1 {
-    color: #007bff; /* Màu xanh chủ đạo */
+    color: #0056b3;
 }
 
-/* 📝 Định dạng văn bản */
+/* Văn bản mô tả */
 p {
-    color: #555; /* Màu xám đậm */
+    color: #555;
 }
 
-/* 🎛️ Nút bấm (Button) */
+/* 🔘 Nút bấm */
 .button {
-    background-color: #007bff;
+    background-color: #0056b3;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -96,34 +82,31 @@ p {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* 🖱️ Hiệu ứng khi di chuột vào nút */
 .button:hover {
-    background-color: #0056b3;
+    background-color: #003f80;
     transform: scale(1.05);
 }
 
-/* 🎯 Hiệu ứng khi nhấn nút */
 .button:active {
-    background-color: #004085;
+    background-color: #002f66;
     transform: scale(0.95);
 }
 
-/* 🚫 Nút bị vô hiệu hóa */
 .button:disabled {
     background-color: #d6d6d6;
     cursor: not-allowed;
 }
 
-/* 🔄 Hộp chứa Swap */
+/* 🏦 Swap Container */
 .swap-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 20px 0;
-    gap: 20px; /* Khoảng cách giữa các phần tử */
+    gap: 20px; /* Khoảng cách giữa các phần */
 }
 
-/* 🔄 Ô nhập token */
+/* 🏷️ Hộp nhập số token */
 .token-input {
     display: flex;
     align-items: center;
@@ -135,13 +118,17 @@ p {
     background-color: #f1f1f1;
 }
 
-/* 🖼️ Biểu tượng Token */
+/* 🔹 Định dạng Logo Token VIC & VIN */
 .token-input img {
-    height: 24px;
-    width: 24px;
+    height: 32px; /* Tăng kích thước */
+    width: 32px;
+    border-radius: 50%; /* Bo tròn cho đẹp */
+    background: white; /* Viền sáng */
+    padding: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 🔢 Ô nhập số lượng Token */
+/* 🔹 Định dạng Input */
 .token-input input {
     flex-grow: 1;
     border: none;
@@ -150,47 +137,86 @@ p {
     color: #333;
 }
 
-/* ✏️ Khi nhập số, loại bỏ viền xung quanh */
 .token-input input:focus {
     outline: none;
 }
-/* 🔘 Điều chỉnh nút Max */
+
+/* 🎯 Nút tối đa */
 .token-input .button {
-    margin-left: -5px; /* Điều chỉnh vị trí của nút Max */
+    margin-left: -5px;
 }
 
-/* 🔄 Nút đổi hướng Swap */
+/* 🔁 Nút hoán đổi VIC ⇄ VIN */
 .swap-direction {
     font-size: 24px;
-    color: #007bff; /* Màu xanh chủ đạo */
+    color: #0056b3;
     border: none;
     background: none;
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-/* 🌀 Hiệu ứng xoay khi di chuột vào nút Swap */
 .swap-direction:hover {
     transform: rotate(180deg);
 }
 
-/* ℹ️ Chi tiết giao dịch Swap */
+/* 📜 Thông tin giao dịch */
 .swap-details {
     text-align: left;
     font-size: 14px;
-    color: #555; /* Màu xám đậm */
+    color: #555;
     margin-top: 20px;
 }
 
-/* 📱 Thiết kế responsive (Tối ưu cho di động) */
+/* 📌 Nút ngắt kết nối */
+.disconnect-button {
+    background-color: #d9534f;
+}
+
+.disconnect-button:hover {
+    background-color: #c9302c;
+}
+
+/* 📢 Footer - Thanh điều hướng dưới cùng */
+.footer {
+    text-align: center;
+    padding: 15px;
+    background: #0056b3;
+    color: white;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #f1f1f1;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* 📱 Giao diện trên Mobile */
 @media (max-width: 768px) {
     .swap-container {
         flex-direction: column;
-        gap: 10px; /* Giảm khoảng cách trên giao diện mobile */
+        gap: 10px;
     }
 
     .token-input {
         width: 100%;
     }
-}
 
+    .navbar {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .navbar .logo {
+        margin-bottom: 10px;
+    }
+
+    .footer {
+        font-size: 12px;
+    }
+}
