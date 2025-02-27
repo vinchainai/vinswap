@@ -9,17 +9,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 🔗 Cấu hình Blockchain
     let provider, signer;
     const RPC_URL = "https://rpc.viction.xyz"; // RPC mạng Viction
-    const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38"; // Hợp đồng Swap
     const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // Token VIN
     let walletAddress = null;
 
-    // 🔗 ABI của token VIN (ERC-20)
+    // 🔗 ABI của token VIN (Chuẩn ERC-20)
     const vinTokenABI = [
         {
             "constant": true,
-            "inputs": [{ "name": "owner", "type": "address" }],
+            "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
             "name": "balanceOf",
-            "outputs": [{ "name": "balance", "type": "uint256" }],
+            "outputs": [{ "internalType": "uint256", "name": "balance", "type": "uint256" }],
+            "stateMutability": "view",
             "type": "function"
         }
     ];
@@ -36,8 +36,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             signer = provider.getSigner();
             walletAddress = await signer.getAddress();
 
-            // Kết nối hợp đồng VIN Token
-            vinTokenContract = new ethers.Contract(vinTokenAddress, vinTokenABI, provider);
+            // Kết nối hợp đồng VIN Token với signer
+            vinTokenContract = new ethers.Contract(vinTokenAddress, vinTokenABI, signer);
 
             // 📝 Hiển thị địa chỉ ví
             walletAddressDisplay.textContent = `Wallet: ${walletAddress}`;
@@ -56,13 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             if (!walletAddress) return;
 
-            // 🏦 Lấy số dư VIC bằng Web3Provider (Đúng trên trình duyệt)
+            // 🏦 Lấy số dư VIC (Native Coin)
             const balanceVic = await provider.getBalance(walletAddress);
             const formattedVic = ethers.utils.formatEther(balanceVic);
 
-            // 🏦 Lấy số dư VIN bằng signer thay vì provider
-            const vinTokenContractWithSigner = new ethers.Contract(vinTokenAddress, vinTokenABI, signer);
-            const balanceVin = await vinTokenContractWithSigner.balanceOf(walletAddress);
+            // 🏦 Lấy số dư VIN (SỬA: Dùng signer thay vì provider)
+            const balanceVin = await vinTokenContract.balanceOf(walletAddress);
             const formattedVin = ethers.utils.formatUnits(balanceVin, 18);
 
             // 📝 Hiển thị số dư trên giao diện
@@ -70,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             toTokenInfo.textContent = `VIN: ${formattedVin}`;
             alert(`✅ VIC Balance: ${formattedVic} VIC\n✅ VIN Balance: ${formattedVin} VIN`);
         } catch (error) {
-            console.error("Error checking balances:", error);
+            console.error("❌ Lỗi khi nhận số dư:", error);
         }
     }
 
