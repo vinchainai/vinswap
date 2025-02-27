@@ -88,26 +88,27 @@ async function getBalances(address) {
 const maxButton = document.getElementById("max-button");
 
 maxButton.addEventListener("click", () => {
-    const balanceText = fromTokenInfo.textContent; // Lấy số dư VIC hoặc VIN hiển thị
-    const balance = parseFloat(balanceText.split(": ")[1]); // Lấy giá trị số dư
+    const fromToken = fromTokenInfo.textContent.split(":")[0].trim(); // Lấy loại token đang swap
+    let balanceText = fromTokenInfo.textContent; // Lấy số dư hiển thị hiện tại
+    let balance = parseFloat(balanceText.split(": ")[1]); // Chuyển thành số thực
 
     if (!isNaN(balance) && balance > 0) {
         fromAmountInput.value = balance;
         calculateSwapAmount(); // Tự động tính toán số token nhận được
     } else {
-        alert("Số dư không hợp lệ!");
+        alert(`Số dư ${fromToken} không hợp lệ!`);
     }
 });
 
 // 🎯 Xử lý nút "Mũi tên" (đảo chiều swap giữa VIC ↔ VIN)
 const swapDirectionButton = document.getElementById("swap-direction");
 
-swapDirectionButton.addEventListener("click", () => {
+swapDirectionButton.addEventListener("click", async () => {
     // 🌐 Lấy thông tin hiện tại
     const fromToken = fromTokenInfo.textContent.split(":")[0].trim();
     const toToken = toTokenInfo.textContent.split(":")[0].trim();
 
-    // 🔄 Đổi vị trí hiển thị
+    // 🔄 Đổi vị trí hiển thị VIC ↔ VIN
     fromTokenInfo.textContent = `${toToken}: 0.0000`;
     toTokenInfo.textContent = `${fromToken}: 0.0000`;
 
@@ -116,10 +117,12 @@ swapDirectionButton.addEventListener("click", () => {
     document.getElementById("from-token-logo").src = document.getElementById("to-token-logo").src;
     document.getElementById("to-token-logo").src = fromLogo;
 
-    // 🔄 Đổi placeholder input
+    // 🔄 Xóa giá trị nhập để tránh nhầm lẫn
     fromAmountInput.value = "";
     toAmountInput.value = "";
 
-    // Cập nhật lại số dư để phản ánh sự thay đổi
-    getBalances(userAddress);
+    // ⏳ Chờ 500ms rồi cập nhật lại số dư VIC & VIN
+    setTimeout(async () => {
+        await getBalances(userAddress);
+    }, 500);
 });
