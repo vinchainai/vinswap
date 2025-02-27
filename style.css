@@ -1,191 +1,65 @@
-/* General Styles */
-body {
-    font-family: "Roboto", Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #eef4fa;
-    color: #333;
-    line-height: 1.6;
+/* 🚀 Tối ưu hóa Favicon - Ngăn chặn thao tác không mong muốn trên thiết bị cảm ứng */
+html {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-/* Navbar */
+/* 🎨 Logo - Căn chỉnh kích thước và hiệu ứng hiển thị */
+.logo {
+    height: 40px;
+    display: block;
+    max-width: 100%;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 🔥 Hiệu ứng xuất hiện dần (fade-in) khi tải trang */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 🖌️ Cài đặt chung cho toàn bộ trang */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9; /* Màu nền xám nhẹ */
+    color: #333; /* Màu chữ xám đậm */
+}
+
+/* 🔝 Thanh điều hướng (Navbar) */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
-    background-color: #007bff;
+    padding: 10px 20px;
+    background-color: #007bff; /* Màu xanh dương chủ đạo */
     color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* 🎯 Kích thước logo trong Navbar */
 .navbar .logo {
-    height: 50px;
+    height: 40px;
 }
 
+/* 🔗 Liên kết trong thanh điều hướng */
 .navbar .nav-links a {
     text-decoration: none;
     color: #fff;
-    margin-left: 20px;
-    font-size: 15px;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    margin-left: 15px;
+    font-size: 14px;
 }
 
+/* 🖱️ Hiệu ứng khi di chuột vào liên kết */
 .navbar .nav-links a:hover {
-    color: #cce4ff;
-}
-
-/* Giá VIN/USD */
-.vin-price {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: right;
-}
-/* Interface Containers */
-.interface {
-    max-width: 500px;
-    margin: 60px auto;
-    text-align: center;
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.interface:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-h1 {
-    color: #0056d6;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-p {
-    color: #555;
-    font-size: 14px;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-/* Buttons */
-.button {
-    background-color: #0056d6;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-    background-color: #003f9e;
-    transform: scale(1.05);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-}
-
-.button:active {
-    background-color: #002f7a;
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button:disabled {
-    background-color: #d6d6d6;
-    color: #aaa;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-/* Swap Container */
-.swap-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
-    gap: 20px;
-    flex-wrap: wrap; /* Để giao diện đẹp trên màn hình nhỏ */
-}
-
-.token-input {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 48%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f1f5f9;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.token-input img {
-    height: 28px;
-    width: 28px;
-}
-
-.token-input input {
-    flex-grow: 1;
-    border: none;
-    background: none;
-    font-size: 16px;
-    color: #333;
-    padding: 4px;
-}
-
-.token-input input:focus {
-    outline: none;
-}
-
-.token-input .button {
-    padding: 6px 12px;
-    font-size: 14px;
-    margin-left: -8px;
-}
-/* Swap Details */
-.swap-details {
-    text-align: left;
-    font-size: 14px;
-    color: #555;
-    margin-top: 20px;
-    line-height: 1.4;
-}
-
-/* Swap Direction Button */
-.swap-direction {
-    font-size: 28px;
-    color: #0056d6;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.swap-direction:hover {
-    transform: rotate(180deg);
-    color: #003f9e;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .swap-container {
-        flex-direction: column;
-        gap: 15px; /* Tăng khoảng cách giữa các thành phần trên màn hình nhỏ */
-    }
-
-    .token-input {
-        width: 100%;
-    }
-
-    .button {
-        width: 100%; /* Nút bấm rộng toàn bộ trên màn hình nhỏ */
-    }
+    text-decoration: underline;
 }
