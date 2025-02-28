@@ -72,11 +72,16 @@ disconnectWalletButton.addEventListener("click", () => {
 // 🔄 Lấy số dư VIC & VIN
 async function getBalances() {
     try {
-        balances.VIC = parseFloat(ethers.utils.formatEther(await rpcProvider.getBalance(userAddress)));
+        // 🏦 Lấy số dư VIC của ví
+        const balanceVic = await provider.getBalance(userAddress);
+        balances.VIC = parseFloat(ethers.utils.formatEther(balanceVic));
 
-        const vinContract = new ethers.Contract(vinTokenAddress, vinABI, rpcProvider);
-        balances.VIN = parseFloat(ethers.utils.formatUnits(await vinContract.balanceOf(userAddress), 18));
+        // 🏦 Lấy số dư VIN từ hợp đồng token
+        const vinContract = new ethers.Contract(vinTokenAddress, vinABI, provider);
+        const balanceVin = await vinContract.balanceOf(userAddress);
+        balances.VIN = parseFloat(ethers.utils.formatUnits(balanceVin, 18));
 
+        // 🔄 Cập nhật UI
         updateTokenDisplay();
     } catch (error) {
         console.error("❌ Lỗi khi lấy số dư:", error);
