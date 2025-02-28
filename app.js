@@ -1,10 +1,13 @@
 // 🎯 Cấu hình blockchain
-const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38"; // Hợp đồng Swap
-const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // VIN Token
+const vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38"; // Hợp đồng Swap VIN/VIC
+const vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // Token VIN
 const rpcUrl = "https://rpc.viction.xyz"; // RPC mạng Viction
 
 const RATE = 100; // 1 VIN = 100 VIC
 const FEE = 0.01; // Phí swap 0.01 VIC
+const GAS_FEE_ESTIMATE = 0.000029; // Phí gas ước tính
+const MIN_SWAP_AMOUNT_VIC = 0.011; // Số VIC tối thiểu để swap
+const MIN_SWAP_AMOUNT_VIN = 0.00011; // Số VIN tối thiểu để swap
 
 // 🌐 ABI hợp đồng
 const vinSwapABI = [
@@ -34,6 +37,8 @@ const toTokenLogo = document.getElementById("to-token-logo");
 const swapDirectionButton = document.getElementById("swap-direction");
 const maxButton = document.getElementById("max-button");
 const swapNowButton = document.getElementById("swap-now");
+const transactionFeeDisplay = document.getElementById("transaction-fee");
+const gasFeeDisplay = document.getElementById("gas-fee");
 
 let fromToken = "VIC";
 let toToken = "VIN";
@@ -119,3 +124,37 @@ function calculateToAmount() {
 
     toAmountInput.value = receivingAmount > 0 ? receivingAmount.toFixed(4) : "0.0000";
 }
+
+// 🔄 Xử lý Swap
+swapNowButton.addEventListener("click", async () => {
+    try {
+        const fromAmount = parseFloat(fromAmountInput.value);
+        if (isNaN(fromAmount) || fromAmount <= 0) {
+            alert("Vui lòng nhập số lượng hợp lệ.");
+            return;
+        }
+
+        const vinSwapContract = new ethers.Contract(vinSwapAddress, vinSwapABI, signer);
+        const vinContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+
+        if (fromToken === "VIC") {
+            const fromAmountInWei = ethers.utils.parseEther(fromAmount.toString());
+            const tx = await vinSwapContract.swapVicToVin({ value: fromAmountInWei });
+            await tx.wait();
+            alert("Swap VIC sang VIN thành công.");
+        } else {
+            const fromAmountInWei = ethers.utils.parseUnits(fromAmount.toString(), 18);
+            const approveTx = await vinContract.approve(vinSwapAddress, fromAmountInWei);
+            await approveTx.wait();
+
+            const tx = await vinSwapContract.swapVinToVic(fromAmountInWei);
+            await tx.wait();
+            alert("Swap VIN sang VIC thành công.");
+        }
+
+        await getBalances();
+    } catch (error) {
+        console.error("❌ Lỗi swap:", error);
+        alert(`Swap thất bại: ${error.reason || error.message}`);
+    }
+});
