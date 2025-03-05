@@ -24,12 +24,16 @@ async function connectWallet() {
         console.log("✅ Đã kết nối ví:", userAccount);
         document.getElementById("wallet-address").innerText = userAccount;
 
-        // Ẩn nút Connect Wallet và hiển thị giao diện Swap
-        document.querySelector(".main-content").style.display = "none";
+        // Ẩn các giao diện không cần thiết
+        document.querySelector(".main-content").style.display = "none"; // Ẩn trang chính
+        document.querySelector(".navbar").style.display = "none"; // Ẩn navbar
+        document.querySelector(".footer").style.display = "none"; // Ẩn footer
+
+        // Hiển thị giao diện Swap
         document.getElementById("swap-interface").style.display = "block";
 
         // Gọi hàm hiển thị số dư sau khi kết nối
-        getBalances();
+        await getBalances();
     } catch (error) {
         console.error("❌ Lỗi kết nối ví:", error);
         alert("Kết nối ví thất bại!");
@@ -53,8 +57,16 @@ async function getBalances() {
 
         // 🏦 Lấy số dư VIN (Token ERC-20)
         const vinTokenContract = new ethers.Contract(vinTokenAddress, [
-            { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }
+            {
+                "constant": true,
+                "inputs": [{ "name": "owner", "type": "address" }],
+                "name": "balanceOf",
+                "outputs": [{ "name": "balance", "type": "uint256" }],
+                "stateMutability": "view",
+                "type": "function"
+            }
         ], provider);
+        
         const vinBalanceRaw = await vinTokenContract.balanceOf(userAccount);
         const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
         document.getElementById("to-balance").innerText = `${vinBalance} VIN`;
@@ -62,7 +74,7 @@ async function getBalances() {
         console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
         console.log(`✅ Số dư VIN: ${vinBalance} VIN`);
     } catch (error) {
-        console.error("❌ Lỗi khi lấy số dư:", error);
+        console.error("❌ Lỗi khi lấy số dư VIN:", error);
     }
 }
 
