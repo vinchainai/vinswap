@@ -369,3 +369,62 @@ body {
     object-fit: contain; /* Đảm bảo logo không bị méo */
     margin-left: 0; /* Sát mép trái */
 }
+
+/* ==========================
+   🔹 RESPONSIVE DESIGN - TỐI ƯU CHO MỌI THIẾT BỊ
+   ========================== */
+
+/* 📱 Điều chỉnh trên màn hình nhỏ hơn 768px (Điện thoại) */
+@media (max-width: 768px) {
+    .navbar {
+        height: 80px; /* Điều chỉnh chiều cao navbar cho điện thoại */
+        padding: 10px; /* Giảm padding */
+    }
+
+    .nav-logo {
+        height: 80%; /* Logo nhỏ hơn trên điện thoại */
+    }
+
+    .nav-center {
+        font-size: 18px; /* Giảm cỡ chữ giá VIN */
+    }
+
+    .main-content {
+        max-width: 90%; /* Tăng độ rộng nội dung trên mobile */
+        margin: 90px auto 10px; /* Giữ khoảng cách hợp lý */
+    }
+
+    .welcome-text {
+        font-size: 28px; /* Giảm kích thước chữ */
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+
+    .button {
+        font-size: 16px; /* Nút nhỏ hơn */
+        padding: 10px 20px;
+    }
+
+    /* Giao diện Swap trên điện thoại */
+    .swap-wrapper {
+        flex-direction: column; /* Xếp dọc trên điện thoại */
+        gap: 10px; /* Giảm khoảng cách */
+    }
+
+    #swap-direction {
+        transform: rotate(90deg); /* Xoay mũi tên swap theo chiều dọc */
+    }
+}
+
+/* 💻 Điều chỉnh trên màn hình lớn hơn 1200px (Máy tính bảng & Laptop) */
+@media (min-width: 1200px) {
+    .main-content {
+        max-width: 600px; /* Thu nhỏ nội dung */
+    }
+
+    .swap-wrapper {
+        max-width: 650px; /* Điều chỉnh bố cục swap */
+    }
+}
