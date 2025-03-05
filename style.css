@@ -23,20 +23,20 @@ body {
    🔹 THANH ĐIỀU HƯỚNG TRÊN (NAVBAR)
    ========================== */
 
-/* Navbar với màu #6C869D, chiều cao gấp đôi */
+/* Navbar với màu #6C869D, chiều cao lớn hơn */
 .navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #6C869D; /* Màu đồng bộ với logo */
-    padding: 10px 20px; /* Điều chỉnh padding */
+    padding: 10px 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
-    height: 80px; /* Tăng chiều cao navbar lên gấp đôi */
+    height: 100px; /* Tăng chiều cao navbar lên */
 }
 
 /* Logo ở góc trái */
@@ -47,7 +47,7 @@ body {
 
 /* Giá VIN ở giữa */
 .nav-center {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     color: white; /* Chữ trắng đậm */
 }
@@ -68,7 +68,7 @@ body {
     backdrop-filter: blur(5px); /* Hiệu ứng mờ nhẹ */
     border-radius: 10px;
     max-width: 500px;
-    margin: 90px auto 20px; /* Đẩy sát lên thanh điều hướng */
+    margin: 110px auto 20px; /* Đẩy sát lên thanh điều hướng */
 }
 
 /* Tiêu đề "Welcome to VinSwap!" */
@@ -123,7 +123,7 @@ body {
     display: block;
 }
 
-/* Hiển thị nội dung Swap ở giữa */
+/* 🔹 Header Swap (Nút Disconnect & Địa chỉ ví) */
 .swap-header {
     display: flex;
     flex-direction: column;
@@ -132,12 +132,179 @@ body {
     margin-bottom: 20px;
 }
 
-/* Địa chỉ ví */
-#wallet-address {
+/* 🔘 Nút "Disconnect Wallet" */
+#disconnect-wallet {
     font-size: 16px;
     font-weight: bold;
-    color: #007bff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff4d4d; /* Màu đỏ nổi bật */
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 220px;
+    text-align: center;
+}
+#disconnect-wallet:hover {
+    background-color: #e60000;
+}
+
+/* 🔹 Địa chỉ ví người dùng */
+#wallet-address {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff; /* Màu xanh dương */
     margin-top: 8px;
+}
+
+/* 🔹 Tiêu đề "Swap" */
+#swap-interface h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #333; /* Màu chữ đậm */
+}
+
+/* ============================== */
+/* 🔹 KHU VỰC SWAP (TOKEN + MŨI TÊN) */
+/* ============================== */
+
+/* Gom nhóm hai ô nhập token và nút mũi tên */
+.swap-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    gap: 20px; /* Khoảng cách giữa các thành phần */
+    position: relative;
+    margin: 20px auto;
+}
+
+/* 📱 TRÊN ĐIỆN THOẠI: XẾP DỌC */
+@media (max-width: 768px) {
+    .swap-wrapper {
+        flex-direction: column;
+    }
+    #swap-direction {
+        position: relative;
+        margin: 10px 0; /* Khoảng cách giữa 2 ô nhập */
+    }
+}
+
+/* 🔲 HAI Ô NHẬP TOKEN (VIC / VIN) */
+.token-input {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 45%;
+}
+
+/* 🔘 Ký hiệu token (VIC / VIN) */
+.token-symbol {
+    font-size: 18px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+/* 🔹 Bố cục bên trong mỗi ô */
+.token-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 🔘 Logo token */
+.token-info img {
+    width: 40px;
+    height: 40px;
+}
+
+/* 🔘 Số dư token */
+.token-info p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* 🔘 Nút MAX */
+#max-button {
+    font-size: 14px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#max-button:hover {
+    background-color: #0056b3;
+}
+
+/* 🔲 Ô nhập số lượng token */
+.token-input input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* 🔄 NÚT MŨI TÊN SWAP */
+#swap-direction {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50%;
+    border: none;
+    background-color: #4CAF50; /* Xanh lá */
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#swap-direction:hover {
+    background-color: #3e8e41;
+}
+
+/* ============================== */
+/* 🔹 CHI TIẾT GIAO DỊCH */
+/* ============================== */
+
+/* 🔽 Swap Details */
+.swap-details {
+    margin: 20px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* 🔘 Nút "Swap Now" */
+#swap-now {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff9800; /* Màu cam nổi bật */
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    display: block;
+    margin: 30px auto;
+}
+#swap-now:hover {
+    background-color: #e68a00;
 }
 /* ==========================
    🔹 CHÂN TRANG (FOOTER)
