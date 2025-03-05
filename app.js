@@ -1,4 +1,9 @@
-// Biến toàn cục
+// Kiểm tra nếu trình duyệt hỗ trợ MetaMask
+if (typeof window.ethereum === "undefined") {
+    alert("Vui lòng cài đặt MetaMask để sử dụng VinSwap!");
+}
+
+// 📌 Biến toàn cục
 let provider, signer, userAccount;
 let vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // Địa chỉ token VIN
 let vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38"; // Địa chỉ hợp đồng Swap
@@ -8,28 +13,39 @@ let fromToken = "VIC";
 let toToken = "VIN";
 const balances = { VIC: 0, VIN: 0 }; // Lưu số dư để cập nhật chính xác
 
-// 📌 Xử lý hoán đổi chiều swap
-document.getElementById("swap-direction").addEventListener("click", async () => {
-    console.log("🔄 Đảo hướng swap...");
+// 📌 Kết nối ví MetaMask
+async function connectWallet() {
+    try {
+        if (!window.ethereum) {
+            alert("Vui lòng cài đặt MetaMask!");
+            return;
+        }
 
-    // Hoán đổi token
-    [fromToken, toToken] = [toToken, fromToken];
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        userAccount = await signer.getAddress();
 
-    // Cập nhật giao diện token
-    document.getElementById("from-token-symbol").textContent = fromToken;
-    document.getElementById("to-token-symbol").textContent = toToken;
-    [document.getElementById("from-token-logo").src, document.getElementById("to-token-logo").src] =
-    [document.getElementById("to-token-logo").src, document.getElementById("from-token-logo").src];
+        console.log("✅ Đã kết nối ví:", userAccount);
+        document.getElementById("wallet-address").innerText = userAccount;
 
-    // Hoán đổi số dư token
-    [balances.VIC, balances.VIN] = [balances.VIN, balances.VIC];
+        // Ẩn các giao diện không cần thiết
+        document.querySelector(".main-content").style.display = "none";
+        document.querySelector(".navbar").style.display = "none";
+        document.querySelector(".footer").style.display = "none";
 
-    // Cập nhật số dư hiển thị
-    document.getElementById("from-balance").textContent = `${balances[fromToken]} ${fromToken}`;
-    document.getElementById("to-balance").textContent = `${balances[toToken]} ${toToken}`;
-});
+        // Hiển thị giao diện Swap
+        document.getElementById("swap-interface").style.display = "block";
 
-// 🏦 Hàm lấy số dư VIC & VIN chính xác
+        // Gọi hàm hiển thị số dư sau khi kết nối
+        await getBalances();
+    } catch (error) {
+        console.error("❌ Lỗi kết nối ví:", error);
+        alert("Kết nối ví thất bại!");
+    }
+}
+
+// 📌 Lấy số dư VIC & VIN
 async function getBalances() {
     try {
         if (!userAccount) {
@@ -70,3 +86,27 @@ async function getBalances() {
         console.error("❌ Lỗi khi lấy số dư VIC hoặc VIN:", error);
     }
 }
+
+// 📌 Xử lý hoán đổi chiều swap
+document.getElementById("swap-direction").addEventListener("click", async () => {
+    console.log("🔄 Đảo hướng swap...");
+
+    // Hoán đổi token
+    [fromToken, toToken] = [toToken, fromToken];
+
+    // Cập nhật giao diện token
+    document.getElementById("from-token-symbol").textContent = fromToken;
+    document.getElementById("to-token-symbol").textContent = toToken;
+    [document.getElementById("from-token-logo").src, document.getElementById("to-token-logo").src] =
+    [document.getElementById("to-token-logo").src, document.getElementById("from-token-logo").src];
+
+    // Hoán đổi số dư token
+    [balances.VIC, balances.VIN] = [balances.VIN, balances.VIC];
+
+    // Cập nhật số dư hiển thị
+    document.getElementById("from-balance").textContent = `${balances[fromToken]} ${fromToken}`;
+    document.getElementById("to-balance").textContent = `${balances[toToken]} ${toToken}`;
+});
+
+// 📌 Gán sự kiện cho nút kết nối ví
+document.getElementById("connect-wallet").addEventListener("click", connectWallet);
