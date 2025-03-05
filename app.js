@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Địa chỉ hợp đồng thông minh của VIN & Swap Contract
     const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-    const SWAP_CONTRACT_ADDRESS = "";
+    const SWAP_CONTRACT_ADDRESS = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
 
     // ABI của VIN Token (Chỉ lấy phần cần thiết)
     const vinABI = [
@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(`🔄 Swapping: ${fromAmount} ${fromTokenSymbol.textContent.trim()}`);
 
             // ✅ Kết nối hợp đồng Swap VIN/VIC
-            const VINSWAP_CONTRACT_ADDRESS = "0xC23a850B5a09ca99d94f80DA08586f2d85320e94";
+            const VINSWAP_CONTRACT_ADDRESS = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
             const vinSwapABI = [
                 "function swapBNBForVIN() payable",
                 "function swapVINForBNB(uint256 vinAmount) external"
