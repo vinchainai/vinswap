@@ -200,12 +200,12 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(`🔄 Swapping: ${fromAmount} ${fromTokenSymbol.textContent.trim()}`);
 
             // ✅ Connect to Swap Contract
-            const FROLLSWAP_CONTRACT_ADDRESS = "0x9197BF0813e0727df4555E8cb43a0977F4a3A068";
-            const frollSwapABI = [
-                "function swapVicToFroll() payable",
-                "function swapFrollToVic(uint256 frollAmount) external"
+            const VINSWAP_CONTRACT_ADDRESS = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
+            const vinSwapABI = [
+                "function swapVicToVin() payable",
+                "function swapVinToVic(uint256 vinAmount) external"
             ];
-            const frollSwapContract = new ethers.Contract(FROLLSWAP_CONTRACT_ADDRESS, frollSwapABI, signer);
+            const vinSwapContract = new ethers.Contract(VINSWAP_CONTRACT_ADDRESS, vinSwapABI, signer);
 
             let tx;
             if (fromTokenSymbol.textContent.trim() === "VIC") {
@@ -213,21 +213,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("❌ Minimum swap amount for VIC is 0.011 VIC.");
                     return;
                 }
-                // ✅ Swap VIC → FROLL (deducting 0.01 VIC fee)
-                tx = await frollSwapContract.swapVicToFroll({
+                // ✅ Swap VIC → VIN (deducting 0.01 VIC fee)
+                tx = await vinSwapContract.swapVicToVin({
                     value: ethers.utils.parseEther(fromAmount.toString())
                 });
             } else {
                 if (fromAmount < 0.00011) {
-                    alert("❌ Minimum swap amount for FROLL is 0.00011 FROLL.");
+                    alert("❌ Minimum swap amount for VIN is 0.00011 VIN.");
                     return;
                 }
-                // ✅ Swap FROLL → VIC (approval required first)
-                const FROLL_CONTRACT_ADDRESS = "0xB4d562A8f811CE7F134a1982992Bd153902290BC";
-                const frollABI = [
+                // ✅ Swap VIN → VIC (approval required first)
+                const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+                const vinABI = [
                     "function approve(address spender, uint256 amount) external returns (bool)"
                 ];
-                const frollTokenContract = new ethers.Contract(FROLL_CONTRACT_ADDRESS, frollABI, signer);
+                const vinTokenContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, vinABI, signer);
 
                 // ✅ Approve before swapping
                 const frollAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
