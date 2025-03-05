@@ -497,3 +497,51 @@ body {
 #swap-direction:hover {
     background-color: #3e8e41;
 }
+
+/* 📌 Mở rộng nền trắng trong suốt của phần giới thiệu */
+.main-content {
+    width: 100vw; /* Chiều rộng 100% toàn trang */
+    height: 100vh; /* Chiều cao 100% toàn trang */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.6); /* Nền trắng trong suốt */
+    backdrop-filter: blur(10px); /* Làm mờ nền phía sau */
+    padding: 20px;
+    border-radius: 0; /* Loại bỏ bo góc */
+    box-shadow: none; /* Loại bỏ đổ bóng */
+}
+
+/* 📌 Căn giữa văn bản */
+.welcome-text {
+    font-size: 36px; /* Tăng kích thước chữ */
+    font-weight: bold;
+    color: #FF5722; /* Màu cam đậm */
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* 📌 Chỉnh lại mô tả dưới tiêu đề */
+.subtitle {
+    font-size: 20px;
+    color: #444;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* 📌 Điều chỉnh nút "Connect Wallet" */
+.button {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 14px 28px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #008CBA, #006080);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.button:hover {
+    background: linear-gradient(90deg, #005f8b, #003f5e);
+}
