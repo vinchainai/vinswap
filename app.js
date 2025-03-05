@@ -95,7 +95,7 @@ function updateBalanceDisplay() {
 
 // 📌 Xử lý hoán đổi chiều swap
 document.getElementById("swap-direction").addEventListener("click", async () => {
-    console.log("🔄 Đảo hướng swap...");
+    console.log("🔄 Swapping direction...");
 
     // Hoán đổi token
     [fromToken, toToken] = [toToken, fromToken];
@@ -155,22 +155,22 @@ maxButton.addEventListener("click", async () => {
 document.getElementById("swap-now").addEventListener("click", async function () {
     try {
         if (!window.ethereum) {
-            alert("❌ Vui lòng cài đặt MetaMask để swap!");
+            alert("❌ Please install MetaMask to swap!");
             return;
         }
 
         if (!userAccount) {
-            alert("❌ Vui lòng kết nối ví trước khi swap!");
+            alert("❌ Please connect your wallet before swapping!");
             return;
         }
 
         let fromAmount = parseFloat(document.getElementById("from-amount").value);
         if (isNaN(fromAmount) || fromAmount <= 0) {
-            alert("❌ Vui lòng nhập số lượng hợp lệ!");
+            alert("❌ Please enter a valid amount!");
             return;
         }
 
-        console.log(`🔄 Đang swap: ${fromAmount} ${fromToken}`);
+        console.log(`🔄 Swapping: ${fromAmount} ${fromToken}`);
 
         // ✅ Kiểm tra & chuyển mạng sang VIC nếu chưa đúng
         const provider = new ethers.providers.Web3Provider(window.ethereum);
