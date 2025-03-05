@@ -563,3 +563,10 @@ body {
     object-fit: contain; /* Giữ tỉ lệ logo */
     margin-left: 10px; /* Giữ khoảng cách sát mép trái */
 }
+
+body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
