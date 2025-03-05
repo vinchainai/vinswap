@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const toBalance = document.getElementById("to-balance");
 
     let provider, signer, walletAddress;
-    let frollTokenContract;
+    let vinTokenContract;
     let fromToken = "VIC";
     let toToken = "VIN";
     const balances = { VIC: 0, VIN: 0 };
