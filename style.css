@@ -545,3 +545,21 @@ body {
 .footer {
     margin-top: auto;
 }
+
+/* ==========================
+   🔹 CĂN CHỈNH LOGO TRONG NAVBAR
+   ========================== */
+
+/* Đảm bảo logo có kích thước nhỏ hơn và sát mép trái */
+.nav-left {
+    display: flex;
+    align-items: center;
+    height: 100%; /* Đảm bảo logo chiếm toàn bộ chiều cao navbar */
+}
+
+/* Logo nhỏ lại, căn giữa theo chiều dọc, sát mép trái */
+.nav-logo {
+    height: 70%; /* Giảm kích thước logo (điều chỉnh nếu cần) */
+    object-fit: contain; /* Giữ tỉ lệ logo */
+    margin-left: 10px; /* Giữ khoảng cách sát mép trái */
+}
