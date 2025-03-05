@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let vinTokenContract;
     
     // Địa chỉ hợp đồng thông minh của VIN & Swap Contract
-    const VIN_CONTRACT_ADDRESS = "0xeD9b4820cF465cc32a842434d6AeC74E950976c7";
-    const SWAP_CONTRACT_ADDRESS = "0xC23a850B5a09ca99d94f80DA08586f2d85320e94";
+    const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+    const SWAP_CONTRACT_ADDRESS = "";
 
     // ABI của VIN Token (Chỉ lấy phần cần thiết)
     const vinABI = [
