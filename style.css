@@ -1,254 +1,142 @@
 /* ==========================
-   🔹 THANH ĐIỀU HƯỚNG (NAVBAR)
-   ========================== */
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #6C869D;
-    padding: 10px 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    height: 100px;
-}
-
-/* Logo bên trái */
-.nav-logo {
-    height: 100%;
-    object-fit: contain;
-}
-
-/* Giá VIN ở giữa */
-.nav-center {
-    font-size: 22px;
-    font-weight: bold;
-    color: white;
-    margin: 0 auto;
-}
-
-/* Căn logo và giá VIN hợp lý */
-.nav-left {
-    display: flex;
-    align-items: center;
-}
-
-#vin-price {
-    margin-left: 20px;
-}
-
-/* ==========================
    🔹 GIAO DIỆN TRANG CHÍNH
    ========================== */
-.main-content {
+.main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+    height: 100vh;
     text-align: center;
+    background: linear-gradient(135deg, #008CBA, #006080);
+    color: white;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    border-radius: 10px;
-    max-width: 500px;
-    margin: 110px auto 0;
 }
 
 /* Tiêu đề chính */
 .welcome-text {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
-    color: #FF5722;
     margin-bottom: 10px;
 }
 
-/* Dòng mô tả */
+/* Mô tả */
 .subtitle {
-    font-size: 18px;
-    color: #444;
-    margin-bottom: 20px;
+    font-size: 20px;
+    margin-bottom: 30px;
 }
 
 /* Nút "Connect Wallet" */
-.button {
-    font-size: 18px;
+.connect-button {
+    font-size: 20px;
     font-weight: bold;
-    padding: 12px 24px;
+    padding: 14px 30px;
     border: none;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #008CBA, #006080);
-    color: white;
+    border-radius: 10px;
+    background: white;
+    color: #008CBA;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.button:hover {
-    background: linear-gradient(90deg, #005f8b, #003f5e);
+.connect-button:hover {
+    background: #006080;
+    color: white;
 }
 
 /* ==========================
-   🔹 GIAO DIỆN SWAP (ẨN MẶC ĐỊNH)
+   🔹 GIAO DIỆN SWAP (KHI KẾT NỐI VÍ)
    ========================== */
-#swap-interface {
-    display: none;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    margin: auto;
-    text-align: center;
-}
-
-/* Khi kết nối ví, hiển thị Swap */
-#swap-interface.active {
-    display: block;
-}
-
-/* 🔹 Header Swap */
-.swap-header {
+.swap-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+/* Tiêu đề Swap */
+.swap-container h1 {
+    font-size: 26px;
+    font-weight: bold;
     margin-bottom: 20px;
-}
-
-/* 🔘 Nút "Disconnect Wallet" */
-#disconnect-wallet {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    background-color: #ff4d4d;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 220px;
-    text-align: center;
-}
-
-#disconnect-wallet:hover {
-    background-color: #e60000;
-}
-
-/* 🔹 Địa chỉ ví người dùng */
-#wallet-address {
-    font-size: 18px;
-    font-weight: bold;
-    color: #007bff;
-    margin-top: 8px;
-}
-
-/* 🔹 Tiêu đề Swap */
-#swap-interface h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 20px 0;
     color: #333;
 }
 
-/* ==============================
-   🔹 KHU VỰC SWAP (TOKEN + MŨI TÊN)
-   ============================== */
-.swap-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 600px;
-    gap: 20px;
-    position: relative;
-    margin: 20px auto;
-}
-
-/* 📱 Trên điện thoại: Xếp dọc */
-@media (max-width: 768px) {
-    .swap-wrapper {
-        flex-direction: column;
-    }
-    #swap-direction {
-        position: relative;
-        margin: 10px 0;
-    }
-}
-
-/* 🔲 Hai ô nhập token */
-.token-input {
-    flex: 1;
+/* Ô nhập số lượng token */
+.token-box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+    background: #f7f7f7;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 45%;
+    border-radius: 8px;
 }
 
-/* 🔘 Ký hiệu token */
-.token-symbol {
-    font-size: 18px;
-    font-weight: bold;
-    color: #222;
-    margin-bottom: 5px;
-}
-
-/* 🔹 Bố cục bên trong ô token */
+/* Biểu tượng & thông tin token */
 .token-info {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
-/* 🔘 Logo token */
+/* Logo token */
 .token-info img {
     width: 40px;
     height: 40px;
 }
 
-/* 🔘 Số dư token */
-.token-info p {
-    font-size: 16px;
+/* Tên token */
+.token-symbol {
+    font-size: 20px;
     font-weight: bold;
-    color: #555;
+    color: #333;
 }
 
-/* 🔘 Nút MAX */
-#max-button {
-    font-size: 14px;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-left: 10px;
-}
-
-#max-button:hover {
-    background-color: #0056b3;
-}
-
-/* 🔲 Ô nhập số lượng token */
-.token-input input {
+/* Ô nhập số lượng */
+.token-input {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
     font-size: 18px;
     text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
 }
 
-/* 🔄 Nút Mũi Tên Swap */
-#swap-direction {
+/* Nút MAX */
+.max-button {
+    margin-top: 8px;
+    font-size: 14px;
+    padding: 6px 12px;
+    background: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.max-button:hover {
+    background: #006080;
+}
+
+/* ==========================
+   🔹 NÚT SWAP & CHI TIẾT GIAO DỊCH
+   ========================== */
+
+/* 🔄 Nút Mũi Tên Đảo Chiều */
+.swap-direction {
     width: 50px;
     height: 50px;
     font-size: 24px;
@@ -259,289 +147,85 @@
     color: white;
     cursor: pointer;
     transition: 0.3s;
+    margin: 15px 0;
 }
 
-#swap-direction:hover {
+.swap-direction:hover {
     background-color: #3e8e41;
 }
 
-/* ==============================
-   🔹 CHI TIẾT GIAO DỊCH & NÚT SWAP
-   ============================== */
-
-/* 🔽 Swap Details */
+/* 🔄 Chi Tiết Swap */
 .swap-details {
-    margin: 20px 0;
-    font-size: 14px;
+    margin: 15px 0;
+    font-size: 16px;
     color: #666;
+    text-align: center;
 }
 
 /* 🔘 Nút "Swap Now" */
-#swap-now {
+.swap-button {
     font-size: 18px;
     font-weight: bold;
     padding: 12px 24px;
     border: none;
-    border-radius: 8px;
-    background-color: #ff9800;
+    border-radius: 10px;
+    background-color: #FF9800;
     color: white;
     cursor: pointer;
     transition: 0.3s;
-    display: block;
-    margin: 30px auto;
+    width: 100%;
+    text-align: center;
 }
 
-#swap-now:hover {
+.swap-button:hover {
     background-color: #e68a00;
 }
 /* ==========================
-   🔹 CHÂN TRANG (FOOTER)
-   ========================== */
-.footer {
-    background: #008CBA;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    margin-top: auto;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-/* Kết nối & bản quyền */
-.footer p {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* Khu vực chứa các nút mạng xã hội */
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-/* Nút liên kết (Twitter, Telegram) */
-.social-btn {
-    background: white;
-    color: #008CBA;
-    font-size: 16px;
-    padding: 8px 16px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
-    display: inline-block;
-}
-
-.social-btn:hover {
-    background: #005f8b;
-    color: white;
-}
-/* ==========================
-   🔹 RESPONSIVE DESIGN - TỐI ƯU CHO MỌI THIẾT BỊ
+   🔹 RESPONSIVE DESIGN - MOBILE & DESKTOP
    ========================== */
 
-/* 📱 Điều chỉnh trên màn hình nhỏ hơn 768px (Điện thoại) */
+/* 📱 Trên điện thoại (dưới 768px) */
 @media (max-width: 768px) {
-    .navbar {
-        height: 80px;
-        padding: 10px;
-    }
-
-    .nav-logo {
-        height: 80%;
-    }
-
-    .nav-center {
-        font-size: 18px;
-    }
-
-    .main-content {
-        max-width: 90%;
-        margin: 90px auto 10px;
+    .main-container {
+        height: auto;
+        padding: 40px 20px;
     }
 
     .welcome-text {
-        font-size: 28px;
+        font-size: 30px;
     }
 
     .subtitle {
-        font-size: 16px;
+        font-size: 18px;
     }
 
-    .button {
+    .connect-button {
+        font-size: 18px;
+        padding: 12px 24px;
+    }
+
+    .swap-container {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    .swap-button {
         font-size: 16px;
         padding: 10px 20px;
     }
-
-    /* Giao diện Swap trên điện thoại */
-    .swap-wrapper {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    #swap-direction {
-        transform: rotate(90deg);
-    }
 }
 
-/* 💻 Điều chỉnh trên màn hình lớn hơn 1200px (Máy tính bảng & Laptop) */
+/* 💻 Trên màn hình lớn hơn 1200px */
 @media (min-width: 1200px) {
-    .main-content {
-        max-width: 600px;
-    }
-
-    .swap-wrapper {
-        max-width: 650px;
+    .swap-container {
+        max-width: 500px;
     }
 }
 
-/* 📌 Điều chỉnh kích thước khung Swap trên màn hình lớn */
+/* 📌 Điều chỉnh nút Swap trên màn hình lớn */
 @media (min-width: 1024px) {
-    .swap-wrapper {
-        max-width: 700px;
-        gap: 40px;
+    .swap-button {
+        font-size: 20px;
+        padding: 14px 28px;
     }
-}
-
-/* 📌 Điều chỉnh hai ô nhập token */
-.token-input {
-    flex: 1;
-    padding: 20px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-}
-
-/* 📌 Ô nhập số lượng token */
-.token-input input {
-    width: 100%;
-    padding: 14px;
-    font-size: 18px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-/* 📌 Hiển thị số dư token */
-.token-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    font-size: 18px;
-}
-
-/* 📌 Nút Max */
-#max-button {
-    font-size: 14px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-left: 15px;
-}
-
-#max-button:hover {
-    background-color: #0056b3;
-}
-
-/* 📌 Nút mũi tên Swap */
-#swap-direction {
-    width: 55px;
-    height: 55px;
-    font-size: 26px;
-    font-weight: bold;
-    border-radius: 50%;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-#swap-direction:hover {
-    background-color: #3e8e41;
-}
-/* ==========================
-   🔹 CĂN CHỈNH TOÀN TRANG
-   ========================== */
-
-/* 📌 Mở rộng nền trắng trong suốt của phần giới thiệu */
-.main-content {
-    width: 100vw;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    padding: 40px 20px 20px;
-    margin-top: 100px;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-/* 📌 Căn giữa văn bản */
-.welcome-text {
-    font-size: 36px;
-    font-weight: bold;
-    color: #FF5722;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-/* 📌 Chỉnh lại mô tả dưới tiêu đề */
-.subtitle {
-    font-size: 20px;
-    color: #444;
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-/* 📌 Điều chỉnh nút "Connect Wallet" */
-.button {
-    font-size: 20px;
-    font-weight: bold;
-    padding: 14px 28px;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #008CBA, #006080);
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.button:hover {
-    background: linear-gradient(90deg, #005f8b, #003f5e);
-}
-
-/* 📌 Căn giá VIN sát logo */
-.nav-center {
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    justify-content: center;
-    flex-grow: 1;
-}
-
-/* 📌 Căn trái giá VIN */
-#vin-price {
-    margin-left: 20px;
-}
-
-/* 📌 Đảm bảo footer luôn nằm dưới cùng */
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.footer {
-    margin-top: auto;
 }
