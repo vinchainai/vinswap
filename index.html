@@ -22,19 +22,60 @@
             <span id="vin-price">1 VIN = Loading... USD</span>
         </div>
     </nav>
-
     <!-- Trang chính -->
     <main class="main-content">
         <h1 class="welcome-text">Welcome to VinSwap!</h1>
         <p class="subtitle">Swap your tokens easily, quickly, and securely</p>
         <button id="connect-wallet" class="button">Connect Wallet</button>
     </main>
-
     <!-- Giao diện Swap (Mặc định bị ẩn) -->
     <div id="swap-interface" class="hidden">
-        <!-- Nội dung giao diện Swap sẽ được hiển thị bằng JavaScript -->
-    </div>
+        
+        <!-- Header: Hiển thị địa chỉ ví -->
+        <header class="swap-header">
+            <button id="disconnect-wallet" class="button">Disconnect Wallet</button>
+            <div id="wallet-address" class="wallet-address">Not Connected</div>
+        </header>
 
+        <!-- Tiêu đề Swap -->
+        <h1>Swap</h1>
+
+        <!-- Swap Container -->
+        <div class="swap-wrapper">
+            <!-- From Token (VIC / VIN) -->
+            <div class="token-input">
+                <p class="token-symbol" id="from-token-symbol">VIC</p>
+                <div class="token-info">
+                    <img id="from-token-logo" src="images/vic24.png" alt="VIC Token">
+                    <p><span id="from-balance">0.0000</span></p>
+                    <button id="max-button" class="button">Max</button>
+                </div>
+                <input type="number" id="from-amount" placeholder="0.0">
+            </div>
+
+            <!-- Swap Direction (↔️) -->
+            <button id="swap-direction" class="swap-direction">↔️</button>
+
+            <!-- To Token (VIN / VIC) -->
+            <div class="token-input">
+                <p class="token-symbol" id="to-token-symbol">VIN</p>
+                <div class="token-info">
+                    <img id="to-token-logo" src="images/vin24.png" alt="VIN Token">
+                    <p><span id="to-balance">0.0000</span></p>
+                </div>
+                <input type="text" id="to-amount" placeholder="0.0" disabled>
+            </div>
+        </div>
+
+        <!-- Swap Details -->
+        <div class="swap-details">
+            <p id="transaction-fee">Transaction Fee: 0.01 VIC</p>
+            <p id="gas-fee">Estimated Gas Fee: ~0.000029 VIC</p>
+        </div>
+
+        <!-- Swap Button -->
+        <button id="swap-now" class="button">Swap Now</button>
+    </div>
     <!-- Chân trang -->
     <footer class="footer">
         <p>🌐 Connect with Us</p>
@@ -44,7 +85,6 @@
         </div>
         <p>© 2025 VinSwap.vin. All rights reserved.</p>
     </footer>
-
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <script type="module" src="app.js"></script>
