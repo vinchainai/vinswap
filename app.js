@@ -112,3 +112,41 @@ document.getElementById("swap-direction").addEventListener("click", async () => 
 
 // 📌 Gán sự kiện cho nút kết nối ví
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+
+// 📌 Xử lý khi người dùng nhập số lượng hoặc bấm nút Max
+const fromAmountInput = document.getElementById("from-amount");
+const toAmountInput = document.getElementById("to-amount");
+const maxButton = document.getElementById("max-button");
+
+// ✅ Hàm cập nhật số token nhận được
+function updateSwapOutput() {
+    let fromTokenSymbol = document.getElementById("from-token-symbol").textContent.trim(); // Token đang swap
+    let inputAmount = parseFloat(fromAmountInput.value) || 0; // Số lượng token muốn đổi
+    let outputAmount = 0; // Số lượng token nhận
+
+    // ✅ Tính số lượng token nhận theo hợp đồng (1 VIN = 100 VIC, trừ phí 0.01 VIC)
+    if (fromTokenSymbol === "VIC") {
+        let netVic = inputAmount - 0.01; // Trừ phí swap
+        outputAmount = netVic >= 0.001 ? netVic / 100 : 0; // Đảm bảo chỉ hiện nếu >= 0.001 VIN
+    } else {
+        let vicAmount = inputAmount * 100; // Quy đổi sang VIC
+        outputAmount = vicAmount > 0.01 ? vicAmount - 0.01 : 0; // Trừ phí swap
+    }
+
+    // ✅ Hiển thị đúng 18 số thập phân
+    toAmountInput.value = outputAmount > 0 ? outputAmount.toFixed(18) : "0.000000000000000000";
+}
+
+// 📌 Khi người dùng nhập số lượng token muốn đổi
+fromAmountInput.addEventListener("input", updateSwapOutput);
+
+// 📌 Khi bấm nút Max, nhập toàn bộ số dư token vào ô nhập
+maxButton.addEventListener("click", async () => {
+    let fromTokenSymbol = document.getElementById("from-token-symbol").textContent.trim(); // Token đang swap
+    let maxAmount = parseFloat(document.getElementById("from-balance").textContent.trim()) || 0; // Số dư hiện tại
+
+    if (maxAmount > 0) {
+        fromAmountInput.value = maxAmount.toFixed(18); // Điền số dư tối đa vào ô nhập với độ chính xác 18 số thập phân
+        updateSwapOutput(); // Cập nhật số lượng token nhận
+    }
+});
