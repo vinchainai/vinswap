@@ -93,3 +93,41 @@ async function updateBalances() {
 
 // 📌 Tự động cập nhật số dư mỗi 30 giây
 setInterval(updateBalances, 30000);
+
+// ==============================
+// 🔹 XỬ LÝ HOÁN ĐỔI CHIỀU SWAP (NÚT MŨI TÊN)
+// ==============================
+
+const swapDirectionButton = document.getElementById("swap-direction");
+const fromTokenSymbol = document.getElementById("from-token-symbol");
+const toTokenSymbol = document.getElementById("to-token-symbol");
+const fromTokenLogo = document.getElementById("from-token-logo");
+const toTokenLogo = document.getElementById("to-token-logo");
+
+let fromToken = "VIC";
+let toToken = "VIN";
+
+// 📌 Xử lý khi bấm nút đảo chiều swap
+swapDirectionButton.addEventListener("click", async () => {
+    console.log("🔄 Đảo hướng swap...");
+
+    // Đảo vị trí token
+    [fromToken, toToken] = [toToken, fromToken];
+
+    // Cập nhật giao diện
+    fromTokenSymbol.textContent = fromToken;
+    toTokenSymbol.textContent = toToken;
+
+    // Đảo vị trí logo token
+    [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
+
+    // Cập nhật số dư mới sau khi đổi chiều swap
+    await updateBalances();
+});
+
+// 🚀 Tự động kết nối nếu trước đó đã kết nối
+document.addEventListener("DOMContentLoaded", async () => {
+    if (window.ethereum && (await window.ethereum.request({ method: "eth_accounts" })).length > 0) {
+        await connectWallet();
+    }
+});
