@@ -7,6 +7,7 @@ if (typeof window.ethereum === "undefined") {
 let provider, signer, userAccount;
 let vinTokenAddress = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4"; // Địa chỉ token VIN
 let vinSwapAddress = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38"; // Địa chỉ hợp đồng Swap
+let rpcUrl = "https://rpc.viction.xyz"; // RPC mạng Viction
 
 // Khởi tạo kết nối ví MetaMask
 async function connectWallet() {
@@ -25,9 +26,9 @@ async function connectWallet() {
         document.getElementById("wallet-address").innerText = userAccount;
 
         // Ẩn các giao diện không cần thiết
-        document.querySelector(".main-content").style.display = "none"; // Ẩn trang chính
-        document.querySelector(".navbar").style.display = "none"; // Ẩn navbar
-        document.querySelector(".footer").style.display = "none"; // Ẩn footer
+        document.querySelector(".main-content").style.display = "none";
+        document.querySelector(".navbar").style.display = "none";
+        document.querySelector(".footer").style.display = "none";
 
         // Hiển thị giao diện Swap
         document.getElementById("swap-interface").style.display = "block";
@@ -40,7 +41,7 @@ async function connectWallet() {
     }
 }
 
-// Hàm lấy số dư VIC & VIN của người dùng
+// 🏦 Hàm lấy số dư VIC & VIN chính xác
 async function getBalances() {
     try {
         if (!userAccount) {
@@ -55,8 +56,8 @@ async function getBalances() {
         const vicBalance = ethers.utils.formatEther(vicBalanceRaw);
         document.getElementById("from-balance").innerText = `${vicBalance} VIC`;
 
-        // 🏦 Lấy số dư VIN (Token ERC-20)
-        const vinTokenContract = new ethers.Contract(vinTokenAddress, [
+        // 🏦 Lấy số dư VIN (Token ERC-20) - SỬ DỤNG JSON-RPC TRỰC TIẾP
+        const vinABI = [
             {
                 "constant": true,
                 "inputs": [{ "name": "owner", "type": "address" }],
@@ -65,7 +66,10 @@ async function getBalances() {
                 "stateMutability": "view",
                 "type": "function"
             }
-        ], provider);
+        ];
+        
+        const vinProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
+        const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, vinProvider);
         
         const vinBalanceRaw = await vinTokenContract.balanceOf(userAccount);
         const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
