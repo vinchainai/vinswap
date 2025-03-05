@@ -154,6 +154,11 @@ maxButton.addEventListener("click", async () => {
 // 📌 Xử lý Swap khi bấm nút "Swap Now"
 document.getElementById("swap-now").addEventListener("click", async function () {
     try {
+        if (!window.ethereum) {
+            alert("❌ Vui lòng cài đặt MetaMask để swap!");
+            return;
+        }
+
         if (!userAccount) {
             alert("❌ Vui lòng kết nối ví trước khi swap!");
             return;
@@ -166,6 +171,10 @@ document.getElementById("swap-now").addEventListener("click", async function () 
         }
 
         console.log(`🔄 Đang swap: ${fromAmount} ${fromToken}`);
+
+        // ✅ Lấy provider từ MetaMask
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
 
         // ✅ Kết nối hợp đồng Swap
         const swapABI = [
