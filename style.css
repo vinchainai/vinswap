@@ -180,15 +180,15 @@ nav {
 /* ==========================
    🔥 TRADE FROLL BUTTON
    ========================== */
-#trade-froll-section {
+#trade-vin-section {
     text-align: center;
     margin: 0; /* Xóa khoảng cách */
     padding: 5px 0; /* Giữ khoảng cách nhỏ để dễ đọc */
 }
 
-/* Nút Trade FROLL */
-#trade-froll-btn {
-    font-size: 24px; /* Chữ lớn hơn giá FROLL */
+/* Nút Trade VIN */
+#trade-vin-btn {
+    font-size: 24px; /* Chữ lớn hơn giá VIN */
     font-weight: bold;
     color: #FF9800; /* Màu cam */
     background: transparent; /* Nền trong suốt */
@@ -200,13 +200,13 @@ nav {
 }
 
 /* Hiệu ứng khi rê chuột */
-#trade-froll-btn:hover {
+#trade-vin-btn:hover {
     color: #E65100; /* Màu cam đậm hơn */
     transform: scale(1.05); /* Phóng to nhẹ */
 }
 
 /* Hiệu ứng khi bấm */
-#trade-froll-btn:active {
+#trade-vin-btn:active {
     transform: scale(0.95); /* Thu nhỏ nhẹ */
 }
 
@@ -214,7 +214,7 @@ nav {
    📱 RESPONSIVE CHO MOBILE
    ========================== */
 @media (max-width: 768px) {
-    #trade-froll-btn {
+    #trade-vin-btn {
         font-size: 22px; /* Chữ nhỏ hơn một chút trên mobile */
     }
 }
@@ -332,7 +332,7 @@ nav {
     }
 }
 
-/* 🔲 HAI KHOANG TOKEN (FROLL / VIC) */
+/* 🔲 HAI KHOANG TOKEN (VIN / VIC) */
 .token-input {
     flex: 1;
     display: flex;
@@ -346,7 +346,7 @@ nav {
     min-width: 45%;
 }
 
-/* 🔘 Mã ký hiệu token (VIC / FROLL) */
+/* 🔘 Mã ký hiệu token (VIC / VIN) */
 .token-symbol {
     font-size: 18px;
     font-weight: bold;
