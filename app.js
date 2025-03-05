@@ -131,3 +131,45 @@ document.addEventListener("DOMContentLoaded", async () => {
         await connectWallet();
     }
 });
+
+// ==============================
+// 🔹 XỬ LÝ KHI NGƯỜI DÙNG NHẬP SỐ LƯỢNG HOẶC BẤM NÚT MAX
+// ==============================
+
+// Lấy các phần tử nhập số lượng token
+const fromAmountInput = document.getElementById("from-amount");
+const toAmountInput = document.getElementById("to-amount");
+const maxButton = document.getElementById("max-button");
+
+// ✅ Hàm cập nhật số token nhận được dựa vào tỷ lệ swap
+function updateSwapOutput() {
+    let fromTokenSymbol = document.getElementById("from-token-symbol").textContent.trim(); // Token nguồn
+    let inputAmount = parseFloat(fromAmountInput.value) || 0; // Số lượng token đầu vào
+    let outputAmount = 0; // Số lượng token nhận được
+
+    // ✅ Tính số lượng token nhận theo hợp đồng (1 VIN = 100 VIC, trừ phí 0.01 VIC)
+    if (fromTokenSymbol === "VIC") {
+        let netVic = inputAmount - 0.01; // Trừ phí swap
+        outputAmount = netVic >= 0.001 ? netVic / 100 : 0; // Đảm bảo không tính nếu < 0.001 VIN
+    } else {
+        let vicAmount = inputAmount * 100; // Quy đổi sang VIC
+        outputAmount = vicAmount > 0.01 ? vicAmount - 0.01 : 0; // Trừ phí swap
+    }
+
+    // ✅ Hiển thị tối đa 4 chữ số thập phân để tránh sai số
+    toAmountInput.value = outputAmount > 0 ? outputAmount.toFixed(4) : "0.0000";
+}
+
+// 📌 Khi người dùng nhập số lượng token muốn swap
+fromAmountInput.addEventListener("input", updateSwapOutput);
+
+// 📌 Khi bấm nút Max, nhập toàn bộ số dư token vào ô nhập
+maxButton.addEventListener("click", async () => {
+    let fromTokenSymbol = document.getElementById("from-token-symbol").textContent.trim(); // Token nguồn
+    let maxAmount = parseFloat(document.getElementById("from-balance").textContent.trim()) || 0; // Số dư hiện tại
+
+    if (maxAmount > 0) {
+        fromAmountInput.value = maxAmount.toFixed(4); // Điền số dư tối đa với độ chính xác 4 chữ số thập phân
+        updateSwapOutput(); // Cập nhật số lượng token nhận
+    }
+});
