@@ -172,8 +172,15 @@ document.getElementById("swap-now").addEventListener("click", async function () 
 
         console.log(`🔄 Đang swap: ${fromAmount} ${fromToken}`);
 
-        // ✅ Lấy provider từ MetaMask
+        // ✅ Kiểm tra & chuyển mạng sang VIC nếu chưa đúng
         const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const network = await provider.getNetwork();
+        if (network.chainId !== 88) { // 88 là chainId của Viction
+            alert("🔄 Vui lòng chuyển mạng sang Viction để tiếp tục!");
+            await switchToVICNetwork();
+            return;
+        }
+
         const signer = provider.getSigner();
 
         // ✅ Kết nối hợp đồng Swap
@@ -227,6 +234,22 @@ document.getElementById("swap-now").addEventListener("click", async function () 
         alert("❌ Swap thất bại! Vui lòng thử lại.");
     }
 });
+
+// 📌 Hàm chuyển sang mạng VIC nếu MetaMask đang ở mạng khác
+async function switchToVICNetwork() {
+    try {
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x58" }] // 0x58 = 88 (Viction Chain ID)
+        });
+    } catch (switchError) {
+        if (switchError.code === 4902) {
+            alert("⚠️ Mạng VIC chưa có trong MetaMask! Vui lòng thêm thủ công.");
+        } else {
+            console.error("❌ Lỗi chuyển mạng:", switchError);
+        }
+    }
+}
 
 // 📌 Xử lý nút Disconnect Wallet
 document.getElementById("disconnect-wallet").addEventListener("click", function () {
