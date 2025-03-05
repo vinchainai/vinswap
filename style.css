@@ -524,3 +524,33 @@
 .button:hover {
     background: linear-gradient(90deg, #005f8b, #003f5e);
 }
+
+/* 📌 Đẩy phần chào mừng lên sát thanh điều hướng */
+.main-content {
+    width: 100vw; /* Mở rộng toàn trang */
+    height: auto; /* Điều chỉnh chiều cao tự động */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Đẩy lên trên */
+    background: rgba(255, 255, 255, 0.6); /* Nền trắng trong suốt */
+    backdrop-filter: blur(10px);
+    padding: 40px 20px 20px; /* Giữ khoảng cách hợp lý */
+    margin-top: 100px; /* Đảm bảo nằm ngay dưới navbar */
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* 📌 Căn giá VIN sát logo */
+.nav-center {
+    margin-left: auto; /* Đẩy nội dung về bên phải */
+    margin-right: auto; /* Căn giữa lại */
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* 📌 Căn trái giá VIN */
+#vin-price {
+    margin-left: 20px; /* Đẩy giá VIN sát logo */
+}
