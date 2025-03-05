@@ -12,7 +12,7 @@
 
 /* Toàn bộ trang */
 body {
-    background: rgba(255, 255, 255, 0.9); /* Nền trắng trong suốt nhẹ */
+    background: #f4f4f4; /* Nền xám nhẹ */
     color: #333; /* Màu chữ chính */
     text-align: center; /* Căn giữa nội dung */
 }
@@ -22,7 +22,7 @@ h1 {
     font-size: 28px;
     font-weight: bold;
     margin: 20px 0;
-    color: #007bff; /* Màu xanh đậm tạo điểm nhấn */
+    color: #007bff; /* Màu xanh đậm */
 }
 
 /* Tiêu đề phụ */
@@ -30,10 +30,10 @@ h2 {
     font-size: 22px;
     font-weight: bold;
     margin: 15px 0;
-    color: #222; /* Màu đen đậm để chuyên nghiệp hơn */
+    color: #222; /* Màu đen đậm */
 }
 
-/* Liên kết (mặc định) */
+/* Liên kết */
 a {
     color: #007bff; /* Màu xanh sáng */
     text-decoration: none;
@@ -44,57 +44,82 @@ a:hover {
     text-decoration: underline;
 }
 /* ==========================
-   🔹 LOGO & GIÁ VIN
+   🔹 THANH ĐIỀU HƯỚNG (LOGO & GIÁ VIN)
    ========================== */
 
-/* Thanh điều hướng */
 nav {
     display: flex;
-    flex-direction: column; /* Xếp logo trên, giá VIN dưới */
     align-items: center;
-    justify-content: center;
-    padding: 15px;
+    justify-content: space-between;
+    padding: 15px 20px;
     background: white; /* Nền trắng */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
 }
 
 /* Logo */
 .nav-logo {
-    width: 120px; /* Định kích thước logo */
+    width: 100px; /* Kích thước logo */
     height: auto;
-    margin-bottom: 10px; /* Tạo khoảng cách giữa logo và giá VIN */
 }
 
 /* Giá VIN */
 .price {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: #FFC107; /* Màu vàng nổi bật */
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng nhẹ */
     padding: 5px 10px;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.8); /* Nền trắng mờ để dễ nhìn hơn */
+    background: rgba(255, 255, 255, 0.8); /* Nền trắng mờ */
+}
+/* ==========================
+   🔥 KHU VỰC TRADE VIN
+   ========================== */
+
+#trade-vin-section {
+    text-align: center;
+    margin: 20px 0;
 }
 
-/* ==============================
-   🔹 CHÂN TRANG (FOOTER NAVIGATION)
-   ============================== */
+/* Nút Trade VIN */
+#trade-vin-btn {
+    font-size: 22px;
+    font-weight: bold;
+    color: #FF9800; /* Màu cam */
+    background: transparent; /* Nền trong suốt */
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
 
-footer {
-    background: #008CBA; /* Màu xanh tươi sáng */
+/* Hiệu ứng khi rê chuột */
+#trade-vin-btn:hover {
+    color: #E65100; /* Màu cam đậm hơn */
+    transform: scale(1.05); /* Phóng to nhẹ */
+}
+
+/* Hiệu ứng khi bấm */
+#trade-vin-btn:active {
+    transform: scale(0.95); /* Thu nhỏ nhẹ */
+}
+
+/* ==========================
+   🔹 CHÂN TRANG (FOOTER)
+   ========================== */
+
+.footer-nav {
+    background: #008CBA; /* Màu xanh biển */
     color: white; /* Màu chữ trắng */
     text-align: center;
     padding: 20px 10px;
-    font-family: 'Arial', sans-serif;
-    font-weight: bold;
 }
 
 /* Tiêu đề "🌐 Connect with Us" */
 .footer-title {
-    font-size: 22px;
+    font-size: 18px;
     margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-weight: bold;
 }
 
 /* Khu vực chứa các nút mạng xã hội */
@@ -105,7 +130,7 @@ footer {
     margin-bottom: 10px;
 }
 
-/* Nút liên kết (Twitter, Telegram, Facebook) */
+/* Nút liên kết (Twitter, Telegram) */
 .social-btn {
     background: white;
     color: #008CBA;
@@ -129,99 +154,10 @@ footer {
     opacity: 0.8;
     margin-top: 5px;
 }
-
-/* Responsive: Chỉnh cho điện thoại */
-@media (max-width: 768px) {
-    .social-links {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .social-btn {
-        width: 80%;
-        text-align: center;
-    }
-
-    .footer-rights {
-        font-size: 12px;
-    }
-}
-
 /* ==========================
-   🔹 XÓA ĐƯỜNG KẺ NGĂN CÁCH GIỮA LOGO & TRÒ CHƠI
+   🔹 GIAO DIỆN SWAP
    ========================== */
 
-/* Đảm bảo thanh điều hướng (chứa logo) không có border dưới */
-nav {
-    border-bottom: none !important; /* Xóa viền kẻ dưới nếu có */
-    background: transparent; /* Nếu muốn làm nền trong suốt */
-    margin-bottom: 0; /* Xóa khoảng cách dư */
-    padding-bottom: 5px; /* Giữ khoảng cách nhỏ nếu cần */
-}
-
-/* Đảm bảo khu vực trò chơi không có khoảng cách trên */
-.games {
-    margin-top: 0 !important; /* Xóa khoảng cách trên */
-    padding-top: 0 !important;
-    border-top: none !important; /* Xóa viền kẻ trên nếu có */
-}
-
-/* Nếu vẫn có đường kẻ, ép xóa border trong một số trình duyệt */
-.games::before {
-    display: none !important;
-}
-
-/* Nếu vẫn còn một đường kẻ ẩn, đảm bảo không có box-shadow */
-.games,
-nav {
-    box-shadow: none !important;
-}
-
-/* ==========================
-   🔥 TRADE FROLL BUTTON
-   ========================== */
-#trade-vin-section {
-    text-align: center;
-    margin: 0; /* Xóa khoảng cách */
-    padding: 5px 0; /* Giữ khoảng cách nhỏ để dễ đọc */
-}
-
-/* Nút Trade VIN */
-#trade-vin-btn {
-    font-size: 24px; /* Chữ lớn hơn giá VIN */
-    font-weight: bold;
-    color: #FF9800; /* Màu cam */
-    background: transparent; /* Nền trong suốt */
-    border: none;
-    cursor: pointer;
-    display: inline-block;
-    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    font-family: 'Arial', sans-serif;
-}
-
-/* Hiệu ứng khi rê chuột */
-#trade-vin-btn:hover {
-    color: #E65100; /* Màu cam đậm hơn */
-    transform: scale(1.05); /* Phóng to nhẹ */
-}
-
-/* Hiệu ứng khi bấm */
-#trade-vin-btn:active {
-    transform: scale(0.95); /* Thu nhỏ nhẹ */
-}
-
-/* ==========================
-   📱 RESPONSIVE CHO MOBILE
-   ========================== */
-@media (max-width: 768px) {
-    #trade-vin-btn {
-        font-size: 22px; /* Chữ nhỏ hơn một chút trên mobile */
-    }
-}
-
-/* ==============================
-   🔹 SWAP INTERFACE (Ẩn/Mở giao diện Swap)
-   ============================== */
 /* Ẩn giao diện Swap mặc định */
 #swap-interface {
     display: none;
@@ -232,24 +168,7 @@ nav {
     display: block;
 }
 
-/* Ẩn trang chủ khi bấm nút "Trade FROLL" */
-.hidden {
-    display: none !important;
-}
-
-
-/* ============================== */
-/* 🔹 GIAO DIỆN SWAP - CĂN CHỈNH CHUẨN */
-/* ============================== */
-
-/* 🔲 Toàn bộ giao diện Swap */
-#swap-interface {
-    text-align: center;
-    padding: 20px;
-    background: transparent; /* Nền trong suốt */
-}
-
-/* 🔹 Header Swap (Nút Disconnect & Địa chỉ ví) */
+/* Header Swap (Nút Disconnect & Địa chỉ ví) */
 .swap-header {
     display: flex;
     flex-direction: column;
@@ -258,25 +177,23 @@ nav {
     margin-bottom: 20px;
 }
 
-/* 🔘 Nút "Disconnect Wallet" */
+/* Nút "Disconnect Wallet" */
 #disconnect-wallet {
     font-size: 16px;
     font-weight: bold;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
     background-color: #ff4d4d; /* Màu đỏ nổi bật */
     color: white;
     cursor: pointer;
     transition: 0.3s;
-    width: 220px;
-    text-align: center;
 }
 #disconnect-wallet:hover {
     background-color: #e60000;
 }
 
-/* 🔹 Địa chỉ ví người dùng */
+/* Địa chỉ ví người dùng */
 #wallet-address {
     font-size: 18px;
     font-weight: bold;
@@ -284,7 +201,7 @@ nav {
     margin-top: 8px;
 }
 
-/* 🔹 Tiêu đề "Swap" */
+/* Tiêu đề Swap */
 #swap-interface h1 {
     font-size: 24px;
     font-weight: bold;
@@ -292,23 +209,19 @@ nav {
     color: #333; /* Màu chữ đậm */
 }
 
-/* ============================== */
-/* 🔹 KHU VỰC SWAP (TOKEN + MŨI TÊN) */
-/* ============================== */
-
-/* 🔲 Gom nhóm hai khoang token và nút mũi tên */
+/* Swap Container */
 .swap-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    max-width: 600px;
     gap: 20px; /* Khoảng cách giữa các thành phần */
     position: relative;
     margin: 20px auto;
+    max-width: 400px;
+    flex-direction: column;
 }
 
-/* 🔄 TRÊN MÁY TÍNH: XẾP NGANG */
+/* Responsive: Trên máy tính xếp ngang */
 @media (min-width: 769px) {
     .swap-wrapper {
         flex-direction: row;
@@ -320,21 +233,12 @@ nav {
         transform: translate(-50%, -50%);
     }
 }
+/* ==========================
+   🔹 CÁC Ô NHẬP TOKEN & NÚT SWAP
+   ========================== */
 
-/* 📱 TRÊN ĐIỆN THOẠI: XẾP DỌC */
-@media (max-width: 768px) {
-    .swap-wrapper {
-        flex-direction: column;
-    }
-    #swap-direction {
-        position: relative;
-        margin: 10px 0; /* Khoảng cách giữa 2 khoang */
-    }
-}
-
-/* 🔲 HAI KHOANG TOKEN (VIN / VIC) */
+/* Ô nhập token */
 .token-input {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -343,10 +247,10 @@ nav {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 45%;
+    width: 100%;
 }
 
-/* 🔘 Mã ký hiệu token (VIC / VIN) */
+/* Mã ký hiệu token (VIC / VIN) */
 .token-symbol {
     font-size: 18px;
     font-weight: bold;
@@ -354,27 +258,29 @@ nav {
     margin-bottom: 5px;
 }
 
-/* 🔹 Bố cục bên trong mỗi khoang */
+/* Bố cục bên trong mỗi ô token */
 .token-info {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* 🔘 Logo token */
+/* Logo token */
 .token-info img {
     width: 40px;
     height: 40px;
+    border-radius: 50%; /* Làm tròn hình ảnh */
+    object-fit: contain;
 }
 
-/* 🔘 Số dư token */
+/* Số dư token */
 .token-info p {
     font-size: 16px;
     font-weight: bold;
     color: #555;
 }
 
-/* 🔘 Nút MAX */
+/* Nút MAX */
 #max-button {
     font-size: 14px;
     padding: 6px 10px;
@@ -389,7 +295,7 @@ nav {
     background-color: #0056b3;
 }
 
-/* 🔲 Ô nhập số lượng token */
+/* Ô nhập số lượng token */
 .token-input input {
     width: 100%;
     padding: 10px;
@@ -400,7 +306,7 @@ nav {
     border-radius: 8px;
 }
 
-/* 🔄 NÚT MŨI TÊN SWAP */
+/* Nút đổi chiều Swap */
 #swap-direction {
     width: 50px;
     height: 50px;
@@ -417,18 +323,14 @@ nav {
     background-color: #3e8e41;
 }
 
-/* ============================== */
-/* 🔹 CHI TIẾT GIAO DỊCH */
-/* ============================== */
-
-/* 🔽 Swap Details */
+/* Chi tiết giao dịch */
 .swap-details {
     margin: 20px 0;
     font-size: 14px;
     color: #666;
 }
 
-/* 🔘 Nút "Swap Now" */
+/* Nút Swap Now */
 #swap-now {
     font-size: 18px;
     font-weight: bold;
@@ -445,65 +347,46 @@ nav {
 #swap-now:hover {
     background-color: #e68a00;
 }
+/* ==========================
+   🔹 RESPONSIVE CHO MOBILE
+   ========================== */
 
-/* 📱 Điều chỉnh kích thước địa chỉ ví trên điện thoại */
-@media (max-width: 768px) {
-    #wallet-address {
-        font-size: 14px; /* Chữ nhỏ hơn trên điện thoại */
-        word-break: break-all; /* Nếu dài quá thì tự xuống dòng */
-    }
-}
-
-/* Chỉnh màu chữ Swap */
-h1 {
-    color: #007bff; /* Màu xanh */
-    font-weight: bold; /* Chữ đậm */
-}
-
-/* Hiệu ứng nút mũi tên đảo chiều */
-#swap-direction {
-    font-size: 24px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-}
-
-#swap-direction:hover {
-    transform: rotate(180deg);
-}
-
-/* Điều chỉnh layout theo thiết bị */
+/* Điều chỉnh bố cục trên điện thoại */
 @media (max-width: 768px) {
     .swap-wrapper {
-        display: flex;
-        flex-direction: column; /* Điện thoại: dọc */
-        align-items: center;
+        flex-direction: column;
     }
 
     #swap-direction {
-        transform: rotate(90deg); /* Mũi tên theo chiều dọc */
+        position: relative;
+        margin: 10px 0; /* Khoảng cách giữa 2 ô token */
+    }
+
+    /* Điều chỉnh kích thước địa chỉ ví */
+    #wallet-address {
+        font-size: 14px; /* Chữ nhỏ hơn trên điện thoại */
+        word-break: break-word; /* Nếu dài quá thì tự xuống dòng */
+    }
+
+    /* Các nút mạng xã hội hiển thị dọc */
+    .social-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .social-btn {
+        width: 80%;
+        text-align: center;
     }
 }
 
+/* Trên màn hình lớn */
 @media (min-width: 769px) {
     .swap-wrapper {
-        display: flex;
-        flex-direction: row; /* Máy tính: ngang */
-        justify-content: center;
-        align-items: center;
+        flex-direction: row; /* Máy tính: xếp ngang */
     }
 
     #swap-direction {
         transform: rotate(0deg); /* Mặc định chiều ngang */
     }
-}
-
-/* Cải thiện độ nét logo token */
-.token-info img {
-    width: 40px; /* Kích thước cố định */
-    height: 40px;
-    border-radius: 50%; /* Làm tròn hình ảnh */
-    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng giúp nổi bật */
-    object-fit: contain; /* Hiển thị ảnh rõ nét */
 }
