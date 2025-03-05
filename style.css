@@ -75,3 +75,104 @@ nav {
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.8); /* Nền trắng mờ để dễ nhìn hơn */
 }
+
+/* ==============================
+   🔹 CHÂN TRANG (FOOTER NAVIGATION)
+   ============================== */
+
+footer {
+    background: #008CBA; /* Màu xanh tươi sáng */
+    color: white; /* Màu chữ trắng */
+    text-align: center;
+    padding: 20px 10px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+}
+
+/* Tiêu đề "🌐 Connect with Us" */
+.footer-title {
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Khu vực chứa các nút mạng xã hội */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+/* Nút liên kết (Twitter, Telegram, Facebook) */
+.social-btn {
+    background: white;
+    color: #008CBA;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.social-btn:hover {
+    background: #005f8b;
+    color: white;
+}
+
+/* Bản quyền © */
+.footer-rights {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+/* Responsive: Chỉnh cho điện thoại */
+@media (max-width: 768px) {
+    .social-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .social-btn {
+        width: 80%;
+        text-align: center;
+    }
+
+    .footer-rights {
+        font-size: 12px;
+    }
+}
+
+/* ==========================
+   🔹 XÓA ĐƯỜNG KẺ NGĂN CÁCH GIỮA LOGO & TRÒ CHƠI
+   ========================== */
+
+/* Đảm bảo thanh điều hướng (chứa logo) không có border dưới */
+nav {
+    border-bottom: none !important; /* Xóa viền kẻ dưới nếu có */
+    background: transparent; /* Nếu muốn làm nền trong suốt */
+    margin-bottom: 0; /* Xóa khoảng cách dư */
+    padding-bottom: 5px; /* Giữ khoảng cách nhỏ nếu cần */
+}
+
+/* Đảm bảo khu vực trò chơi không có khoảng cách trên */
+.games {
+    margin-top: 0 !important; /* Xóa khoảng cách trên */
+    padding-top: 0 !important;
+    border-top: none !important; /* Xóa viền kẻ trên nếu có */
+}
+
+/* Nếu vẫn có đường kẻ, ép xóa border trong một số trình duyệt */
+.games::before {
+    display: none !important;
+}
+
+/* Nếu vẫn còn một đường kẻ ẩn, đảm bảo không có box-shadow */
+.games,
+nav {
+    box-shadow: none !important;
+}
