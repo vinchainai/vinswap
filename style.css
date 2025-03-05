@@ -1,16 +1,4 @@
 /* ==========================
-   🔹 RESET & CẤU HÌNH CHUNG
-   ========================== */
-
-/* Reset mặc định cho trình duyệt */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-/* ==========================
    🔹 THANH ĐIỀU HƯỚNG TRÊN (NAVBAR)
    ========================== */
 
