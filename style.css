@@ -353,3 +353,19 @@ body {
     background: #005f8b;
     color: white;
 }
+/* ==========================
+   🔹 CĂN CHỈNH LOGO TRONG NAVBAR
+   ========================== */
+
+/* Đảm bảo logo có chiều cao bằng với navbar và nằm sát mép trái */
+.nav-left {
+    display: flex;
+    align-items: center;
+    height: 100%; /* Đảm bảo logo chiếm toàn bộ chiều cao navbar */
+}
+
+.nav-logo {
+    height: 100%; /* Logo bằng đúng chiều cao navbar */
+    object-fit: contain; /* Đảm bảo logo không bị méo */
+    margin-left: 0; /* Sát mép trái */
+}
