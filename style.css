@@ -10,15 +10,6 @@
     font-family: Arial, sans-serif;
 }
 
-/* Toàn bộ trang */
-body {
-    background: #f8f9fa; /* Nền xám nhẹ */
-    color: #333; /* Màu chữ chính */
-    text-align: center; /* Căn giữa nội dung */
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Đảm bảo footer luôn nằm dưới */
-}
 /* ==========================
    🔹 THANH ĐIỀU HƯỚNG TRÊN (NAVBAR)
    ========================== */
