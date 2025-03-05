@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
                 // ✅ Swap VIN → VIC (phải cấp quyền trước)
-                const VIN_CONTRACT_ADDRESS = "0xeD9b4820cF465cc32a842434d6AeC74E950976c7";
+                const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
                 const vinABI = [
                     "function approve(address spender, uint256 amount) external returns (bool)"
                 ];
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
             maxAmount = ethers.utils.formatEther(maxAmount);
         } else {
             const vinTokenContract = new ethers.Contract(
-                "0xeD9b4820cF465cc32a842434d6AeC74E950976c7",
+                "0x941F63807401efCE8afe3C9d88d368bAA287Fac4",
                 ["function balanceOf(address owner) view returns (uint256)"],
                 signer
             );
