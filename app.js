@@ -242,16 +242,16 @@ async function switchToVICNetwork() {
         });
     } catch (switchError) {
         if (switchError.code === 4902) {
-            alert("⚠️ Mạng VIC chưa có trong MetaMask! Vui lòng thêm thủ công.");
+            alert("⚠️ VIC network is not added in MetaMask! Please add it manually.");
         } else {
-            console.error("❌ Lỗi chuyển mạng:", switchError);
+            console.error("❌ Network switching error:", switchError);
         }
     }
 }
 
 // 📌 Xử lý nút Disconnect Wallet
 document.getElementById("disconnect-wallet").addEventListener("click", function () {
-    console.log("🔌 Đang ngắt kết nối ví...");
+    console.log("🔌 Disconnecting wallet...");
 
     // Ẩn giao diện Swap, hiển thị lại trang chính
     document.getElementById("swap-interface").style.display = "none";
