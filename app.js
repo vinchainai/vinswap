@@ -1,10 +1,10 @@
 // ==============================
-// 🔹 KẾT NỐI VÍ & CẬP NHẬT SỐ DƯ VIC & FROLL (Trade FROLL)
+// 🔹 KẾT NỐI VÍ & CẬP NHẬT SỐ DƯ VIC & VIN (Trade VIN)
 // ==============================
 
 document.addEventListener("DOMContentLoaded", function () {
     // Lấy các phần tử quan trọng từ giao diện
-    const tradeButton = document.getElementById("trade-froll-btn");  // Nút "Trade FROLL"
+    const tradeButton = document.getElementById("trade-vin-btn");  // Nút "Trade VIN"
     const swapInterface = document.getElementById("swap-interface"); // Giao diện Swap
     const walletAddressEl = document.getElementById("wallet-address"); // Khu vực hiển thị địa chỉ ví
     const disconnectButton = document.getElementById("disconnect-wallet"); // Nút "Disconnect"
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let provider, signer, walletAddress;
     let frollTokenContract;
     let fromToken = "VIC";
-    let toToken = "FROLL";
-    const balances = { VIC: 0, FROLL: 0 };
+    let toToken = "VIN";
+    const balances = { VIC: 0, VIN: 0 };
 
     const FROLL_CONTRACT_ADDRESS = "0xB4d562A8f811CE7F134a1982992Bd153902290BC";
 
