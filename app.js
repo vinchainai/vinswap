@@ -150,3 +150,84 @@ maxButton.addEventListener("click", async () => {
         updateSwapOutput(); // Cập nhật số lượng token nhận
     }
 });
+
+// 📌 Xử lý nút Swap Now
+document.getElementById("swap-now").addEventListener("click", async function () {
+    try {
+        if (!userAccount) {
+            alert("❌ Vui lòng kết nối ví trước khi swap!");
+            return;
+        }
+
+        let fromAmount = parseFloat(document.getElementById("from-amount").value);
+        if (isNaN(fromAmount) || fromAmount <= 0) {
+            alert("❌ Vui lòng nhập số lượng hợp lệ!");
+            return;
+        }
+
+        console.log(`🔄 Đang swap: ${fromAmount} ${fromToken}`);
+
+        // ✅ Kết nối hợp đồng Swap
+        const swapABI = [
+            "function swapVicToVin() payable",
+            "function swapVinToVic(uint256 vinAmount) external"
+        ];
+        const swapContract = new ethers.Contract(vinSwapAddress, swapABI, signer);
+
+        let tx;
+        if (fromToken === "VIC") {
+            if (fromAmount < 0.011) {
+                alert("❌ Số lượng VIC tối thiểu để swap là 0.011 VIC.");
+                return;
+            }
+            // ✅ Swap VIC → VIN
+            tx = await swapContract.swapVicToVin({ value: ethers.utils.parseEther(fromAmount.toString()) });
+        } else {
+            if (fromAmount < 0.00011) {
+                alert("❌ Số lượng VIN tối thiểu để swap là 0.00011 VIN.");
+                return;
+            }
+            // ✅ Kết nối hợp đồng token VIN để approve
+            const vinABI = ["function approve(address spender, uint256 amount) external returns (bool)"];
+            const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
+
+            // ✅ Approve VIN trước khi swap
+            const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
+            console.log("🔄 Đang approve VIN...");
+            const approveTx = await vinTokenContract.approve(vinSwapAddress, vinAmount);
+            await approveTx.wait();
+            console.log("✅ Approve thành công!");
+
+            // ✅ Swap VIN → VIC
+            tx = await swapContract.swapVinToVic(vinAmount);
+        }
+
+        await tx.wait();
+        console.log("✅ Swap thành công:", tx.hash);
+
+        // ✅ Cập nhật số dư sau swap
+        alert("✅ Swap thành công!");
+        await getBalances();
+
+    } catch (error) {
+        console.error("❌ Lỗi swap:", error);
+        alert("❌ Swap thất bại! Vui lòng thử lại.");
+    }
+});
+
+// 📌 Xử lý nút Disconnect Wallet
+document.getElementById("disconnect-wallet").addEventListener("click", function () {
+    console.log("🔌 Đang ngắt kết nối ví...");
+
+    // Ẩn giao diện Swap, hiển thị lại trang chính
+    document.getElementById("swap-interface").style.display = "none";
+    document.querySelector(".main-content").style.display = "block";
+    document.querySelector(".navbar").style.display = "flex";
+    document.querySelector(".footer").style.display = "block";
+
+    // Reset thông tin ví
+    document.getElementById("wallet-address").innerText = "Not Connected";
+    userAccount = null;
+    fromAmountInput.value = "";
+    toAmountInput.value = "";
+});
