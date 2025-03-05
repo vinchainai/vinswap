@@ -151,7 +151,7 @@ maxButton.addEventListener("click", async () => {
     }
 });
 
-// 📌 Xử lý nút Swap Now
+// 📌 Xử lý Swap khi bấm nút "Swap Now"
 document.getElementById("swap-now").addEventListener("click", async function () {
     try {
         if (!userAccount) {
@@ -180,15 +180,19 @@ document.getElementById("swap-now").addEventListener("click", async function () 
                 alert("❌ Số lượng VIC tối thiểu để swap là 0.011 VIC.");
                 return;
             }
-            // ✅ Swap VIC → VIN
-            tx = await swapContract.swapVicToVin({ value: ethers.utils.parseEther(fromAmount.toString()) });
+            // ✅ Swap VIC → VIN (Gửi VIC đến hợp đồng)
+            tx = await swapContract.swapVicToVin({
+                value: ethers.utils.parseEther(fromAmount.toString())
+            });
         } else {
             if (fromAmount < 0.00011) {
                 alert("❌ Số lượng VIN tối thiểu để swap là 0.00011 VIN.");
                 return;
             }
             // ✅ Kết nối hợp đồng token VIN để approve
-            const vinABI = ["function approve(address spender, uint256 amount) external returns (bool)"];
+            const vinABI = [
+                "function approve(address spender, uint256 amount) external returns (bool)"
+            ];
             const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, signer);
 
             // ✅ Approve VIN trước khi swap
