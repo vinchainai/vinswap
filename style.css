@@ -44,13 +44,13 @@ a:hover {
     text-decoration: underline;
 }
 /* ==========================
-   🔹 LOGO & GIÁ FROLL
+   🔹 LOGO & GIÁ VIN
    ========================== */
 
 /* Thanh điều hướng */
 nav {
     display: flex;
-    flex-direction: column; /* Xếp logo trên, giá FROLL dưới */
+    flex-direction: column; /* Xếp logo trên, giá VIN dưới */
     align-items: center;
     justify-content: center;
     padding: 15px;
@@ -62,10 +62,10 @@ nav {
 .nav-logo {
     width: 120px; /* Định kích thước logo */
     height: auto;
-    margin-bottom: 10px; /* Tạo khoảng cách giữa logo và giá FROLL */
+    margin-bottom: 10px; /* Tạo khoảng cách giữa logo và giá VIN */
 }
 
-/* Giá FROLL */
+/* Giá VIN */
 .price {
     font-size: 20px;
     font-weight: bold;
