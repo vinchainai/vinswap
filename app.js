@@ -45,12 +45,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             console.log("🔗 Kết nối thành công, địa chỉ ví:", walletAddress);
 
-            frollTokenContract = new ethers.Contract(FROLL_CONTRACT_ADDRESS, frollABI, provider);
+            vinTokenContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, vinABI, provider);
 
             await updateBalances();
 
             // Ẩn các giao diện khác, hiển thị Swap Interface
-            document.querySelectorAll("#home-page, .results, .check-hash, .guide-section, #check-ticket-section, .froll-info, .winning-hash, .lottery-froll, .lotto-froll, .roulette-froll, footer").forEach(section => {
+            document.querySelectorAll("#home-page, footer").forEach(section => {
                 section.style.display = "none";
             });
             swapInterface.classList.remove("hidden");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 📌 Xử lý khi người dùng bấm nút "Trade FROLL"
+    // 📌 Xử lý khi người dùng bấm nút "Trade VIN"
     if (tradeButton) {
         tradeButton.addEventListener("click", connectWallet);
     }
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 📌 Xử lý khi người dùng bấm nút "Disconnect Wallet"
     disconnectButton.addEventListener("click", function () {
         swapInterface.style.display = "none";
-        document.querySelectorAll("#home-page, .results, .check-hash, .guide-section, #check-ticket-section, .froll-info, .winning-hash, .lottery-froll, .lotto-froll, .roulette-froll, footer").forEach(section => {
+        document.querySelectorAll("#home-page, footer").forEach(section => {
             section.style.display = "block";
         });
         walletAddressEl.textContent = "Not Connected";
