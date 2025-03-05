@@ -86,11 +86,12 @@ async function getBalances() {
     }
 }
 
-// 📌 Cập nhật số dư trên giao diện
+// 📌 Cập nhật số dư trên giao diện (hiển thị 18 số thập phân)
 function updateBalanceDisplay() {
-    document.getElementById("from-balance").textContent = `${balances[fromToken]}`;
-    document.getElementById("to-balance").textContent = `${balances[toToken]}`;
+    document.getElementById("from-balance").textContent = `${parseFloat(balances[fromToken]).toFixed(18)}`;
+    document.getElementById("to-balance").textContent = `${parseFloat(balances[toToken]).toFixed(18)}`;
 }
+
 
 // 📌 Xử lý hoán đổi chiều swap
 document.getElementById("swap-direction").addEventListener("click", async () => {
