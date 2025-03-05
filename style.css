@@ -428,3 +428,40 @@ body {
         max-width: 650px; /* Điều chỉnh bố cục swap */
     }
 }
+/* 📌 Điều chỉnh chiều rộng ô nhập số lượng token */
+.token-input input {
+    width: 100%; /* Tăng chiều rộng tối đa */
+    padding: 12px;
+    font-size: 16px; /* Tăng cỡ chữ */
+    text-align: center;
+}
+
+/* 📌 Điều chỉnh hiển thị số dư token */
+.token-info p {
+    font-size: 16px; /* Tăng cỡ chữ */
+    width: 100%; /* Đảm bảo số dư không bị cắt */
+    word-break: break-word; /* Đảm bảo số dư không bị tràn ra ngoài */
+}
+
+/* 📌 Điều chỉnh ô token để phù hợp với số thập phân dài */
+.token-input {
+    min-width: 50%; /* Tăng kích thước tối thiểu */
+    padding: 15px;
+}
+/* 📌 Điều chỉnh khoảng cách giữa nút Max và nút Mũi Tên trên màn hình lớn */
+@media (min-width: 768px) {
+    .swap-wrapper {
+        gap: 30px; /* Tăng khoảng cách giữa các ô nhập và nút mũi tên */
+    }
+
+    .token-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    #max-button {
+        margin-left: 10px; /* Tạo khoảng cách giữa số dư và nút Max */
+    }
+}
