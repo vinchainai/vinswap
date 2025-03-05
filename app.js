@@ -52,8 +52,10 @@ async function getBalances() {
         console.log("🔍 Kiểm tra số dư của ví:", userAccount);
 
         // 🏦 Lấy số dư VIC (Native Coin - Viction)
-        const vicBalanceRaw = await provider.getBalance(userAccount);
+        const vicProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
+        const vicBalanceRaw = await vicProvider.getBalance(userAccount);
         const vicBalance = ethers.utils.formatEther(vicBalanceRaw);
+
         document.getElementById("from-balance").innerText = `${vicBalance} VIC`;
 
         // 🏦 Lấy số dư VIN (Token ERC-20) - SỬ DỤNG JSON-RPC TRỰC TIẾP
@@ -67,10 +69,8 @@ async function getBalances() {
                 "type": "function"
             }
         ];
-        
-        const vinProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
-        const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, vinProvider);
-        
+
+        const vinTokenContract = new ethers.Contract(vinTokenAddress, vinABI, vicProvider);
         const vinBalanceRaw = await vinTokenContract.balanceOf(userAccount);
         const vinBalance = ethers.utils.formatUnits(vinBalanceRaw, 18);
         document.getElementById("to-balance").innerText = `${vinBalance} VIN`;
@@ -78,7 +78,7 @@ async function getBalances() {
         console.log(`✅ Số dư VIC: ${vicBalance} VIC`);
         console.log(`✅ Số dư VIN: ${vinBalance} VIN`);
     } catch (error) {
-        console.error("❌ Lỗi khi lấy số dư VIN:", error);
+        console.error("❌ Lỗi khi lấy số dư VIC hoặc VIN:", error);
     }
 }
 
