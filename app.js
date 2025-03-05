@@ -84,3 +84,25 @@ async function getBalances() {
 
 // Gán sự kiện cho nút kết nối
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+
+// Biến toàn cục
+let fromToken = "VIC";
+let toToken = "VIN";
+
+// 📌 Xử lý hoán đổi chiều swap
+document.getElementById("swap-direction").addEventListener("click", async () => {
+    console.log("🔄 Đảo hướng swap...");
+
+    // Hoán đổi token
+    [fromToken, toToken] = [toToken, fromToken];
+
+    // Cập nhật giao diện token
+    document.getElementById("from-token-symbol").textContent = fromToken;
+    document.getElementById("to-token-symbol").textContent = toToken;
+    [document.getElementById("from-token-logo").src, document.getElementById("to-token-logo").src] =
+    [document.getElementById("to-token-logo").src, document.getElementById("from-token-logo").src];
+
+    // Cập nhật số dư tương ứng
+    await getBalances();
+});
+
