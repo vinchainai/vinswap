@@ -78,17 +78,17 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("❌ Wallet disconnected!");
     });
 
-    // 📌 Cập nhật số dư VIC & FROLL (Hiển thị đủ 18 số thập phân)
+    // 📌 Cập nhật số dư VIC & VIN (Hiển thị đủ 18 số thập phân)
     async function updateBalances() {
         if (!walletAddress || !provider) return;
 
-        // Lấy số dư VIC và FROLL
+        // Lấy số dư VIC và VIN
         const vicBalance = await provider.getBalance(walletAddress);
-        const frollBalance = await frollTokenContract.balanceOf(walletAddress);
+        const vinBalance = await vinTokenContract.balanceOf(walletAddress);
 
         // Định dạng số dư với 18 chữ số thập phân
         balances.VIC = ethers.utils.formatEther(vicBalance);
-        balances.FROLL = ethers.utils.formatUnits(frollBalance, 18);
+        balances.VIN = ethers.utils.formatUnits(vinBalance, 18);
 
         // Cập nhật số dư lên giao diện
         fromBalance.textContent = parseFloat(balances[fromToken]).toFixed(18);
@@ -127,10 +127,10 @@ function updateSwapOutput() {
     let inputAmount = parseFloat(fromAmountInput.value) || 0; // Số lượng token muốn đổi
     let outputAmount = 0; // Số lượng token nhận
 
-    // ✅ Tính số lượng token nhận theo hợp đồng (1 FROLL = 100 VIC, trừ phí 0.01 VIC)
+    // ✅ Tính số lượng token nhận theo hợp đồng (1 VIN = 100 VIC, trừ phí 0.01 VIC)
     if (fromTokenSymbol === "VIC") {
         let netVic = inputAmount - 0.01; // Trừ phí swap
-        outputAmount = netVic >= 0.001 ? netVic / 100 : 0; // Đảm bảo chỉ hiện nếu >= 0.001 FROLL
+        outputAmount = netVic >= 0.001 ? netVic / 100 : 0; // Đảm bảo chỉ hiện nếu >= 0.001 VIN
     } else {
         let vicAmount = inputAmount * 100; // Quy đổi sang VIC
         outputAmount = vicAmount > 0.01 ? vicAmount - 0.01 : 0; // Trừ phí swap
