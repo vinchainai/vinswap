@@ -23,30 +23,31 @@ body {
    🔹 THANH ĐIỀU HƯỚNG TRÊN (NAVBAR)
    ========================== */
 
-/* Navbar với màu #6C869D */
+/* Navbar với màu #6C869D, chiều cao gấp đôi */
 .navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #6C869D; /* Màu đồng bộ với logo */
-    padding: 7px 15px; /* Giảm chiều cao */
+    padding: 10px 20px; /* Điều chỉnh padding */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
-    height: 40px; /* Giảm chiều cao navbar */
+    height: 80px; /* Tăng chiều cao navbar lên gấp đôi */
 }
 
 /* Logo ở góc trái */
 .nav-logo {
     height: 100%; /* Logo chạm mép trên và dưới */
+    object-fit: contain; /* Đảm bảo logo không bị méo */
 }
 
 /* Giá VIN ở giữa */
 .nav-center {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     color: white; /* Chữ trắng đậm */
 }
@@ -54,6 +55,7 @@ body {
    🔹 GIAO DIỆN TRANG CHÍNH
    ========================== */
 
+/* Đẩy sát lên ngay dưới thanh điều hướng */
 .main-content {
     flex: 1; /* Chiếm phần còn lại của chiều cao trang */
     display: flex;
@@ -61,12 +63,12 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 100px 20px 50px;
+    padding: 20px 20px 50px; /* Giảm khoảng cách trên */
     background: rgba(255, 255, 255, 0.8); /* Nền trắng trong suốt */
     backdrop-filter: blur(5px); /* Hiệu ứng mờ nhẹ */
     border-radius: 10px;
     max-width: 500px;
-    margin: 80px auto 20px; /* Cách biệt với navbar phía trên */
+    margin: 90px auto 20px; /* Đẩy sát lên thanh điều hướng */
 }
 
 /* Tiêu đề "Welcome to VinSwap!" */
