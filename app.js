@@ -176,7 +176,7 @@ document.getElementById("swap-now").addEventListener("click", async function () 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const network = await provider.getNetwork();
         if (network.chainId !== 88) { // 88 là chainId của Viction
-            console.log("🔄 Đang tự động chuyển sang mạng VIC...");
+            console.log("🔄 Automatically switching to VIC network...");
             await switchToVICNetwork(); // Chuyển mạng tự động
         }
         const signer = provider.getSigner();
@@ -191,7 +191,7 @@ document.getElementById("swap-now").addEventListener("click", async function () 
         let tx;
         if (fromToken === "VIC") {
             if (fromAmount < 0.011) {
-                alert("❌ Số lượng VIC tối thiểu để swap là 0.011 VIC.");
+                alert("❌ The minimum amount to swap VIC is 0.011 VIC.");
                 return;
             }
             // ✅ Swap VIC → VIN (Gửi VIC đến hợp đồng)
@@ -200,7 +200,7 @@ document.getElementById("swap-now").addEventListener("click", async function () 
             });
         } else {
             if (fromAmount < 0.00011) {
-                alert("❌ Số lượng VIN tối thiểu để swap là 0.00011 VIN.");
+                alert("❌ The minimum amount to swap VIN is 0.00011 VIN.");
                 return;
             }
             // ✅ Kết nối hợp đồng token VIN để approve
@@ -211,25 +211,25 @@ document.getElementById("swap-now").addEventListener("click", async function () 
 
             // ✅ Approve VIN trước khi swap
             const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
-            console.log("🔄 Đang approve VIN...");
+            console.log("🔄 Approving VIN...");
             const approveTx = await vinTokenContract.approve(vinSwapAddress, vinAmount);
             await approveTx.wait();
-            console.log("✅ Approve thành công!");
+            console.log("✅ Approval successful!");
 
             // ✅ Swap VIN → VIC
             tx = await swapContract.swapVinToVic(vinAmount);
         }
 
         await tx.wait();
-        console.log("✅ Swap thành công:", tx.hash);
+        console.log("✅ Swap successful:", tx.hash);
 
         // ✅ Cập nhật số dư sau swap
-        alert("✅ Swap thành công!");
+        alert("✅ Swap successful!");
         await getBalances();
 
     } catch (error) {
-        console.error("❌ Lỗi swap:", error);
-        alert("❌ Swap thất bại! Vui lòng thử lại.");
+        console.error("❌ Swap failed:", error);
+        alert("❌ Swap failed! Please try again.");
     }
 });
 
