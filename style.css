@@ -20,54 +20,53 @@ body {
     min-height: 100vh; /* Đảm bảo footer luôn nằm dưới */
 }
 /* ==========================
-   🔹 THANH ĐIỀU HƯỚNG (NAVBAR)
+   🔹 THANH ĐIỀU HƯỚNG TRÊN (NAVBAR)
    ========================== */
 
-/* Thanh điều hướng trên cùng */
+/* Navbar với màu #6C869D */
 .navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(90deg, #FF6F00, #FF3D00); /* Cam rực lửa */
-    padding: 15px 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background: #6C869D; /* Màu đồng bộ với logo */
+    padding: 7px 15px; /* Giảm chiều cao */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
+    height: 40px; /* Giảm chiều cao navbar */
 }
 
 /* Logo ở góc trái */
 .nav-logo {
-    width: 100px;
-    height: auto;
+    height: 100%; /* Logo chạm mép trên và dưới */
 }
 
 /* Giá VIN ở giữa */
 .nav-center {
     font-size: 18px;
     font-weight: bold;
-    color: white; /* Chữ trắng */
+    color: white; /* Chữ trắng đậm */
 }
 /* ==========================
    🔹 GIAO DIỆN TRANG CHÍNH
    ========================== */
 
-/* Nền trắng trong suốt */
 .main-content {
-    flex: 1; /* Để phần này chiếm toàn bộ chiều cao trừ navbar & footer */
+    flex: 1; /* Chiếm phần còn lại của chiều cao trang */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 100px 20px 50px;
-    background: rgba(255, 255, 255, 0.8); /* Trắng trong suốt */
+    background: rgba(255, 255, 255, 0.8); /* Nền trắng trong suốt */
     backdrop-filter: blur(5px); /* Hiệu ứng mờ nhẹ */
     border-radius: 10px;
     max-width: 500px;
-    margin: auto;
+    margin: 80px auto 20px; /* Cách biệt với navbar phía trên */
 }
 
 /* Tiêu đề "Welcome to VinSwap!" */
@@ -78,7 +77,7 @@ body {
     margin-bottom: 10px;
 }
 
-/* Dòng mô tả "Swap your tokens..." */
+/* Dòng mô tả "Swap your tokens easily, quickly, and securely" */
 .subtitle {
     font-size: 18px;
     color: #444; /* Màu xám đậm */
@@ -143,12 +142,44 @@ body {
    ========================== */
 
 .footer {
-    background: #333; /* Màu nền đậm */
-    color: white;
+    background: #008CBA; /* Màu xanh biển */
+    color: white; /* Chữ trắng đậm */
     text-align: center;
     padding: 15px 0;
     margin-top: auto;
     position: relative;
     bottom: 0;
     width: 100%;
+}
+
+/* Kết nối & bản quyền */
+.footer p {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Khu vực chứa các nút mạng xã hội */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+/* Nút liên kết (Twitter, Telegram) */
+.social-btn {
+    background: white;
+    color: #008CBA;
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.social-btn:hover {
+    background: #005f8b;
+    color: white;
 }
