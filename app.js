@@ -1,33 +1,27 @@
 // ==============================
-// 🔹 KẾT NỐI VÍ & CẬP NHẬT SỐ DƯ VIC & VIN (Trade VIN)
+// 🔹 KẾT NỐI VÍ & CẬP NHẬT SỐ DƯ VIC & VIN
 // ==============================
-
 document.addEventListener("DOMContentLoaded", function () {
     // Lấy các phần tử quan trọng từ giao diện
-    const tradeButton = document.getElementById("trade-vin-btn");  // Nút "Trade VIN"
-    const swapInterface = document.getElementById("swap-interface"); // Giao diện Swap
-    const walletAddressEl = document.getElementById("wallet-address"); // Khu vực hiển thị địa chỉ ví
-    const disconnectButton = document.getElementById("disconnect-wallet"); // Nút "Disconnect"
-    const swapDirectionButton = document.getElementById("swap-direction"); // Nút đảo hướng swap
-    const fromTokenSymbol = document.getElementById("from-token-symbol");
-    const toTokenSymbol = document.getElementById("to-token-symbol");
-    const fromTokenLogo = document.getElementById("from-token-logo");
-    const toTokenLogo = document.getElementById("to-token-logo");
+    const connectWalletBtn = document.getElementById("connect-wallet");
+    const disconnectWalletBtn = document.getElementById("disconnect-wallet");
+    const swapInterface = document.getElementById("swap-interface");
+    const walletAddressEl = document.getElementById("wallet-address");
     const fromBalance = document.getElementById("from-balance");
     const toBalance = document.getElementById("to-balance");
 
     let provider, signer, walletAddress;
     let vinTokenContract;
-    let fromToken = "VIC";
-    let toToken = "VIN";
-    const balances = { VIC: 0, VIN: 0 };
+    
+    // Địa chỉ hợp đồng thông minh của VIN & Swap Contract
+    const VIN_CONTRACT_ADDRESS = "0xeD9b4820cF465cc32a842434d6AeC74E950976c7";
+    const SWAP_CONTRACT_ADDRESS = "0xC23a850B5a09ca99d94f80DA08586f2d85320e94";
 
-    const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-
-    // 📌 ABI của VIN Token (Chỉ lấy phần cần thiết)
+    // ABI của VIN Token (Chỉ lấy phần cần thiết)
     const vinABI = [
         "function balanceOf(address owner) view returns (uint256)",
-        "function decimals() view returns (uint8)"
+        "function decimals() view returns (uint8)",
+        "function approve(address spender, uint256 amount) external returns (bool)"
     ];
 
     // 📌 Kết nối ví
@@ -43,281 +37,59 @@ document.addEventListener("DOMContentLoaded", function () {
             signer = provider.getSigner();
             walletAddress = await signer.getAddress();
 
-            console.log("🔗 Kết nối thành công, địa chỉ ví:", walletAddress);
+            console.log("🔗 Wallet connected:", walletAddress);
 
             vinTokenContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, vinABI, provider);
-
             await updateBalances();
 
-            // Ẩn các giao diện khác, hiển thị Swap Interface
-            document.querySelectorAll("#home-page, footer").forEach(section => {
-                section.style.display = "none";
-            });
+            // Hiển thị giao diện Swap, ẩn trang chính
+            document.querySelector(".main-content").style.display = "none";
             swapInterface.classList.remove("hidden");
             swapInterface.style.display = "block";
             walletAddressEl.textContent = walletAddress;
         } catch (error) {
-            console.error("❌ Lỗi khi kết nối ví:", error);
+            console.error("❌ Wallet connection error:", error);
             alert("❌ Unable to connect wallet. Please try again!");
         }
     }
 
-    // 📌 Xử lý khi người dùng bấm nút "Trade VIN"
-    if (tradeButton) {
-        tradeButton.addEventListener("click", connectWallet);
+    // 📌 Xử lý khi người dùng bấm "Connect Wallet"
+    if (connectWalletBtn) {
+        connectWalletBtn.addEventListener("click", connectWallet);
     }
 
-    // 📌 Xử lý khi người dùng bấm nút "Disconnect Wallet"
-    disconnectButton.addEventListener("click", function () {
+    // 📌 Xử lý khi người dùng bấm "Disconnect Wallet"
+    disconnectWalletBtn.addEventListener("click", function () {
         swapInterface.style.display = "none";
-        document.querySelectorAll("#home-page, footer").forEach(section => {
-            section.style.display = "block";
-        });
+        document.querySelector(".main-content").style.display = "flex";
         walletAddressEl.textContent = "Not Connected";
-        console.log("🔴 Người dùng đã ngắt kết nối ví.");
+        console.log("🔴 Wallet disconnected.");
         alert("❌ Wallet disconnected!");
     });
+});
+// ==============================
+// 🔹 CẬP NHẬT SỐ DƯ VIC & VIN
+// ==============================
+async function updateBalances() {
+    if (!walletAddress || !provider) return;
 
-    // 📌 Cập nhật số dư VIC & VIN (Hiển thị đủ 18 số thập phân)
-    async function updateBalances() {
-        if (!walletAddress || !provider) return;
-
-        // Lấy số dư VIC và VIN
+    try {
+        // Lấy số dư VIC (BNB Native)
         const vicBalance = await provider.getBalance(walletAddress);
         const vinBalance = await vinTokenContract.balanceOf(walletAddress);
 
-        // Định dạng số dư với 18 chữ số thập phân
-        balances.VIC = ethers.utils.formatEther(vicBalance);
-        balances.VIN = ethers.utils.formatUnits(vinBalance, 18);
+        // Chuyển đổi số dư thành định dạng đọc được
+        fromBalance.textContent = parseFloat(ethers.utils.formatEther(vicBalance)).toFixed(4);
+        toBalance.textContent = parseFloat(ethers.utils.formatUnits(vinBalance, 18)).toFixed(4);
 
-        // Cập nhật số dư lên giao diện
-        fromBalance.textContent = parseFloat(balances[fromToken]).toFixed(18);
-        toBalance.textContent = parseFloat(balances[toToken]).toFixed(18);
-
-        console.log("✅ Cập nhật số dư:", balances);
+        console.log("✅ Balances updated:", {
+            VIC: fromBalance.textContent,
+            VIN: toBalance.textContent,
+        });
+    } catch (error) {
+        console.error("❌ Error updating balances:", error);
     }
-
-    // 📌 Xử lý hoán đổi chiều swap
-    swapDirectionButton.addEventListener("click", async () => {
-        console.log("🔄 Đảo hướng swap...");
-        [fromToken, toToken] = [toToken, fromToken];
-        fromTokenSymbol.textContent = fromToken;
-        toTokenSymbol.textContent = toToken;
-        [fromTokenLogo.src, toTokenLogo.src] = [toTokenLogo.src, fromTokenLogo.src];
-
-        await updateBalances();
-    });
-
-    // 🚀 Tự động kết nối nếu trước đó đã kết nối
-    document.addEventListener("DOMContentLoaded", async () => {
-        if (window.ethereum && (await window.ethereum.request({ method: "eth_accounts" })).length > 0) {
-            await connectWallet();
-        }
-    });
-});
-
-// 📌 Xử lý khi người dùng nhập số lượng hoặc bấm nút Max
-const fromAmountInput = document.getElementById("from-amount");
-const toAmountInput = document.getElementById("to-amount");
-const maxButton = document.getElementById("max-button");
-
-// ✅ Hàm cập nhật số token nhận được
-function updateSwapOutput() {
-    let fromTokenSymbol = document.getElementById("from-token-symbol").textContent.trim(); // Token đang swap
-    let inputAmount = parseFloat(fromAmountInput.value) || 0; // Số lượng token muốn đổi
-    let outputAmount = 0; // Số lượng token nhận
-
-    // ✅ Tính số lượng token nhận theo hợp đồng (1 VIN = 100 VIC, trừ phí 0.01 VIC)
-    if (fromTokenSymbol === "VIC") {
-        let netVic = inputAmount - 0.01; // Trừ phí swap
-        outputAmount = netVic >= 0.001 ? netVic / 100 : 0; // Đảm bảo chỉ hiện nếu >= 0.001 VIN
-    } else {
-        let vicAmount = inputAmount * 100; // Quy đổi sang VIC
-        outputAmount = vicAmount > 0.01 ? vicAmount - 0.01 : 0; // Trừ phí swap
-    }
-
-    // ✅ Hiển thị đúng 18 số thập phân
-    toAmountInput.value = outputAmount > 0 ? outputAmount.toFixed(18) : "0.000000000000000000";
 }
 
-// 📌 Khi người dùng nhập số lượng token muốn đổi
-fromAmountInput.addEventListener("input", updateSwapOutput);
-
-// 📌 Khi bấm nút Max, nhập toàn bộ số dư token vào ô nhập
-maxButton.addEventListener("click", async () => {
-    let fromTokenSymbol = document.getElementById("from-token-symbol").textContent.trim(); // Token đang swap
-    let maxAmount = parseFloat(document.getElementById("from-balance").textContent.trim()) || 0; // Số dư hiện tại
-
-    if (maxAmount > 0) {
-        fromAmountInput.value = maxAmount.toFixed(18); // Điền số dư tối đa vào ô nhập với độ chính xác 18 số thập phân
-        updateSwapOutput(); // Cập nhật số lượng token nhận
-    }
-});
-
-// ==============================
-// 🔹 HANDLE SWAP TRANSACTION WHEN "SWAP NOW" BUTTON IS CLICKED
-// ==============================
-document.addEventListener("DOMContentLoaded", function () {
-    const swapNowButton = document.getElementById("swap-now");
-    const fromAmountInput = document.getElementById("from-amount");
-    const toAmountInput = document.getElementById("to-amount");
-    const fromTokenSymbol = document.getElementById("from-token-symbol");
-    const fromBalance = document.getElementById("from-balance");
-    const toBalance = document.getElementById("to-balance");
-    const maxButton = document.getElementById("max-button");
-
-    let walletAddress;
-    let provider;
-    let signer;
-
-    if (!swapNowButton) {
-        console.error("❌ Swap Now button not found.");
-        return;
-    }
-
-    // 📌 Connect Wallet & Get Signer
-    async function connectWallet() {
-        if (!window.ethereum) {
-            alert("❌ Please connect your MetaMask wallet first.");
-            return;
-        }
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        signer = provider.getSigner();
-        walletAddress = await signer.getAddress();
-    }
-
-    // 📌 Swap Now Click Event
-    swapNowButton.addEventListener("click", async function () {
-        try {
-            await connectWallet();
-
-            let fromAmount = parseFloat(fromAmountInput.value);
-            if (isNaN(fromAmount) || fromAmount <= 0) {
-                alert("❌ Please enter a valid amount.");
-                return;
-            }
-
-            console.log(`🔄 Swapping: ${fromAmount} ${fromTokenSymbol.textContent.trim()}`);
-
-            // ✅ Connect to Swap Contract
-            const VINSWAP_CONTRACT_ADDRESS = "0xFFE8C8E49f065b083ce3F45014b443Cb6c5F6e38";
-            const vinSwapABI = [
-                "function swapVicToVin() payable",
-                "function swapVinToVic(uint256 vinAmount) external"
-            ];
-            const vinSwapContract = new ethers.Contract(VINSWAP_CONTRACT_ADDRESS, vinSwapABI, signer);
-
-            let tx;
-            if (fromTokenSymbol.textContent.trim() === "VIC") {
-                if (fromAmount < 0.011) {
-                    alert("❌ Minimum swap amount for VIC is 0.011 VIC.");
-                    return;
-                }
-                // ✅ Swap VIC → VIN (deducting 0.01 VIC fee)
-                tx = await vinSwapContract.swapVicToVin({
-                    value: ethers.utils.parseEther(fromAmount.toString())
-                });
-            } else {
-                if (fromAmount < 0.00011) {
-                    alert("❌ Minimum swap amount for VIN is 0.00011 VIN.");
-                    return;
-                }
-                // ✅ Swap VIN → VIC (approval required first)
-                const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-                const vinABI = [
-                    "function approve(address spender, uint256 amount) external returns (bool)"
-                ];
-                const vinTokenContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, vinABI, signer);
-
-                // ✅ Approve before swapping
-                const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
-                console.log("🔄 Approving VIN for swap...");
-                const approveTx = await vinTokenContract.approve(VINSWAP_CONTRACT_ADDRESS, vinAmount);
-                await approveTx.wait();
-                console.log("✅ Approval successful!");
-
-                // ✅ Swap VIN → VIC
-                tx = await vinSwapContract.swapVinToVic(vinAmount);
-            }
-
-            await tx.wait();
-            console.log("✅ Swap completed:", tx.hash);
-
-            // ✅ Show success alert and update balances when clicking OK
-            alert("✅ Swap successful!");
-            await updateBalances();
-            console.log("✅ Balance updated successfully!");
-
-        } catch (error) {
-            console.error("❌ Swap failed:", error);
-            alert("❌ Swap failed! Please try again.");
-        }
-    });
-
-    // 📌 Max Button - Must Swap All
-    maxButton.addEventListener("click", async function () {
-        await connectWallet();
-
-        const fromToken = fromTokenSymbol.textContent.trim();
-        let maxAmount;
-        if (fromToken === "VIC") {
-            maxAmount = await provider.getBalance(walletAddress);
-            maxAmount = ethers.utils.formatEther(maxAmount);
-        } else {
-            const vinTokenContract = new ethers.Contract(
-                "0x941F63807401efCE8afe3C9d88d368bAA287Fac4",
-                ["function balanceOf(address owner) view returns (uint256)"],
-                signer
-            );
-            maxAmount = await vinTokenContract.balanceOf(walletAddress);
-            maxAmount = ethers.utils.formatUnits(maxAmount, 18);
-        }
-
-        fromAmountInput.value = parseFloat(maxAmount).toFixed(18); // Show full precision
-        updateSwapOutput();
-    });
-
-    // 📌 Auto Update Swap Output
-    fromAmountInput.addEventListener("input", updateSwapOutput);
-
-    function updateSwapOutput() {
-        const fromToken = fromTokenSymbol.textContent.trim();
-        let inputAmount = parseFloat(fromAmountInput.value) || 0;
-        let outputAmount = 0;
-
-        if (fromToken === "VIC") {
-            let effectiveVicAmount = inputAmount - 0.01; // Subtract fee
-            outputAmount = effectiveVicAmount > 0 ? effectiveVicAmount / 100 : 0;
-        } else {
-            outputAmount = inputAmount * 100 - 0.01;
-        }
-
-        toAmountInput.value = outputAmount > 0 ? outputAmount.toFixed(18) : "0.000000000000000000";
-    }
-
-    // 📌 Update Balances
-    async function updateBalances() {
-        try {
-            if (!walletAddress || !provider) return;
-
-            const vinTokenContract = new ethers.Contract(
-                "0x941F63807401efCE8afe3C9d88d368bAA287Fac4",
-                ["function balanceOf(address owner) view returns (uint256)"],
-                signer
-            );
-
-            const vicBalance = await provider.getBalance(walletAddress);
-            const vinBalance = await vinTokenContract.balanceOf(walletAddress);
-
-            // Convert balances
-            let vicBalanceFormatted = ethers.utils.formatEther(vicBalance);
-            let vinBalanceFormatted = ethers.utils.formatUnits(vinBalance, 18);
-
-            fromBalance.textContent = parseFloat(vicBalanceFormatted).toFixed(18);
-            toBalance.textContent = parseFloat(vinBalanceFormatted).toFixed(18);
-            console.log("✅ Updated Balances:", { VIC: vicBalanceFormatted, VIN: vinBalanceFormatted });
-        } catch (error) {
-            console.error("❌ Error updating balance:", error);
-        }
-    }
-});
+// 📌 Tự động cập nhật số dư mỗi 30 giây
+setInterval(updateBalances, 30000);
