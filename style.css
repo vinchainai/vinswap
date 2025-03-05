@@ -554,3 +554,13 @@
 #vin-price {
     margin-left: 20px; /* Đẩy giá VIN sát logo */
 }
+/* 📌 Đảm bảo footer luôn nằm dưới cùng */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Chiều cao tối thiểu bằng 100% màn hình */
+}
+
+.footer {
+    margin-top: auto; /* Đẩy footer xuống dưới cùng */
+}
