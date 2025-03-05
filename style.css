@@ -428,40 +428,72 @@ body {
         max-width: 650px; /* Điều chỉnh bố cục swap */
     }
 }
-/* 📌 Điều chỉnh chiều rộng ô nhập số lượng token */
-.token-input input {
-    width: 100%; /* Tăng chiều rộng tối đa */
-    padding: 12px;
-    font-size: 16px; /* Tăng cỡ chữ */
-    text-align: center;
-}
 
-/* 📌 Điều chỉnh hiển thị số dư token */
-.token-info p {
-    font-size: 16px; /* Tăng cỡ chữ */
-    width: 100%; /* Đảm bảo số dư không bị cắt */
-    word-break: break-word; /* Đảm bảo số dư không bị tràn ra ngoài */
-}
-
-/* 📌 Điều chỉnh ô token để phù hợp với số thập phân dài */
-.token-input {
-    min-width: 50%; /* Tăng kích thước tối thiểu */
-    padding: 15px;
-}
-/* 📌 Điều chỉnh khoảng cách giữa nút Max và nút Mũi Tên trên màn hình lớn */
-@media (min-width: 768px) {
+/* 📌 Điều chỉnh kích thước khung Swap trên màn hình lớn */
+@media (min-width: 1024px) {
     .swap-wrapper {
-        gap: 30px; /* Tăng khoảng cách giữa các ô nhập và nút mũi tên */
+        max-width: 700px; /* Mở rộng khung swap */
+        gap: 40px; /* Tăng khoảng cách giữa các ô nhập */
     }
+}
 
-    .token-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
+/* 📌 Điều chỉnh hai ô nhập token */
+.token-input {
+    flex: 1; /* Mở rộng để hai ô nhập cân đối */
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
 
-    #max-button {
-        margin-left: 10px; /* Tạo khoảng cách giữa số dư và nút Max */
-    }
+/* 📌 Ô nhập số lượng token */
+.token-input input {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* 📌 Hiển thị số dư token */
+.token-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 18px; /* Tăng cỡ chữ */
+}
+
+/* 📌 Nút Max - đảm bảo khoảng cách hợp lý */
+#max-button {
+    font-size: 14px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left: 15px; /* Đẩy xa số dư một chút */
+}
+#max-button:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Nút mũi tên Swap */
+#swap-direction {
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 50%;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#swap-direction:hover {
+    background-color: #3e8e41;
 }
