@@ -176,11 +176,9 @@ document.getElementById("swap-now").addEventListener("click", async function () 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const network = await provider.getNetwork();
         if (network.chainId !== 88) { // 88 là chainId của Viction
-            alert("🔄 Vui lòng chuyển mạng sang Viction để tiếp tục!");
-            await switchToVICNetwork();
-            return;
+            console.log("🔄 Đang tự động chuyển sang mạng VIC...");
+            await switchToVICNetwork(); // Chuyển mạng tự động
         }
-
         const signer = provider.getSigner();
 
         // ✅ Kết nối hợp đồng Swap
