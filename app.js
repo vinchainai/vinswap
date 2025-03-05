@@ -265,3 +265,33 @@ document.getElementById("disconnect-wallet").addEventListener("click", function 
     fromAmountInput.value = "";
     toAmountInput.value = "";
 });
+
+// ==============================
+// 🔹 CHẶN SAO CHÉP & CHẶN DEV TOOLS
+// ==============================
+
+// ✅ Chặn menu chuột phải trên toàn trang
+document.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+});
+
+// ✅ Chặn F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+C (DevTools & View Source)
+document.addEventListener("keydown", function (event) {
+    if (event.key === "F12" ||
+        (event.ctrlKey && event.shiftKey && event.key === "I") ||
+        (event.ctrlKey && event.shiftKey && event.key === "C") ||
+        (event.ctrlKey && event.key === "U")) {
+        event.preventDefault();
+    }
+});
+
+// ✅ Chặn Ctrl+C & Ctrl+X trên toàn trang (ngoại trừ các khu vực được phép copy)
+document.addEventListener("copy", function (event) {
+    let selectedText = window.getSelection().toString();
+    let allowedElements = ["latest-hash", "smart-contract"];
+
+    if (!allowedElements.some(id => event.target.closest(`#${id}`))) {
+        event.preventDefault();
+        alert("❌ Copying is disabled on this website!");
+    }
+});
