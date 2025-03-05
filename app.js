@@ -22,10 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let toToken = "VIN";
     const balances = { VIC: 0, VIN: 0 };
 
-    const FROLL_CONTRACT_ADDRESS = "0xB4d562A8f811CE7F134a1982992Bd153902290BC";
+    const VIN_CONTRACT_ADDRESS = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
 
-    // 📌 ABI của FROLL Token (Chỉ lấy phần cần thiết)
-    const frollABI = [
+    // 📌 ABI của VIN Token (Chỉ lấy phần cần thiết)
+    const vinABI = [
         "function balanceOf(address owner) view returns (uint256)",
         "function decimals() view returns (uint8)"
     ];
