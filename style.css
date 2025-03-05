@@ -1,234 +1,77 @@
-/* 🌍 Reset Styles */
-html {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    height: 100%;
-}
+/* ==========================
+   🔹 CẤU HÌNH CHUNG CHO TRANG
+   ========================== */
 
-body {
-    font-family: Arial, sans-serif;
+/* Reset mặc định cho trình duyệt */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f7fc; /* Nền xanh nhạt */
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* ✅ Đảm bảo footer luôn ở dưới cùng */
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-/* 📌 Thanh điều hướng trên cùng */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
-    background-color: #0056b3; /* Xanh đậm */
-    color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.navbar .logo {
-    height: 40px;
-    animation: fadeIn 1s ease-in-out;
-}
-
-.navbar .vin-price {
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    animation: fadeIn 1s ease-in-out;
-}
-
-/* 🔥 Keyframes cho hiệu ứng fade-in */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* 📌 Giao diện chính */
-.interface {
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Toàn bộ trang */
+body {
+    background: rgba(255, 255, 255, 0.9); /* Nền trắng trong suốt nhẹ */
+    color: #333; /* Màu chữ chính */
+    text-align: center; /* Căn giữa nội dung */
 }
 
 /* Tiêu đề chính */
 h1 {
-    color: #0056b3;
-}
-
-/* Văn bản mô tả */
-p {
-    color: #555;
-}
-
-/* 🔘 Nút bấm */
-.button {
-    background-color: #0056b3;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.button:hover {
-    background-color: #003f80;
-    transform: scale(1.05);
-}
-
-.button:active {
-    background-color: #002f66;
-    transform: scale(0.95);
-}
-
-.button:disabled {
-    background-color: #d6d6d6;
-    cursor: not-allowed;
-}
-
-/* 🏦 Swap Container */
-.swap-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
-    gap: 20px; /* Khoảng cách giữa các phần */
-}
-
-/* 🏷️ Hộp nhập số token */
-.token-input {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 45%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f1f1f1;
-}
-
-/* 🔹 Định dạng Logo Token VIC & VIN */
-.token-input img {
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
-    background: white;
-    padding: 2px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 🔹 Định dạng Input */
-.token-input input {
-    flex-grow: 1;
-    border: none;
-    background: none;
-    font-size: 16px;
-    color: #333;
-    text-align: right;
-}
-
-.token-input input:focus {
-    outline: none;
-}
-
-/* 🎯 Nút tối đa */
-.token-input .button {
-    margin-left: -5px;
-}
-
-/* 🔄 Nút hoán đổi VIC ⇄ VIN */
-.swap-direction {
-    font-size: 24px;
-    color: #0056b3;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.swap-direction:hover {
-    transform: rotate(180deg);
-}
-
-/* 📜 Thông tin giao dịch */
-.swap-details {
-    text-align: left;
-    font-size: 14px;
-    color: #555;
-    margin-top: 20px;
-}
-
-/* 📌 Nút ngắt kết nối */
-.disconnect-button {
-    background-color: #d9534f;
-}
-
-.disconnect-button:hover {
-    background-color: #c9302c;
-}
-
-/* 📢 Footer - Thanh điều hướng dưới cùng */
-.footer {
-    text-align: center;
-    padding: 15px;
-    background: #0056b3;
-    color: white;
-    font-size: 14px;
+    font-size: 28px;
     font-weight: bold;
-    margin-top: auto; /* ✅ Đẩy footer xuống dưới cùng */
+    margin: 20px 0;
+    color: #007bff; /* Màu xanh đậm tạo điểm nhấn */
 }
 
-.footer p {
-    font-weight: bold; /* ✅ Chữ "Follow us" đậm */
+/* Tiêu đề phụ */
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 15px 0;
+    color: #222; /* Màu đen đậm để chuyên nghiệp hơn */
 }
 
-.footer a {
-    color: #f1f1f1;
+/* Liên kết (mặc định) */
+a {
+    color: #007bff; /* Màu xanh sáng */
     text-decoration: none;
     font-weight: bold;
 }
 
-.footer a:hover {
+a:hover {
     text-decoration: underline;
 }
+/* ==========================
+   🔹 LOGO & GIÁ FROLL
+   ========================== */
 
-/* 📱 Giao diện trên Mobile */
-@media (max-width: 768px) {
-    .swap-container {
-        flex-direction: column;
-        gap: 10px;
-    }
+/* Thanh điều hướng */
+nav {
+    display: flex;
+    flex-direction: column; /* Xếp logo trên, giá FROLL dưới */
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background: white; /* Nền trắng */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
 
-    .token-input {
-        width: 100%;
-    }
+/* Logo */
+.nav-logo {
+    width: 120px; /* Định kích thước logo */
+    height: auto;
+    margin-bottom: 10px; /* Tạo khoảng cách giữa logo và giá FROLL */
+}
 
-    .navbar {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .navbar .logo {
-        margin-bottom: 10px;
-    }
-
-    .footer {
-        font-size: 12px;
-    }
+/* Giá FROLL */
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFC107; /* Màu vàng nổi bật */
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng nhẹ */
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.8); /* Nền trắng mờ để dễ nhìn hơn */
 }
