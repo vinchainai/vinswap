@@ -26,7 +26,7 @@ async function connectWallet() {
         signer = provider.getSigner();
         userAccount = await signer.getAddress();
 
-        console.log("✅ Đã kết nối ví:", userAccount);
+        console.log("✅ Wallet connected:", userAccount);
         document.getElementById("wallet-address").innerText = userAccount;
 
         // Ẩn các giao diện không cần thiết
@@ -53,7 +53,7 @@ async function getBalances() {
             return;
         }
 
-        console.log("🔍 Kiểm tra số dư của ví:", userAccount);
+        console.log("🔍 Checking wallet balance:", userAccount);
 
         // 🏦 Lấy số dư VIC (Native Coin - Viction)
         const vicProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
@@ -79,10 +79,10 @@ async function getBalances() {
         // Hiển thị số dư đúng
         updateBalanceDisplay();
 
-        console.log(`✅ Số dư VIC: ${balances.VIC} VIC`);
-        console.log(`✅ Số dư VIN: ${balances.VIN} VIN`);
+        console.log(`✅ VIC Balance: ${balances.VIC} VIC`);
+        console.log(`✅ VIN Balance: ${balances.VIN} VIN`);
     } catch (error) {
-        console.error("❌ Lỗi khi lấy số dư VIC hoặc VIN:", error);
+        console.error("❌ Error fetching VIC or VIN balance:", error);
     }
 }
 
