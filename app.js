@@ -173,3 +173,110 @@ maxButton.addEventListener("click", async () => {
         updateSwapOutput(); // Cập nhật số lượng token nhận
     }
 });
+
+// ==============================
+// 🔹 XỬ LÝ GIAO DỊCH SWAP KHI NHẤN "SWAP NOW"
+// ==============================
+
+document.addEventListener("DOMContentLoaded", function () {
+    const swapNowButton = document.getElementById("swap-now");
+
+    if (!swapNowButton) {
+        console.error("❌ Swap Now button not found.");
+        return;
+    }
+
+    // 📌 Sự kiện khi nhấn nút Swap
+    swapNowButton.addEventListener("click", async function () {
+        try {
+            await connectWallet();
+
+            let fromAmount = parseFloat(fromAmountInput.value);
+            if (isNaN(fromAmount) || fromAmount <= 0) {
+                alert("❌ Please enter a valid amount.");
+                return;
+            }
+
+            console.log(`🔄 Swapping: ${fromAmount} ${fromTokenSymbol.textContent.trim()}`);
+
+            // ✅ Kết nối hợp đồng Swap VIN/VIC
+            const VINSWAP_CONTRACT_ADDRESS = "0xC23a850B5a09ca99d94f80DA08586f2d85320e94";
+            const vinSwapABI = [
+                "function swapBNBForVIN() payable",
+                "function swapVINForBNB(uint256 vinAmount) external"
+            ];
+            const vinSwapContract = new ethers.Contract(VINSWAP_CONTRACT_ADDRESS, vinSwapABI, signer);
+
+            let tx;
+            if (fromTokenSymbol.textContent.trim() === "VIC") {
+                if (fromAmount < 0.011) {
+                    alert("❌ Minimum swap amount for VIC is 0.011 VIC.");
+                    return;
+                }
+                // ✅ Swap VIC → VIN (trừ phí 0.01 VIC)
+                tx = await vinSwapContract.swapBNBForVIN({
+                    value: ethers.utils.parseEther(fromAmount.toString())
+                });
+            } else {
+                if (fromAmount < 0.00011) {
+                    alert("❌ Minimum swap amount for VIN is 0.00011 VIN.");
+                    return;
+                }
+                // ✅ Swap VIN → VIC (phải cấp quyền trước)
+                const VIN_CONTRACT_ADDRESS = "0xeD9b4820cF465cc32a842434d6AeC74E950976c7";
+                const vinABI = [
+                    "function approve(address spender, uint256 amount) external returns (bool)"
+                ];
+                const vinTokenContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, vinABI, signer);
+
+                // ✅ Cấp quyền swap trước khi giao dịch
+                const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
+                console.log("🔄 Approving VIN for swap...");
+                const approveTx = await vinTokenContract.approve(VINSWAP_CONTRACT_ADDRESS, vinAmount);
+                await approveTx.wait();
+                console.log("✅ Approval successful!");
+
+                // ✅ Swap VIN → VIC
+                tx = await vinSwapContract.swapVINForBNB(vinAmount);
+            }
+
+            await tx.wait();
+            console.log("✅ Swap completed:", tx.hash);
+
+            // ✅ Hiển thị thông báo thành công & cập nhật số dư
+            alert("✅ Swap successful!");
+            await updateBalances();
+            console.log("✅ Balance updated successfully!");
+
+        } catch (error) {
+            console.error("❌ Swap failed:", error);
+            alert("❌ Swap failed! Please try again.");
+        }
+    });
+
+    // 📌 Nút Max - Swap toàn bộ số dư
+    maxButton.addEventListener("click", async function () {
+        await connectWallet();
+
+        const fromToken = fromTokenSymbol.textContent.trim();
+        let maxAmount;
+        if (fromToken === "VIC") {
+            maxAmount = await provider.getBalance(walletAddress);
+            maxAmount = ethers.utils.formatEther(maxAmount);
+        } else {
+            const vinTokenContract = new ethers.Contract(
+                "0xeD9b4820cF465cc32a842434d6AeC74E950976c7",
+                ["function balanceOf(address owner) view returns (uint256)"],
+                signer
+            );
+            maxAmount = await vinTokenContract.balanceOf(walletAddress);
+            maxAmount = ethers.utils.formatUnits(maxAmount, 18);
+        }
+
+        fromAmountInput.value = parseFloat(maxAmount).toFixed(18); // Hiển thị chính xác số dư
+        updateSwapOutput();
+    });
+
+    // 📌 Tự động cập nhật kết quả Swap khi nhập số lượng
+    fromAmountInput.addEventListener("input", updateSwapOutput);
+});
