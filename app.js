@@ -230,14 +230,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const vinTokenContract = new ethers.Contract(VIN_CONTRACT_ADDRESS, vinABI, signer);
 
                 // ✅ Approve before swapping
-                const frollAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
-                console.log("🔄 Approving FROLL for swap...");
-                const approveTx = await frollTokenContract.approve(FROLLSWAP_CONTRACT_ADDRESS, frollAmount);
+                const vinAmount = ethers.utils.parseUnits(fromAmount.toString(), 18);
+                console.log("🔄 Approving VIN for swap...");
+                const approveTx = await vinTokenContract.approve(VINSWAP_CONTRACT_ADDRESS, vinAmount);
                 await approveTx.wait();
                 console.log("✅ Approval successful!");
 
-                // ✅ Swap FROLL → VIC
-                tx = await frollSwapContract.swapFrollToVic(frollAmount);
+                // ✅ Swap VIN → VIC
+                tx = await vinSwapContract.swapVinToVic(vinAmount);
             }
 
             await tx.wait();
@@ -264,12 +264,12 @@ document.addEventListener("DOMContentLoaded", function () {
             maxAmount = await provider.getBalance(walletAddress);
             maxAmount = ethers.utils.formatEther(maxAmount);
         } else {
-            const frollTokenContract = new ethers.Contract(
-                "0xB4d562A8f811CE7F134a1982992Bd153902290BC",
+            const vinTokenContract = new ethers.Contract(
+                "0x941F63807401efCE8afe3C9d88d368bAA287Fac4",
                 ["function balanceOf(address owner) view returns (uint256)"],
                 signer
             );
-            maxAmount = await frollTokenContract.balanceOf(walletAddress);
+            maxAmount = await vinTokenContract.balanceOf(walletAddress);
             maxAmount = ethers.utils.formatUnits(maxAmount, 18);
         }
 
@@ -300,22 +300,22 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             if (!walletAddress || !provider) return;
 
-            const frollTokenContract = new ethers.Contract(
-                "0xB4d562A8f811CE7F134a1982992Bd153902290BC",
+            const vinTokenContract = new ethers.Contract(
+                "0x941F63807401efCE8afe3C9d88d368bAA287Fac4",
                 ["function balanceOf(address owner) view returns (uint256)"],
                 signer
             );
 
             const vicBalance = await provider.getBalance(walletAddress);
-            const frollBalance = await frollTokenContract.balanceOf(walletAddress);
+            const vinBalance = await vinTokenContract.balanceOf(walletAddress);
 
             // Convert balances
             let vicBalanceFormatted = ethers.utils.formatEther(vicBalance);
-            let frollBalanceFormatted = ethers.utils.formatUnits(frollBalance, 18);
+            let vinBalanceFormatted = ethers.utils.formatUnits(vinBalance, 18);
 
             fromBalance.textContent = parseFloat(vicBalanceFormatted).toFixed(18);
-            toBalance.textContent = parseFloat(frollBalanceFormatted).toFixed(18);
-            console.log("✅ Updated Balances:", { VIC: vicBalanceFormatted, FROLL: frollBalanceFormatted });
+            toBalance.textContent = parseFloat(vinBalanceFormatted).toFixed(18);
+            console.log("✅ Updated Balances:", { VIC: vicBalanceFormatted, VIN: vinBalanceFormatted });
         } catch (error) {
             console.error("❌ Error updating balance:", error);
         }
