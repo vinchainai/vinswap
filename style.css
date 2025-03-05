@@ -52,7 +52,7 @@ body {
     color: white; /* Chữ trắng đậm */
 }
 /* ==========================
-   🔹 GIAO DIỆN TRANG CHÍNH
+   🔹 GIAO DIỆN TRANG CHÍNH (CẬP NHẬT)
    ========================== */
 
 /* Đẩy sát lên ngay dưới thanh điều hướng */
@@ -61,14 +61,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* Đẩy nội dung lên trên */
     text-align: center;
-    padding: 20px 20px 50px; /* Giảm khoảng cách trên */
+    padding: 20px 20px 10px; /* Giảm khoảng cách dưới */
     background: rgba(255, 255, 255, 0.8); /* Nền trắng trong suốt */
     backdrop-filter: blur(5px); /* Hiệu ứng mờ nhẹ */
     border-radius: 10px;
     max-width: 500px;
-    margin: 110px auto 20px; /* Đẩy sát lên thanh điều hướng */
+    margin: 110px auto 0; /* Đẩy sát lên thanh điều hướng */
 }
 
 /* Tiêu đề "Welcome to VinSwap!" */
@@ -102,6 +102,7 @@ body {
 .button:hover {
     background: linear-gradient(90deg, #005f8b, #003f5e);
 }
+
 /* ==========================
    🔹 GIAO DIỆN SWAP (MẶC ĐỊNH ẨN)
    ========================== */
