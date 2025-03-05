@@ -1,6 +1,6 @@
 // Kiểm tra nếu trình duyệt hỗ trợ MetaMask
 if (typeof window.ethereum === "undefined") {
-    alert("Vui lòng cài đặt MetaMask để sử dụng VinSwap!");
+    alert("Please install MetaMask to use VinSwap!");
 }
 
 // 📌 Biến toàn cục
@@ -17,7 +17,7 @@ const balances = { VIC: 0, VIN: 0 }; // Lưu số dư VIC/VIN chính xác
 async function connectWallet() {
     try {
         if (!window.ethereum) {
-            alert("Vui lòng cài đặt MetaMask!");
+            alert("Please install MetaMask!");
             return;
         }
 
@@ -40,8 +40,8 @@ async function connectWallet() {
         // Gọi hàm hiển thị số dư sau khi kết nối
         await getBalances();
     } catch (error) {
-        console.error("❌ Lỗi kết nối ví:", error);
-        alert("Kết nối ví thất bại!");
+        console.error("❌ Wallet connection failed:", error);
+        alert("Wallet connection failed!");
     }
 }
 
@@ -49,7 +49,7 @@ async function connectWallet() {
 async function getBalances() {
     try {
         if (!userAccount) {
-            console.error("Ví chưa được kết nối!");
+            console.error("Wallet is not connected!");
             return;
         }
 
