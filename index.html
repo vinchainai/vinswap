@@ -22,7 +22,7 @@
             <span id="vin-price">1 VIN = Loading... USD</span>
         </div>
     </nav>
-    <!-- Trang chính -->
+<!-- Trang chính -->
 <main class="main-content">
     <h1 class="welcome-text">Welcome to VinSwap – Trade & Play with Confidence</h1>
     <p class="subtitle">VIN is more than just a token – it’s your gateway to decentralized trading and gaming.</p>
@@ -33,30 +33,44 @@
 
         <ul class="vin-details">
             <li>💎 <strong>Max Supply:</strong> 21,000,000 VIN</li>
-            <li>📍 <strong>Smart Contract:</strong> <a href="https://www.vicscan.xyz/token/0x941F63807401efCE8afe3C9d88d368bAA287Fac4" target="_blank">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</a></li>
-            <li>🔍 <strong>Check on Blockchain:</strong> <a href="https://www.vicscan.xyz/token/0x941F63807401efCE8afe3C9d88d368bAA287Fac4" target="_blank">VicScan Explorer</a></li>
+            <li>📍 <strong>Smart Contract:</strong> 
+                <span class="copy-address" onclick="copyToClipboard()">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</span>
+            </li>
+            <li>🔍 <strong>Check on Blockchain:</strong> 
+                <a href="https://www.vicscan.xyz/token/0x941F63807401efCE8afe3C9d88d368bAA287Fac4" target="_blank">VicScan Explorer</a>
+            </li>
         </ul>
 
         <h2>VIN – The Currency of VinPlay.vin</h2>
-        <p>VIN is the **exclusive currency** used on <strong>VinPlay.vin</strong> – a fully on-chain gaming platform where every bet, every result, and every payout is recorded on the blockchain.</p>
+        <p>VIN is the <strong>exclusive currency</strong> used on <strong>VinPlay.vin</strong> – a fully on-chain gaming platform where every bet, every result, and every payout is recorded on the blockchain.</p>
 
         <h2>How to Earn with VIN?</h2>
         <ul class="vin-earn">
-            <li>🎯 <strong>Jackpot:</strong> Buy a **2 USD ticket** (paid in VIN) and win **100,000 VIN** if you match **5+1 numbers**.</li>
-            <li>💎 <strong>BetAll:</strong> Place a bet in **VIN**, pick **00-99**, and win **108x** your stake.</li>
-            <li>💸 <strong>BetOne:</strong> Bet **VIN** on a single number and get **70x** your payout if you win.</li>
+            <li>🎯 <strong>Jackpot:</strong> Buy a <strong>2 USD ticket</strong> (paid in VIN) and win <strong>100,000 VIN</strong> if you match <strong>5+1 numbers</strong>.</li>
+            <li>💎 <strong>BetAll:</strong> Place a bet in <strong>VIN</strong>, pick <strong>00-99</strong>, and win <strong>108x</strong> your stake.</li>
+            <li>💸 <strong>BetOne:</strong> Bet <strong>VIN</strong> on a single number and get <strong>70x</strong> your payout if you win.</li>
         </ul>
 
         <h2>100% Smart Contract-Powered</h2>
-        <p>Every transaction, every bet, and every trade on **VinPlay.vin** and **VinSwap.vin** is executed by **smart contracts** – ensuring **fairness, transparency, and instant settlements**.</p>
+        <p>Every transaction, every bet, and every trade on <strong>VinPlay.vin</strong> and <strong>VinSwap.vin</strong> is executed by <strong>smart contracts</strong> – ensuring <strong>fairness, transparency, and instant settlements</strong>.</p>
 
         <h2>Ready to Trade?</h2>
-        <p>Click **Connect Wallet** and start swapping VIN/VIC instantly!</p>
+        <p>Click <strong>Connect Wallet</strong> and start swapping VIN/VIC instantly!</p>
     </section>
 
-    <!-- Đưa nút "Connect Wallet" xuống cuối để dẫn dụ người dùng giao dịch -->
+    <!-- Nút "Connect Wallet" giữ nguyên logic -->
     <button id="connect-wallet" class="button">Connect Wallet</button>
 </main>
+
+<!-- Script sao chép địa chỉ -->
+<script>
+    function copyToClipboard() {
+        const address = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
+        navigator.clipboard.writeText(address).then(() => {
+            alert("Smart Contract Address copied!");
+        });
+    }
+</script>
 
     <!-- Giao diện Swap (Mặc định bị ẩn) -->
     <div id="swap-interface" class="hidden">
