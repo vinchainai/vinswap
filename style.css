@@ -43,16 +43,33 @@
 /* ==========================
    🔹 GIAO DIỆN TRANG CHÍNH
    ========================== */
-/* Cải thiện hiển thị của danh sách thông tin VIN */
-.vin-details {
-    list-style: none;
-    padding: 0;
-    font-size: 16px;
-    line-height: 1.6;
+/* Căn giữa toàn bộ nội dung */
+.main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
 }
 
-.vin-details li {
+/* Căn giữa tiêu đề */
+h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+/* Định dạng danh sách không có dấu chấm, chỉ giữ icon */
+.vin-details, .vin-earn {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+.vin-details li, .vin-earn li {
     padding: 8px 0;
+    font-size: 16px;
 }
 
 /* Làm nổi bật địa chỉ hợp đồng & cho phép sao chép */
@@ -81,6 +98,36 @@
 
 .vin-details li a:hover {
     text-decoration: underline;
+}
+
+/* Khu vực nút Play Now */
+.play-now-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.play-now-text {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.play-now-button {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #28a745;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.play-now-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
 /* Nút Connect Wallet */
