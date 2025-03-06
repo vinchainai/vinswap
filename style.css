@@ -43,136 +43,60 @@
 /* ==========================
    🔹 GIAO DIỆN TRANG CHÍNH
    ========================== */
-/* Reset CSS để đảm bảo hiển thị đồng nhất */
-* {
-    margin: 0;
+/* Cải thiện hiển thị của danh sách thông tin VIN */
+.vin-details {
+    list-style: none;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
-/* Toàn bộ trang chính với nền trong suốt */
-body {
-    background: transparent;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
+.vin-details li {
+    padding: 8px 0;
 }
 
-/* Căn chỉnh phần nội dung chính */
-.main-content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    backdrop-filter: blur(10px); /* Tạo hiệu ứng mờ nhẹ */
-    border-radius: 10px;
-}
-
-/* Lời chào mừng ấn tượng */
-.welcome-text {
-    font-size: 2.5rem;
+/* Làm nổi bật địa chỉ hợp đồng & cho phép sao chép */
+.copy-address {
+    display: inline-block;
     font-weight: bold;
-    color: #ffcc00;
-    margin-bottom: 15px;
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
 }
 
-/* Phần mô tả nhỏ gọn */
-.subtitle {
-    font-size: 1.2rem;
-    color: #ccc;
-    margin-bottom: 30px;
+.copy-address:hover {
+    background: rgba(0, 123, 255, 0.2);
+    color: #0056b3;
 }
 
-/* Phần giới thiệu VIN */
-.vin-info {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 10px;
-    margin-top: 20px;
-}
-
-/* Tiêu đề trong từng phần */
-.vin-info h2 {
-    font-size: 1.8rem;
-    color: #ffcc00;
-    margin-bottom: 15px;
-}
-
-/* Danh sách thông tin VIN */
-.vin-details,
-.vin-earn {
-    list-style-type: none;
-    padding: 0;
-}
-
-.vin-details li,
-.vin-earn li {
-    font-size: 1.1rem;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-/* Link hợp đồng thông minh & kiểm tra trên blockchain */
-.vin-info a {
-    color: #ffcc00;
-    font-weight: bold;
+/* Căn chỉnh link VicScan trên hàng riêng biệt */
+.vin-details li a {
+    color: #007bff;
     text-decoration: none;
+    font-weight: bold;
 }
 
-.vin-info a:hover {
+.vin-details li a:hover {
     text-decoration: underline;
 }
 
-/* Định dạng nút Connect Wallet */
+/* Nút Connect Wallet */
 .button {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    background: linear-gradient(90deg, #ff9900, #ffcc00);
-    color: #000;
-    padding: 15px;
-    font-size: 1.2rem;
-    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 18px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    margin: 30px auto;
-    transition: 0.3s;
+    transition: background 0.3s;
 }
 
 .button:hover {
-    background: linear-gradient(90deg, #ffcc00, #ff9900);
-}
-
-/* Hiển thị tốt trên thiết bị di động */
-@media screen and (max-width: 768px) {
-    .welcome-text {
-        font-size: 2rem;
-    }
-    
-    .subtitle {
-        font-size: 1rem;
-    }
-    
-    .vin-info {
-        padding: 20px;
-    }
-    
-    .vin-info h2 {
-        font-size: 1.5rem;
-    }
-    
-    .vin-details li, .vin-earn li {
-        font-size: 1rem;
-        padding: 10px;
-    }
-    
-    .button {
-        font-size: 1rem;
-        padding: 12px;
-    }
+    background-color: #0056b3;
 }
 
 
