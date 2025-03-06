@@ -628,3 +628,41 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
 }
+/* Giảm chiều cao của thanh điều hướng */
+.navbar {
+    height: 50px; /* Điều chỉnh chiều cao, mặc định thường là 60-70px */
+    padding: 5px 15px; /* Giảm khoảng cách trên/dưới */
+    display: flex;
+    align-items: center; /* Căn giữa nội dung theo chiều dọc */
+}
+
+/* Thu nhỏ logo nếu có */
+.navbar-logo {
+    height: 35px; /* Điều chỉnh kích thước logo */
+    max-height: 100%; /* Đảm bảo không bị vỡ */
+}
+
+/* Căn chỉnh menu trong navbar */
+.navbar-menu {
+    display: flex;
+    gap: 15px; /* Giữ khoảng cách hợp lý giữa các mục */
+    font-size: 14px; /* Giảm nhẹ cỡ chữ để phù hợp với thanh điều hướng nhỏ hơn */
+}
+
+/* Điều chỉnh padding cho các mục menu */
+.navbar-menu a {
+    padding: 5px 10px; /* Giữ nút menu nhỏ gọn nhưng vẫn dễ bấm */
+}
+
+/* Responsive: Giữ navbar hợp lý trên màn hình nhỏ */
+@media (max-width: 768px) {
+    .navbar {
+        height: 45px; /* Thu nhỏ hơn khi trên mobile */
+        padding: 5px 10px;
+    }
+
+    .navbar-menu {
+        font-size: 13px; /* Giảm cỡ chữ nhẹ trên mobile */
+        gap: 10px;
+    }
+}
