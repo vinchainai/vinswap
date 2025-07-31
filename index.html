@@ -6,6 +6,20 @@
   <title>VinSwap.vin</title>
   <link rel="icon" href="logo64.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .copyable {
+      background: #eef6ff;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #007bff;
+      font-weight: bold;
+      display: inline-block;
+    }
+    .copyable:hover {
+      background: #d7eaff;
+    }
+  </style>
 </head>
 <body>
 
@@ -14,52 +28,54 @@
     <img src="logo128.png" alt="VIN Logo" class="logo-main"/>
   </div>
 
-  <!-- Giá VIN -->
+  <!-- VIN Price -->
   <div class="price-center">
     <span id="vin-price">1 VIN = Loading... USD</span>
   </div>
 
-  <!-- Nút Swap + Hướng dẫn -->
+  <!-- Swap Button -->
   <div class="connect-container">
     <button id="connect-wallet" class="button">🔁 Swap VIN/VIC</button>
     <p class="hint-text">🔔 Open VinSwap.vin in your MetaMask browser (on Viction Network) to connect and swap.</p>
   </div>
 
-  <!-- Nội dung chính -->
+  <!-- Main Content -->
   <main class="main-content">
 
-    <!-- Thông tin về VIN -->
+    <!-- VIN Token Info -->
     <section class="vin-info">
-      <h2>🪙 Thông tin về VIN</h2>
+      <h2>🪙 VIN Token Information</h2>
       <ul class="vin-details">
-        <li>🔹 Tên: VIN</li>
-        <li>🔹 Mã token: VIN</li>
-        <li>🔹 Nguồn cung tối đa: 21,000,000 VIN</li>
-        <li>🔹 Hợp đồng: <a href="https://www.vicscan.xyz/token/0x941F63807401efCE8afe3C9d88d368bAA287Fac4" target="_blank">Xem trên VicScan</a></li>
+        <li>🔹 Name: VIN</li>
+        <li>🔹 Symbol: VIN</li>
+        <li>🔹 Max Supply: 21,000,000 VIN</li>
+        <li>🔹 Contract: <a href="https://www.vicscan.xyz/token/0x941F63807401efCE8afe3C9d88d368bAA287Fac4" target="_blank">View on VicScan</a></li>
       </ul>
 
-      <h2>🎮 Hệ sinh thái sử dụng VIN</h2>
+      <h2>🎮 VIN Ecosystem</h2>
       <ul class="vin-earn">
-        <li>🎲 <a href="https://vinplay.vin" target="_blank">VinPlay.vin</a> – Xổ số phi tập trung</li>
-        <li>🏦 <a href="https://vinbank.vin" target="_blank">VinBank.vin</a> – Gửi và vay VIN</li>
-        <li>📣 <a href="https://vinsocial.vin" target="_blank">VinSocial.vin</a> – Mạng xã hội chống kiểm duyệt</li>
+        <li>🎲 <a href="https://vinplay.vin" target="_blank">VinPlay.vin</a> – Decentralized lottery games</li>
+        <li>🏦 <a href="https://vinbank.vin" target="_blank">VinBank.vin</a> – On-chain savings & loans</li>
+        <li>📣 <a href="https://vinsocial.vin" target="_blank">VinSocial.vin</a> – Free-speech social network</li>
       </ul>
 
-      <h2>🧭 Hướng dẫn thêm mạng Viction & token VIN</h2>
+      <h2>🧭 Add Viction Network & VIN Token</h2>
       <ul class="vin-details">
-        <li>🌐 RPC: <code>https://rpc.viction.xyz</code></li>
-        <li>🆔 Chain ID: <code>88</code></li>
-        <li>💠 Symbol: VIC</li>
-        <li>🔎 Explorer: <a href="https://vicscan.xyz" target="_blank">https://vicscan.xyz</a></li>
-        <li style="margin-top:10px;">📌 Token VIN:</li>
-        <li>Contract: <span class="copy-address" onclick="copyToClipboard()">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</span></li>
-        <li>Symbol: VIN</li>
-        <li>Decimals: 18</li>
+        <li><strong>🧩 Add Viction Network:</strong></li>
+        <li>RPC: <span class="copyable" onclick="copyText('https://rpc.viction.xyz')">https://rpc.viction.xyz</span></li>
+        <li>Chain ID: <span class="copyable" onclick="copyText('88')">88</span></li>
+        <li>Symbol: <span class="copyable" onclick="copyText('VIC')">VIC</span></li>
+        <li>Explorer: <span class="copyable" onclick="copyText('https://vicscan.xyz')">https://vicscan.xyz</span></li>
+
+        <li style="margin-top: 12px;"><strong>🔔 Add VIN Token:</strong></li>
+        <li>Contract: <span class="copyable" onclick="copyText('0x941F63807401efCE8afe3C9d88d368bAA287Fac4')">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</span></li>
+        <li>Symbol: <span class="copyable" onclick="copyText('VIN')">VIN</span></li>
+        <li>Decimals: <span class="copyable" onclick="copyText('18')">18</span></li>
       </ul>
     </section>
   </main>
 
-  <!-- Giao diện Swap -->
+  <!-- Swap Interface -->
   <div id="swap-interface" class="hidden">
     <header class="swap-header">
       <button id="disconnect-wallet" class="button">Disconnect Wallet</button>
@@ -109,17 +125,16 @@
     <p>© 2025 VinSwap.vin. All rights reserved.</p>
   </footer>
 
-  <!-- Clipboard Script -->
+  <!-- Copy to clipboard logic -->
   <script>
-    function copyToClipboard() {
-      const address = "0x941F63807401efCE8afe3C9d88d368bAA287Fac4";
-      navigator.clipboard.writeText(address).then(() => {
-        alert("✅ VIN Token Address copied to clipboard!");
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✅ Copied: " + text);
       });
     }
   </script>
 
-  <!-- VIN Price Script -->
+  <!-- Price Script -->
   <script>
     const BINANCE_API_URL = "https://api.binance.com/api/v3/ticker/price?symbol=VICUSDT";
     async function updateVinPrice() {
@@ -138,7 +153,7 @@
     setInterval(updateVinPrice, 60000);
   </script>
 
-  <!-- Ether.js + App Logic -->
+  <!-- Ether.js + Logic -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <script type="module" src="app.js"></script>
 
