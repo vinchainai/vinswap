@@ -239,3 +239,9 @@ body {
     min-width: 100%;
   }
 }
+#vin-price {
+  color: gold;
+  font-weight: bold;
+  font-size: 22px;
+  text-shadow: 1px 1px 2px #333;
+}
