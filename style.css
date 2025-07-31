@@ -239,9 +239,11 @@ body {
     min-width: 100%;
   }
 }
+
 #vin-price {
-  color: gold;
-  font-weight: bold;
+  color: #FFD700; /* màu vàng tươi dễ nhìn */
+  font-weight: 600;
   font-size: 22px;
-  text-shadow: 1px 1px 2px #333;
+  text-shadow: none;
 }
+
