@@ -32,6 +32,7 @@ async function connectWallet() {
     document.querySelector(".main-content").style.display = "none";
     document.querySelector(".connect-container").style.display = "none";
     document.getElementById("swap-interface").style.display = "block";
+    document.getElementById("add-viction").style.display = "none";  // Ẩn "Add Viction Network" khi Swap
 
     await getBalances();
   } catch (error) {
@@ -74,13 +75,17 @@ function updateBalanceDisplay() {
   document.getElementById("to-balance").textContent = parseFloat(balances[toToken]).toFixed(6);
 }
 
+// Kết nối ví khi người dùng nhấn nút "Connect Wallet"
 document.getElementById("connect-wallet").addEventListener("click", connectWallet);
+
+// Ngắt kết nối ví
 document.getElementById("disconnect-wallet").addEventListener("click", () => {
   userAccount = null;
   document.getElementById("wallet-address").innerText = "Not Connected";
   document.getElementById("swap-interface").style.display = "none";
   document.querySelector(".main-content").style.display = "block";
   document.querySelector(".connect-container").style.display = "flex";
+  document.getElementById("add-viction").style.display = "block";  // Hiển thị lại phần Add Viction Network
 });
 
 // Swap chiều
