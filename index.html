@@ -19,31 +19,32 @@
     .copyable:hover {
       background: #d7eaff;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
   <!-- Logo -->
-  <div class="logo-center">
+  <div class="logo-center" id="logo-center">
     <img src="logo128.png" alt="VIN Logo" class="logo-main"/>
   </div>
 
   <!-- VIN Price -->
-  <div class="price-center">
+  <div class="price-center" id="price-center">
     <span id="vin-price">1 VIN = Loading... USD</span>
   </div>
 
   <!-- Swap Button -->
-  <div class="connect-container">
+  <div class="connect-container" id="connect-container">
     <button id="connect-wallet" class="button">🔁 Swap VIN/VIC</button>
     <p class="hint-text">🔔 Open VinSwap.vin in your MetaMask browser (on Viction Network) to connect and swap.</p>
   </div>
 
   <!-- Main Content -->
-  <main class="main-content">
-
-    <!-- VIN Token Info -->
-    <section class="vin-info">
+  <main class="main-content" id="main-content">
+    <section class="vin-info" id="vin-info">
       <h2>🪙 VIN Token Information</h2>
       <ul class="vin-details">
         <li>🔹 Name: VinLottery</li>
@@ -51,26 +52,11 @@
         <li>🔹 Max Supply: 21,000,000 VIN</li>
         <li>🔹 Contract: <a href="https://www.vicscan.xyz/token/0x941F63807401efCE8afe3C9d88d368bAA287Fac4" target="_blank">View on VicScan</a></li>
       </ul>
-
       <h2>🎮 VIN Ecosystem</h2>
       <ul class="vin-earn">
         <li>🎲 <a href="https://vinplay.vin" target="_blank">VinPlay.vin</a> – Decentralized lottery games</li>
         <li>🏦 <a href="https://vinbank.vin" target="_blank">VinBank.vin</a> – On-chain savings & loans</li>
         <li>📣 <a href="https://vinsocial.vin" target="_blank">VinSocial.vin</a> – Free-speech social network</li>
-      </ul>
-
-      <h2>🧭 Add Viction Network & VIN Token</h2>
-      <ul class="vin-details">
-        <li><strong>🧩 Add Viction Network:</strong></li>
-        <li>RPC: <span class="copyable" onclick="copyText('https://rpc.viction.xyz')">https://rpc.viction.xyz</span></li>
-        <li>Chain ID: <span class="copyable" onclick="copyText('88')">88</span></li>
-        <li>Symbol: <span class="copyable" onclick="copyText('VIC')">VIC</span></li>
-        <li>Explorer: <span class="copyable" onclick="copyText('https://vicscan.xyz')">https://vicscan.xyz</span></li>
-
-        <li style="margin-top: 12px;"><strong>🔔 Add VIN Token:</strong></li>
-        <li>Contract: <span class="copyable" onclick="copyText('0x941F63807401efCE8afe3C9d88d368bAA287Fac4')">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</span></li>
-        <li>Symbol: <span class="copyable" onclick="copyText('VIN')">VIN</span></li>
-        <li>Decimals: <span class="copyable" onclick="copyText('18')">18</span></li>
       </ul>
     </section>
   </main>
@@ -81,9 +67,7 @@
       <button id="disconnect-wallet" class="button">Disconnect Wallet</button>
       <div id="wallet-address" class="wallet-address">Not Connected</div>
     </header>
-
     <h1>Swap</h1>
-
     <div class="swap-wrapper">
       <div class="token-input">
         <p class="token-symbol" id="from-token-symbol">VIC</p>
@@ -116,7 +100,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer" id="footer">
     <p>🌐 Connect with Us</p>
     <div class="social-links">
       <a href="https://x.com/VinEcosystem" target="_blank" class="social-btn">✅ Twitter/X</a>
@@ -125,17 +109,25 @@
     <p>© 2025 VinSwap.vin. All rights reserved.</p>
   </footer>
 
-  <!-- Copy to clipboard logic -->
   <script>
+    // JavaScript for hiding unnecessary sections when swap is clicked
+    document.getElementById('connect-wallet').addEventListener('click', function() {
+      document.getElementById('logo-center').classList.add('hidden');
+      document.getElementById('price-center').classList.add('hidden');
+      document.getElementById('connect-container').classList.add('hidden');
+      document.getElementById('main-content').classList.add('hidden');
+      document.getElementById('footer').classList.add('hidden');
+      document.getElementById('swap-interface').classList.remove('hidden');
+    });
+
+    // Logic to copy text to clipboard
     function copyText(text) {
       navigator.clipboard.writeText(text).then(() => {
         alert("✅ Copied: " + text);
       });
     }
-  </script>
 
-  <!-- Price Script -->
-  <script>
+    // Price Script (kept from your previous code)
     const BINANCE_API_URL = "https://api.binance.com/api/v3/ticker/price?symbol=VICUSDT";
     async function updateVinPrice() {
       try {
@@ -153,7 +145,6 @@
     setInterval(updateVinPrice, 60000);
   </script>
 
-  <!-- Ether.js + Logic -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <script type="module" src="app.js"></script>
 
