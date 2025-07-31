@@ -199,6 +199,39 @@ body {
   color: #555;
 }
 
+/* ========== ADD VICTON NETWORK SECTION ========== */
+#add-viction {
+  display: block;
+  margin: 30px 0;
+  text-align: center;
+}
+
+#add-viction h2 {
+  font-size: 22px;
+  color: #333;
+}
+
+#add-viction .vin-details {
+  list-style: none;
+  padding: 0;
+  margin: 10px auto;
+  max-width: 600px;
+  font-size: 16px;
+}
+
+#add-viction .copyable {
+  background: #eaf4ff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #007bff;
+  font-weight: bold;
+}
+
+#add-viction .copyable:hover {
+  background: #d7eaff;
+}
+
 /* ========== FOOTER ========== */
 .footer {
   background: #007bff;
