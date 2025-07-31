@@ -247,3 +247,12 @@ body {
   text-shadow: none;
 }
 
+#logo-main {
+  display: block;
+  margin: 0 auto 10px auto;
+  width: 80px;  /* Điều chỉnh kích thước logo */
+  height: 80px;
+  object-fit: contain;
+  image-rendering: crisp-edges;
+  background-color: transparent;
+}
