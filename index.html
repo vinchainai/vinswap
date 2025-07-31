@@ -130,13 +130,14 @@
   <script>
     // JavaScript for hiding unnecessary sections when swap is clicked
     document.getElementById('connect-wallet').addEventListener('click', function() {
+      // Hide all unnecessary sections
       document.getElementById('logo-center').classList.add('hidden');
       document.getElementById('price-center').classList.add('hidden');
       document.getElementById('connect-container').classList.add('hidden');
       document.getElementById('main-content').classList.add('hidden');
       document.getElementById('footer').classList.add('hidden');
+      document.getElementById('add-viction').classList.add('hidden');  // Hide "Add Viction Network & VIN Token" part
       document.getElementById('swap-interface').classList.remove('hidden');
-      document.getElementById('add-viction').classList.add('hidden'); // Hide "Add Viction Network" after swap
     });
 
     // Logic to copy text to clipboard
