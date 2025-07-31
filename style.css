@@ -289,3 +289,33 @@ body {
   image-rendering: crisp-edges;
   background-color: transparent;
 }
+
+/* ========== CẢI TIẾN CHIỀU CAO CHO THANH ĐIỀU HƯỚNG FOOTER ========== */
+.footer {
+  background: #007bff;
+  color: white;
+  text-align: center;
+  padding: 10px 10px;  /* Điều chỉnh padding để giảm chiều cao */
+  margin-top: auto;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 5px 0; /* Giảm khoảng cách trên và dưới các nút */
+}
+
+.social-btn {
+  background: white;
+  color: #007bff;
+  padding: 6px 12px;  /* Điều chỉnh padding để làm nhỏ các nút */
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.social-btn:hover {
+  background: #0056b3;
+  color: white;
+}
