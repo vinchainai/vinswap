@@ -42,6 +42,23 @@
     <p class="hint-text">🔔 Open VinSwap.vin in your MetaMask browser (on Viction Network) to connect and swap.</p>
   </div>
 
+  <!-- Add Viction Network & VIN Token -->
+  <section id="add-viction">
+    <h2>🧭 Add Viction Network & VIN Token</h2>
+    <ul class="vin-details">
+      <li><strong>🧩 Add Viction Network:</strong></li>
+      <li>RPC: <span class="copyable" onclick="copyText('https://rpc.viction.xyz')">https://rpc.viction.xyz</span></li>
+      <li>Chain ID: <span class="copyable" onclick="copyText('88')">88</span></li>
+      <li>Symbol: <span class="copyable" onclick="copyText('VIC')">VIC</span></li>
+      <li>Explorer: <span class="copyable" onclick="copyText('https://vicscan.xyz')">https://vicscan.xyz</span></li>
+
+      <li style="margin-top: 12px;"><strong>🔔 Add VIN Token:</strong></li>
+      <li>Contract: <span class="copyable" onclick="copyText('0x941F63807401efCE8afe3C9d88d368bAA287Fac4')">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</span></li>
+      <li>Symbol: <span class="copyable" onclick="copyText('VIN')">VIN</span></li>
+      <li>Decimals: <span class="copyable" onclick="copyText('18')">18</span></li>
+    </ul>
+  </section>
+
   <!-- Main Content -->
   <main class="main-content" id="main-content">
     <section class="vin-info" id="vin-info">
@@ -57,19 +74,6 @@
         <li>🎲 <a href="https://vinplay.vin" target="_blank">VinPlay.vin</a> – Decentralized lottery games</li>
         <li>🏦 <a href="https://vinbank.vin" target="_blank">VinBank.vin</a> – On-chain savings & loans</li>
         <li>📣 <a href="https://vinsocial.vin" target="_blank">VinSocial.vin</a> – Free-speech social network</li>
-      </ul>
-      <h2>🧭 Add Viction Network & VIN Token</h2>
-      <ul class="vin-details">
-        <li><strong>🧩 Add Viction Network:</strong></li>
-        <li>RPC: <span class="copyable" onclick="copyText('https://rpc.viction.xyz')">https://rpc.viction.xyz</span></li>
-        <li>Chain ID: <span class="copyable" onclick="copyText('88')">88</span></li>
-        <li>Symbol: <span class="copyable" onclick="copyText('VIC')">VIC</span></li>
-        <li>Explorer: <span class="copyable" onclick="copyText('https://vicscan.xyz')">https://vicscan.xyz</span></li>
-
-        <li style="margin-top: 12px;"><strong>🔔 Add VIN Token:</strong></li>
-        <li>Contract: <span class="copyable" onclick="copyText('0x941F63807401efCE8afe3C9d88d368bAA287Fac4')">0x941F63807401efCE8afe3C9d88d368bAA287Fac4</span></li>
-        <li>Symbol: <span class="copyable" onclick="copyText('VIN')">VIN</span></li>
-        <li>Decimals: <span class="copyable" onclick="copyText('18')">18</span></li>
       </ul>
     </section>
   </main>
@@ -131,6 +135,7 @@
       document.getElementById('main-content').classList.add('hidden');
       document.getElementById('footer').classList.add('hidden');
       document.getElementById('swap-interface').classList.remove('hidden');
+      document.getElementById('add-viction').classList.add('hidden'); // Hide "Add Viction Network" after swap
     });
 
     // Logic to copy text to clipboard
