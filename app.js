@@ -32,7 +32,7 @@ async function connectWallet() {
     document.querySelector(".main-content").style.display = "none";
     document.querySelector(".connect-container").style.display = "none";
     document.getElementById("swap-interface").style.display = "block";
-    document.getElementById("add-viction").style.display = "none";  // Ẩn "Add Viction Network" khi Swap
+    document.getElementById("add-viction").style.display = "none";  // Ẩn phần "Add Viction Network & VIN Token"
 
     await getBalances();
   } catch (error) {
@@ -85,7 +85,7 @@ document.getElementById("disconnect-wallet").addEventListener("click", () => {
   document.getElementById("swap-interface").style.display = "none";
   document.querySelector(".main-content").style.display = "block";
   document.querySelector(".connect-container").style.display = "flex";
-  document.getElementById("add-viction").style.display = "block";  // Hiển thị lại phần Add Viction Network
+  document.getElementById("add-viction").style.display = "block";  // Hiển thị lại phần "Add Viction Network & VIN Token"
 });
 
 // Swap chiều
